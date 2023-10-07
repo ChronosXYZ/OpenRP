@@ -19238,7 +19238,6 @@ public OnPlayerCommandText(playerid, cmdtext[])
 						LockCar(caridhouse[playerid]);
 						IsLocked[caridhouse[playerid]] = 1;
 						createdcar ++;
-						Fuell[caridhouse[playerid]] = PlayerInfo[playerid][pFuelCar];
 						AddVehicleComponent(caridhouse[playerid], PlayerInfo[playerid][pKolesa]);
 						AddVehicleComponent(caridhouse[playerid], PlayerInfo[playerid][pNitro]);
 						AddVehicleComponent(caridhouse[playerid], PlayerInfo[playerid][pGidra]);
