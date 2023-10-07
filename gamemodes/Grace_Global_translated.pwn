@@ -1277,7 +1277,7 @@ new RulesMSG[17][] = // Правила
 	{"{00BFFF}It is prohibited to use nicknames containing obscene or offensive words.\n"},
 	{"{00BFFF}Send more than one request per hour ({FF0000}Exception: Administration Request{00BFFF}).\n"},
 	{"{00BFFF}If you are refused to change your nickname, then you'll be banned.\n"} };
-	new RulesMSGG[22][] = {
+	new RulesMSGG[20][] = {
 	{"{FFFFFF}3. {FFFF00}Chat\n"},
 	{"{00BFFF}OOC ({FF0000}Out Of Charter{00BFFF}) - that's all that concerns the real world.\n"},
 	{"{00BFFF}IC ({FF0000}In Charter{00BFFF}) - this is everything that concerns the virtual world, that is, the game.\n"},
@@ -2575,7 +2575,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        if(response)
 			{
 				new rulesdialogg[1324];
-				format(rulesdialogg,sizeof(rulesdialogg), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSGG[0],RulesMSGG[1],RulesMSGG[2],RulesMSGG[3],RulesMSGG[4],RulesMSGG[5],RulesMSGG[6],RulesMSGG[7],RulesMSGG[8],RulesMSGG[9],RulesMSGG[10],RulesMSGG[11],RulesMSGG[12],RulesMSGG[13],RulesMSGG[14],RulesMSGG[15],RulesMSGG[16],RulesMSGG[17],RulesMSGG[18],RulesMSGG[19],RulesMSGG[20],RulesMSGG[21]);
+				format(rulesdialogg,sizeof(rulesdialogg), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSGG[0],RulesMSGG[1],RulesMSGG[2],RulesMSGG[3],RulesMSGG[4],RulesMSGG[5],RulesMSGG[6],RulesMSGG[7],RulesMSGG[8],RulesMSGG[9],RulesMSGG[10],RulesMSGG[11],RulesMSGG[12],RulesMSGG[13],RulesMSGG[14],RulesMSGG[15],RulesMSGG[16],RulesMSGG[17],RulesMSGG[18],RulesMSGG[19]);
 				SPD(playerid,13,DSM, "{00BFFF}[ {AFAFAF}Server Rules {00BFFF}]", rulesdialogg, "Agree", "Cancel");
 			}
 			else
