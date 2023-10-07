@@ -4296,7 +4296,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				format(string, 128, "You took a weapon from the warehouse");
 				SendClientMessage(playerid, 0x6495EDFF, string);
 			 	GetPlayerName(playerid,playername,sizeof(playername));
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 	  			ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 	  			return true;
 	  		}
@@ -4393,7 +4393,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								GetPlayerName(playerid, playername, sizeof(playername));
 								GetPlayerName(giveplayerid, giver, sizeof(giver));
 								GetPlayerName(hitid, giveplayer, sizeof(giveplayer));
-								format(string, sizeof(string), "Ђ %s[%d] concluded(A) contract with %s[%d] for murder %s[%d] ї", playername,playerid, giver,giveplayeridd, giveplayer, hitid);
+								format(string, sizeof(string), "Ђ %s[%d] concluded contract with %s[%d] for murder %s[%d] ї", playername,playerid, giver,giveplayeridd, giveplayer, hitid);
 								SendFamilyMessage(40, COLOR_GREEN, string);
 								GoChase[giveplayeridd] = hitid;
 								GetChased[hitid] = giveplayeridd;
@@ -5168,7 +5168,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] +=cena; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena;
-			GPN format(string,sizeof(string), "ate(A) burger"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate burger"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 1: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5176,7 +5176,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return	SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena2) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena2; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena2;
-			GPN format(string,sizeof(string), "ate(A) fish soup"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate fish soup"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 2: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5184,7 +5184,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena3) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena3; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena3;
-			GPN format(string,sizeof(string), "ate(A) big burger"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate big burger"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 3: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5192,7 +5192,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena4) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena4; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena4;
-			format(string,sizeof(string), "ate(A) cutlets"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			format(string,sizeof(string), "ate cutlets"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 4: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5200,7 +5200,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0)return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena5) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena5; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena5;
-			format(string,sizeof(string), "ate(A) dumplings"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			format(string,sizeof(string), "ate dumplings"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 5: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5208,7 +5208,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0)return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena6) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena6; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena6;
-			GPN format(string,sizeof(string), "ate(A) hamburger"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate hamburger"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } } } } }
 		}
 	case 5343:
@@ -5265,7 +5265,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                       }
                       foreach(Player,i)
                       {
-                          format(string1,sizeof(string1), "%s %s created(A) event \"%s\"\n\n{FFFFFF}To participate, click Accept or Decline",ttext,PlayerInfo[playerid], (inputtext));
+                          format(string1,sizeof(string1), "%s %s created event \"%s\"\n\n{FFFFFF}To participate, click Accept or Decline",ttext,PlayerInfo[playerid], (inputtext));
                           ShowPlayerDialog(i,5345, DIALOG_STYLE_MSGBOX,"Announcement", string1, "Accept", "Reject");
                       }
                   }
@@ -5342,7 +5342,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena;
-			GPN format(string,sizeof(string), "ate(A) small pizza"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate small pizza"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 1: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5350,7 +5350,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena2) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena2; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena2;
-			GPN format(string,sizeof(string), "ate(A) pizza with mushrooms"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate pizza with mushrooms"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 2: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5358,7 +5358,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0) return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena3) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena3; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena3;
-			GPN format(string,sizeof(string), "ate(A) pizza with cheese"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate pizza with cheese"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 3.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 3: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5366,7 +5366,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0)return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena4)return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena4; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena4;
-			GPN format(string,sizeof(string), "ate(A) big pizza"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate big pizza"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 4: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5374,7 +5374,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0)return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena5) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena5; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena5;
-			GPN format(string,sizeof(string), "ate(A) pizza with ham"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+			GPN format(string,sizeof(string), "ate pizza with ham"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } }
 			case 5: {
 			new Float:health; GetPlayerHealth(playerid,health);
@@ -5382,7 +5382,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(BizzInfo[h][bProducts] <= 0)return SCM(playerid, COLOR_GREY, "No products");
 			if(PlayerInfo[playerid][pCash] < cena6) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			BizzInfo[h][b2Till] += cena6; BizzInfo[h][bProducts] -= 2; PlayerInfo[playerid][pCash] -= cena6;
-		 	GPN format(string,sizeof(string), "ate(A) pizza with meat"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
+		 	GPN format(string,sizeof(string), "ate pizza with meat"); SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000); ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.0, 0, 0, 0, 0, 0,1);
 			return true; } } } } }
 		}
 		case 2289:
@@ -5610,14 +5610,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: {
 			if(newcar >= cnncar[0] && newcar <= cnncar[4] || newcar == cnnmav || PlayerToPoint(30.0,playerid,998.2922,999.8779,1999.7999)) {
-			if(PEfir[playerid] != 999) { PEfir[playerid] = 999; format(string, sizeof(string), "%s began(A) live", playername); SendFamilyMessage(9,COLOR_GREEN, string); }
+			if(PEfir[playerid] != 999) { PEfir[playerid] = 999; format(string, sizeof(string), "%s began live", playername); SendFamilyMessage(9,COLOR_GREEN, string); }
 			else return SCM(playerid, COLOR_WHITE, "You're already on air"); }
 			else return SCM(playerid, COLOR_GREY, "You are not in a reporter's car/helicopter/office!"); }
 			case 1: {
-			if(PEfir[playerid] != 255) { PEfir[playerid] = 255; format(string, sizeof(string), "%s came out(A) from live broadcast", playername); SendFamilyMessage(9,COLOR_GREEN, string); }
+			if(PEfir[playerid] != 255) { PEfir[playerid] = 255; format(string, sizeof(string), "%s came out from live broadcast", playername); SendFamilyMessage(9,COLOR_GREEN, string); }
 			else return SCM(playerid, COLOR_GREY, "You're off the air"); }
-			case 2: format(string, sizeof(string), "%s began(A) taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = true;
-			case 3: format(string, sizeof(string), "%s completed(A) taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = false;
+			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = true;
+			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = false;
 			case 4: if(PlayerInfo[playerid][pLeader] == 9) SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 5: if(PlayerInfo[playerid][pLeader] == 9) return SPD(playerid,31,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
@@ -5629,13 +5629,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: {
 			if(newcar >= lsnewscar[0] && newcar <= lsnewscar[5] || PlayerToPoint(30.0,playerid,998.2922,999.8779,1999.7999)) { } else { SCM(playerid, COLOR_GREY, "You are not in a reporter's car/helicopter/office!"); return true;}
-			if(PEfir[playerid] != 999) { PEfir[playerid] = 999; format(string, sizeof(string), "%s began(A) live", playername); SendFamilyMessage(16,COLOR_BLUE, string); }
+			if(PEfir[playerid] != 999) { PEfir[playerid] = 999; format(string, sizeof(string), "%s began live", playername); SendFamilyMessage(16,COLOR_BLUE, string); }
 			else SCM(playerid, COLOR_WHITE, "You're already on air"); }
 			case 1: {
-			if(PEfir[playerid] != 255) { PEfir[playerid] = 255; format(string, sizeof(string), "%s came out(A) from live broadcast", playername); SendFamilyMessage(16,COLOR_BLUE, string); }
+			if(PEfir[playerid] != 255) { PEfir[playerid] = 255; format(string, sizeof(string), "%s came out from live broadcast", playername); SendFamilyMessage(16,COLOR_BLUE, string); }
 			else SCM(playerid, COLOR_GREY, "You're off the air"); }
-			case 2: format(string, sizeof(string), "%s began(A) taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 1;
-			case 3: format(string, sizeof(string), "%s completed(A) taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 0;
+			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 1;
+			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 0;
 			case 4: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 5: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,32,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
@@ -5647,13 +5647,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: {
 			if(newcar >= lvnewscar[0] && newcar <= lvnewscar[5] || PlayerToPoint(30.0,playerid,998.2922,999.8779,1999.7999)) { } else { SCM(playerid, COLOR_GREY, "You are not in a reporter's car/helicopter/office!"); return true;}
-			if(PEfir[playerid] != 999) { PEfir[playerid] = 999; format(string, sizeof(string), "%s began(A) live", playername); SendFamilyMessage(20,COLOR_BLUE, string); }
+			if(PEfir[playerid] != 999) { PEfir[playerid] = 999; format(string, sizeof(string), "%s began live", playername); SendFamilyMessage(20,COLOR_BLUE, string); }
 			else SCM(playerid, COLOR_WHITE, "You're already on air"); }
 			case 1: {
-			if(PEfir[playerid] != 255) { PEfir[playerid] = 255; format(string, sizeof(string), "%s came out(A) from live broadcast", playername); SendFamilyMessage(20,COLOR_BLUE, string); }
+			if(PEfir[playerid] != 255) { PEfir[playerid] = 255; format(string, sizeof(string), "%s came out from live broadcast", playername); SendFamilyMessage(20,COLOR_BLUE, string); }
 			else SCM(playerid, COLOR_GREY, "You're off the air"); }
-			case 2: format(string, sizeof(string), "%s began(A) taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 1;
-			case 3: format(string, sizeof(string), "%s completed(A) taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 0;
+			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 1;
+			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 0;
 			case 4: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 5: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,33,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
@@ -5662,7 +5662,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response)
 			{
-				SPD(playerid, 10098, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Job{00BFFF}Х", "{FFFFFF}1 lvl. {FE0808}Bus driver\n{FFFFFF}1 lvl. {FE0808}Garbage Truck Driver\n{FFFFFF}2 lvl. {FE0808}Taxi driver\n{FFFFFF}3 lvl. {FE0808}Mechanic\n{FFFFFF}3 lvl. {FE0808}Collector\n{FFFFFF}4 lvl. {FE0808}Product Delivery Man\n{FFFFFF}5 lvl. {FE0808}Driver", "Get settled", "Exit");
+				SPD(playerid, 10098, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Job{00BFFF}Х", "{FFFFFF}1 lvl. {FE0808}Bus driver\n{FFFFFF}1 lvl. {FE0808}Garbage Truck Driver\n{FFFFFF}2 lvl. {FE0808}Taxi driver\n{FFFFFF}3 lvl. {FE0808}Mechanic\n{FFFFFF}3 lvl. {FE0808}Collector\n{FFFFFF}4 lvl. {FE0808}Product Delivery Man\n{FFFFFF}5 lvl. {FE0808}Train Driver", "Join", "Exit");
 			}
 			else return true;
 		}
@@ -5806,7 +5806,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
  	 			new string560[256]; new pname[MAX_PLAYER_NAME]; new idd = strval(inputtext); new lname[MAX_PLAYER_NAME];
 		 		if(!IsPlayerConnected(idd)) return ISCM
-     	 		if(PlayerInfo[idd][pBisLic] == 1) return SCM(playerid, COLOR_GREY, "This player has a Business license!");
+     	 		if(PlayerInfo[idd][pBisLic] == 1) return SCM(playerid, COLOR_GREY, "This player has a business license!");
 				GetPlayerName(idd, pname, sizeof(pname));
 	 			format(string560, sizeof(string560), "You have issued a Business license %s[%d].",pname, idd);
 			 	SCM(playerid, COLOR_LIGHTBLUE, string560);
@@ -8177,7 +8177,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8202,7 +8202,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8227,7 +8227,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8252,7 +8252,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8277,7 +8277,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8302,7 +8302,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8326,7 +8326,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GetWeaponName(gun, gunname, sizeof(gunname));
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
-				GPN format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				GPN format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8351,7 +8351,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8376,7 +8376,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GiveWeapon(playerid, gun, ammo);
 				SCM(playerid, COLOR_YELLOW, "You took a weapon from the warehouse");
 				GPN
-				format(string, sizeof(string), "%s took(A) weapons from warehouse", playername);
+				format(string, sizeof(string), "%s took weapons from warehouse", playername);
 				ProxDetector(20.0, playerid, string,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				SaveMaterials();
 			}
@@ -8778,27 +8778,27 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}7 Administration Level{00BFFF}Х",adm7, "Back", ""); } }
 			case 8: {
 			if(PlayerInfo[playerid][pAdmin] >= 8) {
-   			new adm8[1400];
-   			format(adm8, 1200, "{FFFF00}/givedonate {FFFFFF}- {00BFFF}Give coins money to the Player");
-   			format(adm8, 1200, "%s\n{FFFF00}/givemoney {FFFFFF}- {00BFFF}Give Money to the Player",adm8);
-   			format(adm8, 1200, "%s\n{FFFF00}/setstat {FFFFFF}- {00BFFF}Change statistics for a Player",adm8);
-   			format(adm8, 1200, "%s\n{FFFF00}/makeadmin {FFFFFF}- {00BFFF}Appoint a Player as an Administrator",adm8);
-   			format(adm8, 1200, "%s\n{FFFF00}/makeministr {FFFFFF}- {00BFFF}Appoint Player as Minister",adm8);
-   			format(adm8, 1200, "%s\n{FFFF00}/delacc  {FFFFFF}- {00BFFF}Delete account",adm8);
-   			format(adm8, 1200, "%s\n{FFFF00}/areprimand {FFFFFF}- {00BFFF}Issue a reprimand to the Administrator",adm8);
-   			format(adm8, 1200, "%s\n{FFFF00}/aremovereprimand  {FFFFFF}- {00BFFF}Remove the reprimand from the Administrator",adm8);
-     		format(adm8, 1200, "%s\n{FFFF00}/money {FFFFFF}- {00BFFF}Give money to the Player in the Bank",adm8);
-		 	format(adm8, 1200, "%s\n{FFFF00}/setskill {FFFFFF}- {00BFFF}Give the Player Skills for weapons",adm8);
-		 	format(adm8, 1200, "%s\n{FFFF00}/givemilitarycard {FFFFFF}- {00BFFF}Give the Player a Military Card",adm8);
-		 	format(adm8, 1200, "%s\n{FFFF00}/restart {FFFFFF}- {00BFFF}Restart the Server",adm8);
-      		format(adm8, 1200, "%s\n{FFFF00}/fire {FFFFFF}- {00BFFF}Remove a Player from a Faction/Leadership",adm8);
-		  	format(adm8, 1200, "%s\n{FFFF00}/sethouseclass {FFFFFF}- {00BFFF}Change House Class",adm8);
-		  	format(adm8, 1200, "%s\n{FFFF00}/sethouseprice {FFFFFF}- {00BFFF}Change House Price",adm8);
-		  	format(adm8, 1200, "%s\n{FFFF00}/setpos {FFFFFF}- {00BFFF}Place the house in the specified location",adm8);
-		  	format(adm8, 1200, "%s\n{FFFF00}/setposcar {FFFFFF}- {00BFFF}Link the car to the specified house, in the specified location",adm8);
-		  	format(adm8, 1200, "%s\n{FFFF00}/editint {FFFFFF}- {00BFFF}Change the interior of the house",adm8);
-		  	format(adm8, 1200, "%s\n{FFFF00}/payday {FFFFFF}- {00BFFF}Call ahead of schedule PayDay",adm8);
-		   	format(adm8, 1000, "%s\n{FFFF00}/unwarn {FFFFFF}- {00BFFF}Take off Warn from Player",adm8);
+   			new adm8[1500];
+   			format(adm8, 1500, "{FFFF00}/givedonate {FFFFFF}- {00BFFF}Give coins money to the Player");
+   			format(adm8, 1500, "%s\n{FFFF00}/givemoney {FFFFFF}- {00BFFF}Give Money to the Player",adm8);
+   			format(adm8, 1500, "%s\n{FFFF00}/setstat {FFFFFF}- {00BFFF}Change statistics for a Player",adm8);
+   			format(adm8, 1500, "%s\n{FFFF00}/makeadmin {FFFFFF}- {00BFFF}Appoint a Player as an Administrator",adm8);
+   			format(adm8, 1500, "%s\n{FFFF00}/makeministr {FFFFFF}- {00BFFF}Appoint Player as Minister",adm8);
+   			format(adm8, 1500, "%s\n{FFFF00}/delacc  {FFFFFF}- {00BFFF}Delete account",adm8);
+   			format(adm8, 1500, "%s\n{FFFF00}/areprimand {FFFFFF}- {00BFFF}Issue a reprimand to the Administrator",adm8);
+   			format(adm8, 1500, "%s\n{FFFF00}/aremovereprimand  {FFFFFF}- {00BFFF}Remove the reprimand from the Administrator",adm8);
+     		format(adm8, 1500, "%s\n{FFFF00}/money {FFFFFF}- {00BFFF}Give money to the Player in the Bank",adm8);
+		 	format(adm8, 1500, "%s\n{FFFF00}/setskill {FFFFFF}- {00BFFF}Give the Player Skills for weapons",adm8);
+		 	format(adm8, 1500, "%s\n{FFFF00}/givemilitarycard {FFFFFF}- {00BFFF}Give the Player a Military Card",adm8);
+		 	format(adm8, 1500, "%s\n{FFFF00}/restart {FFFFFF}- {00BFFF}Restart the Server",adm8);
+      		format(adm8, 1500, "%s\n{FFFF00}/fire {FFFFFF}- {00BFFF}Remove a Player from a Faction/Leadership",adm8);
+		  	format(adm8, 1500, "%s\n{FFFF00}/sethouseclass {FFFFFF}- {00BFFF}Change House Class",adm8);
+		  	format(adm8, 1500, "%s\n{FFFF00}/sethouseprice {FFFFFF}- {00BFFF}Change House Price",adm8);
+		  	format(adm8, 1500, "%s\n{FFFF00}/setpos {FFFFFF}- {00BFFF}Place the house in the specified location",adm8);
+		  	format(adm8, 1500, "%s\n{FFFF00}/setposcar {FFFFFF}- {00BFFF}Link the car to the specified house, in the specified location",adm8);
+		  	format(adm8, 1500, "%s\n{FFFF00}/editint {FFFFFF}- {00BFFF}Change the interior of the house",adm8);
+		  	format(adm8, 1500, "%s\n{FFFF00}/payday {FFFFFF}- {00BFFF}Call ahead of schedule PayDay",adm8);
+		   	format(adm8, 1500, "%s\n{FFFF00}/unwarn {FFFFFF}- {00BFFF}Take off Warn from Player",adm8);
        		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}8 Administration Level{00BFFF}Х",adm8, "Back", ""); } } } }
 		}
 		case 2001:
@@ -18420,7 +18420,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 						GPN
 						SCM(playerid, COLOR_GREEN, "You raped a passerby. The victim hit you hard {FFFFFF}(( - 25 hp ))");
 						SCM(giveplayerid, COLOR_RED, "You were raped by a maniac");
-						format(string, sizeof(string), "%s raped(A) %s", playername ,giveplayer);
+						format(string, sizeof(string), "%s raped %s", playername ,giveplayer);
 						ProxDetector(10.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 						ApplyAnimation(giveplayerid, "SNM", "SPANKINGW",4.1,0,1,1,1,1,1);
 						ApplyAnimation(playerid, "SNM", "SPANKEDW",4.1,0,1,1,1,1,1);
@@ -19260,7 +19260,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					}
 					else
 					{
-						SCM(playerid, COLOR_GREY, "You don't have that much money");
+						SCM(playerid, COLOR_GREY, "You don't have that much money in the bank");
 						return true;
 					}
 				}
@@ -19359,7 +19359,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				GPN
 				format(string, sizeof(string), "(( You took a drug ))");
 				SCM(playerid, COLOR_WHITE, string);
-				format(string, sizeof(string), "%s used(A) drugs", playername);
+				format(string, sizeof(string), "%s used drugs", playername);
 				ProxDetector(10.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				if(startaddiction[playerid] == 1)
 				{
@@ -22151,7 +22151,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 						GameTextForPlayer(playerid, string, 3000, 3);
 						SetVehicleParamsEx(GetPlayerVehicleID(playerid),0,0,alarm,doors,bonnet,boot,objective);
 						EngineState[playerid] = false;
-						SCM(playerid, COLOR_WHITE, "Engine has stopped!");
+						SCM(playerid, COLOR_WHITE, "The engine has stopped!");
 					}
 				}
 			}
@@ -24223,7 +24223,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				if(Mobile[i] == playerid)
 				{
 					Mobile[playerid] = i;
-					SCM(i, COLOR_GREY, "Raised(A) telephone handset.");
+					SCM(i, COLOR_GREY, "Raised telephone handset.");
 					GPN
 					SetPlayerSpecialAction(playerid,SPECIAL_ACTION_USECELLPHONE);
 					format(string, sizeof(string), "%s answered the call", playername);
@@ -24263,7 +24263,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					if(caller < 255)
 					{
 						GPN
-						SCM(caller, COLOR_GREY, "The subscriber put(a) phone");
+						SCM(caller, COLOR_GREY, "The subscriber put phone");
 						SetPlayerSpecialAction(caller,SPECIAL_ACTION_STOPUSECELLPHONE);
 						CellTime[caller] = 0;
 						CellTime[playerid] = 0;
@@ -26181,7 +26181,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				new File = ini_openFile(string);
 				ini_getString(File, "Online",stringi);
 				ini_closeFile(File);
-				format(ssss,sizeof(ssss), "Last time %s came in(A) %s",akk,stringi);
+				format(ssss,sizeof(ssss), "Last time %s came in %s",akk,stringi);
 				SCM(playerid,COLOR_GREEN,ssss);
 			}
 		}
@@ -26236,97 +26236,97 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					}
 					if(level == 1)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 1; InviteSkin[giveplayerid] = 280;
-						format(string, sizeof(string), "[State News] New LSPD General -  %s[%d]", giveplayer,giveplayerid);
+						format(string, sizeof(string), "[State News] New LSPD General - %s[%d]", giveplayer,giveplayerid);
                    		SCMTA(COLOR_BLUE,string);
    					} //ѕолици€ LS
 					else if(level == 2)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 2; InviteSkin[giveplayerid] = 286; //‘Ѕ–
-                       	format(string, sizeof(string), "[State News] New FBI Director -  %s[%d]", giveplayer,giveplayerid);
+                       	format(string, sizeof(string), "[State News] New FBI Director - %s[%d]", giveplayer,giveplayerid);
      	                SCMTA(COLOR_BLUE,string);
 		 			}
 					else if(level == 3)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 1; FormaFrac[giveplayerid] = 3; InviteSkin[giveplayerid] = 287; //јрми€ SF
-                        format(string, sizeof(string), "[State News] New General of the Northern Fleet -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New General of the Army SF - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 4)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 4; InviteSkin[giveplayerid] = 70;  //ћедики SF
-                        format(string, sizeof(string), "[State News] New Chief Doctor of the Northern Fleet -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New Chief Doctor of the Hospital SF - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 5)
 					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 223;  //Ћ Ќ
-                        format(string, sizeof(string), "[News] New Leader of LKN -  %s[%d]", giveplayer, giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader of LCN - %s[%d]", giveplayer, giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 6)
 					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 120;  //якудза
-                        format(string, sizeof(string), "[News] New Yakuza Leader -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Yakuza Leader - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 7)
 					{	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 7; InviteSkin[giveplayerid] = 57;  //ћэри€
-                        format(string, sizeof(string), "[State News] The new Mayor of the city of LS -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] The new Mayor of the city of LS - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 8)
 					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 29;  //—трит –ейсеры
-                        format(string, sizeof(string), "[News] New Leader of Street Racers -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader of Street Racers - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 9)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 9; InviteSkin[giveplayerid] = 250;
-                        format(string, sizeof(string), "[State News] New Director of Media of the Northern Fleet -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New Director of Media of San Fierro - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //Ќовости SF
 					else if(level == 10)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 10; InviteSkin[giveplayerid] = 281;
-                        format(string, sizeof(string), "[State News] New SFPD General -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New Sheriff of SFPD - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //ѕолици€ SF
 					else if(level == 11)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 11; InviteSkin[giveplayerid] = 59;
-                        format(string, sizeof(string), "[State News] New Director of AS -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New Director of AutoSchool - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //»нструкторы SF
 					else if(level == 12)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 102;
-                        format(string, sizeof(string), "[News] New Leader Ballas -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader Ballas - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //Ѕаллас
 					else if(level == 13)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 108;
-                        format(string, sizeof(string), "[News] New Leader Vagos -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader Vagos - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //¬агос
 					else if(level == 14)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 111;
-                        format(string, sizeof(string), "[News] New Leader of the Russian Mafia -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader of the Russian Mafia - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //–усска€ мафи€
 					else if(level == 15)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 106;
-                        format(string, sizeof(string), "[News] New Leader Groove -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader Groove - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //√рув
 					else if(level == 16)
 					{	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 16; InviteSkin[giveplayerid] = 261;
-                        format(string, sizeof(string), "[State News] New Director of Media LS -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New Director of Media LS - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //Ќовости LS
 					else if(level == 17)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 115;
-                        format(string, sizeof(string), "[News] New Aztec Leader -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Aztec Leader - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //јцтеки
 					else if(level == 18)
 					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 174;
-                        format(string, sizeof(string), "[News] New Leader Reefs -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Leader of Rifa - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //–ифа
 					else if(level == 19)
 					{	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 2; FormaFrac[giveplayerid] = 19; InviteSkin[giveplayerid] = 287;
-                        format(string, sizeof(string), "[State News] New General LVA -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New General of Army LV -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //јрми€ LV
 					else if(level == 20)
@@ -26346,17 +26346,17 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					} //ћедики LS
 					else if(level == 23)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 248;
-                        format(string, sizeof(string), "[News] New Biker Leader -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[News] New Biker Leader - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //Ѕайкеры
 					else if(level == 24)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 24; InviteSkin[giveplayerid] = 70;
-                        format(string, sizeof(string), "[State News] New Chief Physician LV -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New Chief Doctor of the Hospital LV -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //ћедики LV
 					else if(level == 25)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 3; FormaFrac[giveplayerid] = 25; InviteSkin[giveplayerid] = 287;
-                        format(string, sizeof(string), "[State News] New LS General -  %s[%d]", giveplayer,giveplayerid);
+                        format(string, sizeof(string), "[State News] New General of Army LS - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					} //јрми€ LS
 					else if(level == 26)
@@ -28019,7 +28019,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		}
 		result[idx - offset] = EOS;
 		if(!strlen(result)) return	SCM(playerid, COLOR_WHITE, "Enter: /w [message]");
-		format(string, sizeof(string), "{6E6E6E}%s whispered(A): %s", playername, result);
+		format(string, sizeof(string), "{6E6E6E}%s whispered: %s", playername, result);
 		ProxDetector(1.0, playerid, string, 0x6E6E6EAA, 0x6E6E6EAA, 0x6E6E6EAA, 0x6E6E6EAA, 0x6E6E6EAA);
 		return true;
 	}
@@ -29226,7 +29226,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					        SCM(giveplayerid,0x0AA8DAFF, "-------====================================-------");
 					       	GPN
 					       	GetPlayerName(giveplayerid, giveplayer, sizeof(giveplayer));
-							format(string, sizeof(string), "%s got it(A) documents and showed(A) their %s", playername,giveplayer);
+							format(string, sizeof(string), "%s got it documents and showed their %s", playername,giveplayer);
 							ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		        		}
 		        	}
@@ -29250,9 +29250,9 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			format(textcar,sizeof(textcar), " State: %d percent",PlayerInfo[playerid][pProcents]);
 			SCM(playerid,0xC0E1EEFF, textcar);
 			SCM(playerid,0x0AA8DAFF, "-------====================================-------");
-			format(string,sizeof(string), "got it(A) documents from the glove box",giveplayer);
+			format(string,sizeof(string), "got it documents from the glove box",giveplayer);
 			SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
-			format(string, sizeof(string), "%s got it(A) documents from the glove box", playername);
+			format(string, sizeof(string), "%s got it documents from the glove box", playername);
 			ProxDetector(10.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 			return true;
 		}
@@ -30035,7 +30035,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					if(PlayerInfo[playerid][pVoennik] == 1) { text1 = "Army SF"; }
 					if(PlayerInfo[playerid][pVoennik] == 2) { text1 = "Army LV"; }
 					if(PlayerInfo[playerid][pVoennik] == 3) { text1 = "Army LS"; }
-					if(PlayerInfo[playerid][pVoennik] == 0) { text1 = "Didn't serve(A)"; }
+					if(PlayerInfo[playerid][pVoennik] == 0) { text1 = "Didn't serve"; }
 					new text5[20];
 		            if(PlayerInfo[playerid][pGunLic]) { text5 = "Eat"; } else { text5 = "Absent"; }
 					new level = PlayerInfo[playerid][pLevel];
@@ -30063,7 +30063,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					format(string,sizeof(string), "showed his passport %s'at",giveplayer);
 					SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
 					GPN
-					format(string, sizeof(string), "%s showed(a) your passport", playername);
+					format(string, sizeof(string), "%s showed your passport", playername);
 					ProxDetector(10.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				}
 				else
@@ -30379,7 +30379,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
                     SCM(giveplayerid,0x64E96EDFF,string);
                     format(string,sizeof(string), "You dropped off a suspect %s to the Los Santos police station",giveplayer);
                     SCM(playerid,0x64E96EDFF,string);
-                    format(string,sizeof(string), "Pushed(A) suspect %s to the police station",giveplayer);
+                    format(string,sizeof(string), "Pushed suspect %s to the police station",giveplayer);
                     SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
                 }
                 else if(IsPlayerInRangeOfPoint(giveplayerid,5.0,-1594.2096,716.1803,-4.9063))
@@ -30391,7 +30391,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
                     SCM(giveplayerid,0x64E96EDFF,string);
                     format(string,sizeof(string), "You dropped off a suspect %s to the San Fierro police station",giveplayer);
                     SCM(playerid,0x64E96EDFF,string);
-                    format(string,sizeof(string), "Pushed(A) suspect %s to the police station",giveplayer);
+                    format(string,sizeof(string), "Pushed suspect %s to the police station",giveplayer);
                     SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
                 }
                 else if(IsPlayerInRangeOfPoint(giveplayerid,5.0,2297.1138,2451.4346,10.8203))
@@ -30404,7 +30404,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
                     SCM(giveplayerid,0x64E96EDFF,string);
                     format(string,sizeof(string), "You dropped off a suspect %s to the Las Venturas police station",giveplayer);
                     SCM(playerid,0x64E96EDFF,string);
-                    format(string,sizeof(string), "Pushed(A) suspect %s to the police station",giveplayer);
+                    format(string,sizeof(string), "Pushed suspect %s to the police station",giveplayer);
                     SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
                 }
                 else
@@ -30413,7 +30413,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
                     SCM(giveplayerid,0x64E96EDFF,string);
                     format(string,sizeof(string), "You pulled a suspect from a car %s",giveplayer);
                     SCM(playerid,0x64E96EDFF,string);
-                    format(string,sizeof(string), "Pulled out(A) from the suspect's car %s",giveplayer);
+                    format(string,sizeof(string), "Pulled out from the suspect's car %s",giveplayer);
                     SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
                 }
             }
@@ -30518,7 +30518,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 							GPN
 							format(string, sizeof(string), "You bought %d grams per %d $ %s",DrugGramm[playerid],DrugPrice[playerid],giveplayer);
 							SCM(playerid, 0x6495EDFF, string);
-							format(string, sizeof(string), "%s bought(A) you %d grams per %d $",playername,DrugGramm[playerid],DrugPrice[playerid]);
+							format(string, sizeof(string), "%s bought you %d grams per %d $",playername,DrugGramm[playerid],DrugPrice[playerid]);
 							SCM(DrugOffer[playerid], 0x6495EDFF, string);
 							PlayerInfo[playerid][pCash] -= DrugPrice[playerid];
 							GiveMoney(DrugOffer[playerid], DrugPrice[playerid]);
@@ -30975,7 +30975,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 							GPN
 							SetVehicleHealth(GetPlayerVehicleID(playerid), 1000.0);
 							RepairVehicle(GetPlayerVehicleID(playerid));
-							format(string, sizeof(string), "Your car was repaired(A) behind %d Wirth, Mechanic %s", RepairPrice[playerid], giveplayer);
+							format(string, sizeof(string), "Your car was repaired behind %d Wirth, Mechanic %s", RepairPrice[playerid], giveplayer);
 							SCM(playerid, 0x6495EDFF, string);
 							format(string, sizeof(string), "You fixed the car %s behind %d $",playername,RepairPrice[playerid]);
 							SCM(RepairOffer[playerid], 0x6495EDFF, string);
@@ -31072,7 +31072,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					SCM(playerid, 0x6495EDFF, string);
 					format(string, sizeof(string), "%s offers you to buy his house for %d $ Enter (/accept house)to make a deal",playername,money);
 					SCM(playa, 0x6495EDFF, string);
-					format(string, sizeof(string), "%s offered(A) exchange houses with %s", playername ,giveplayer);
+					format(string, sizeof(string), "%s offered exchange houses with %s", playername ,giveplayer);
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					HouseOffer[playa] = playerid;
 					HousePrice[playa] = money;
@@ -31115,7 +31115,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					SCM(playerid, 0x6495EDFF, string);
 					format(string, sizeof(string), "%s offers you to buy his car for %d $ Enter (/accept vehicle)to complete a transaction.",playername,money);
 					SCM(playa, 0x6495EDFF, string);
-					format(string, sizeof(string), "%s offered(A) %s buy his car", playername ,giveplayer);
+					format(string, sizeof(string), "%s offered %s buy his car", playername ,giveplayer);
 					ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					CarOffer[playa] = playerid;
 					CarPrice[playa] = money;
@@ -31992,7 +31992,7 @@ public OnPlayerText(playerid, text[])
 		ABroadCast(COLOR_LIGHTRED, string, 1);
 		format(string,sizeof(string), "[Security] You received a chat ban for 3 hours /mm - report");
 		SCM(playerid, COLOR_LIGHTRED, string);
-		SetPlayerChatBubble(playerid, "shut up(A)",COLOR_PURPLE,30.0,10000);
+		SetPlayerChatBubble(playerid, "shut up",COLOR_PURPLE,30.0,10000);
 		return false;
     }
     if(TalkingLive[playerid] == 1)
@@ -32141,7 +32141,7 @@ public OnPlayerText(playerid, text[])
 		{
 			if(PlayerInfo[playerid][pMember] == PlayerInfo[suspect][pMember])
 			{
-				format(string, sizeof(string), "%s shook(A) hand %s'at", playername ,giveplayer);
+				format(string, sizeof(string), "%s shook hand %s'at", playername ,giveplayer);
 				ProxDetector(5.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				ApplyAnimation(playerid, "GANGS", "hndshkfa",4.0,0,0,0,0,0,1);
 				ApplyAnimation(suspect, "GANGS", "hndshkfa",4.0,0,0,0,0,0,1);
@@ -32152,45 +32152,45 @@ public OnPlayerText(playerid, text[])
 		{
 			case 12:
 			{
-				format(string,sizeof(string), "showed(a) fingering The Ballas Gang");
+				format(string,sizeof(string), "showed fingering The Ballas Gang");
 				SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
-				format(string, sizeof(string), "%s showed(a) fingering The Ballas Gang", playername);
+				format(string, sizeof(string), "%s showed fingering The Ballas Gang", playername);
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				ApplyAnimation(playerid, "GHANDS", "gsign1LH",4.0,0,0,0,0,0,1);
 				return false;
 			}
 			case 13:
 			{
-				format(string,sizeof(string), "showed(a) fingering Los Santos Vagos Gang");
+				format(string,sizeof(string), "showed fingering Los Santos Vagos Gang");
 				SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
-				format(string, sizeof(string), "%s showed(a) fingering Los Santos Vagos Gang", playername);
+				format(string, sizeof(string), "%s showed fingering Los Santos Vagos Gang", playername);
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				ApplyAnimation(playerid, "GHANDS", "gsign1LH",4.0,0,0,0,0,0,1);
 				return false;
 			}
 			case 15:
 			{
-				format(string,sizeof(string), "showed(a) fingering Grove Street Gang");
+				format(string,sizeof(string), "showed fingering Grove Street Gang");
 				SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
-				format(string, sizeof(string), "%s showed(a) fingering Grove Street Gang", playername);
+				format(string, sizeof(string), "%s showed fingering Grove Street Gang", playername);
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				ApplyAnimation(playerid, "GHANDS", "gsign1LH",4.0,0,0,0,0,0,1);
 				return false;
 			}
 			case 17:
 			{
-				format(string,sizeof(string), "showed(a) fingering Varios Los Aztecas Gang");
+				format(string,sizeof(string), "showed fingering Varios Los Aztecas Gang");
 				SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
-				format(string, sizeof(string), "%s showed(a) fingering Varios Los Aztecas Gang", playername);
+				format(string, sizeof(string), "%s showed fingering Varios Los Aztecas Gang", playername);
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				ApplyAnimation(playerid, "GHANDS", "gsign1LH",4.0,0,0,0,0,0,1);
 				return false;
 			}
 			case 18:
 			{
-				format(string,sizeof(string), "showed(a) fingering The Rifa Gang");
+				format(string,sizeof(string), "showed fingering The Rifa Gang");
 				SetPlayerChatBubble(playerid,string,COLOR_PURPLE,30.0,10000);
-				format(string, sizeof(string), "%s showed(a) fingering The Rifa Gang", playername);
+				format(string, sizeof(string), "%s showed fingering The Rifa Gang", playername);
 				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 				ApplyAnimation(playerid, "GHANDS", "gsign1LH",4.0,0,0,0,0,0,1);
 				return false;
@@ -32579,7 +32579,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				{
 					if(health <= 25 && PlayerInfo[giveplayerid][pUseMafiaRoof] != 0)
 					{
-						if(PlayerInfo[giveplayerid][pDebt] < 50) return SCM(playerid,COLOR_GREY, "He/She hasn't earned anything yet(A)!");
+						if(PlayerInfo[giveplayerid][pDebt] < 50) return SCM(playerid,COLOR_GREY, "He/She hasn't earned anything yet!");
 						SCM(playerid,COLOR_GREEN, "You beat the debtor down to 25 HP, the debt was extorted");
 						MafiaBank[0][nYakuza]+=PlayerInfo[giveplayerid][pDebt];
 						PlayerInfo[giveplayerid][pDebt] = 0;
@@ -32594,7 +32594,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				{
 					if(health <= 25 && PlayerInfo[giveplayerid][pUseMafiaRoof] != 0)
 					{
-						if(PlayerInfo[giveplayerid][pDebt] < 50) return SCM(playerid,COLOR_GREY, "He/She hasn't earned anything yet(A)!");
+						if(PlayerInfo[giveplayerid][pDebt] < 50) return SCM(playerid,COLOR_GREY, "He/She hasn't earned anything yet!");
 						SCM(playerid,COLOR_GREEN, "You beat the debtor down to 25 HP, the debt was extorted");
 						MafiaBank[0][nLcn]+=PlayerInfo[giveplayerid][pDebt];
 						PlayerInfo[giveplayerid][pDebt] = 0;
@@ -32609,7 +32609,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				{
 					if(health <= 25 && PlayerInfo[giveplayerid][pUseMafiaRoof] != 0)
 					{
-						if(PlayerInfo[giveplayerid][pDebt] < 50) return SCM(playerid,COLOR_GREY, "He/She hasn't earned anything yet(A)!");
+						if(PlayerInfo[giveplayerid][pDebt] < 50) return SCM(playerid,COLOR_GREY, "He/She hasn't earned anything yet!");
 						SCM(playerid,COLOR_GREEN, "You beat the debtor down to 25 HP, the debt was extorted");
 						MafiaBank[0][nRm]+=PlayerInfo[giveplayerid][pDebt];
 						PlayerInfo[giveplayerid][pDebt] = 0;
