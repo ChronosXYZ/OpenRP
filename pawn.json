@@ -51,8 +51,11 @@
 	},
 	"builds": [
 		{
-		  "name": "main",
-		  "includes": ["includes"]
+			"name": "main",
+			"includes": [
+				"includes"
+			],
+			"compiler": {}
 		}
-	 ]
+	]
 }

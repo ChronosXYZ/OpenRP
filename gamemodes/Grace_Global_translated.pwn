@@ -9,7 +9,6 @@
 #include <foreach> // »нклуд оптимизации циклов игрока
 
 #include "core/core.pwn"
-#include "core/objects.pwn"
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ ƒефайны ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #pragma dynamic					5900 // ƒинамикка мода. Ќе понижать и не удал€ть, пока не будет оптимизирован мод
 #define Ammo_SDPISTOL 			6 //  оличество патрон необходимые дл€ прокачки 1% оружи€ SD Pistol
@@ -20,7 +19,6 @@
 #define Ammo_M4A1				10 //  оличество патрон необходимые дл€ прокачки 1% оружи€ M4
 #define publics%0(%1) forward%0(%1); public%0(%1) // ћакросс. Ќужен, чтобы не создавать форвардов, дл€ созданых пабликов
 #define SCMTA SendClientMessageToAll // ƒефайн функции отправки сообщений всем игрокам
-#define SPD ShowPlayerDialog // ƒефайн функции вывода диалогов
 #define GPN GetPlayerName(playerid, playername, sizeof(playername)); // ƒефайн дл€ получение никнейма игрока
 #define GGPN GetPlayerName(giveplayerid, giveplayername, sizeof(giveplayername)); // ƒефайн дл€ получение никнейма другого игрока
 #define kick SetTimerEx("Kickk",100,false,"i",playerid); // ƒефайн функции кика
@@ -1592,7 +1590,7 @@ stock PrintSBizInfo(playerid,targetid)
 		else text2 = "Missing";
 		format(bizinfo,sizeof(bizinfo), "======================[ %s ]======================\nUnder control: %s\nTotal earned: %d $\tEarned at this hour: %d $\nProducts: %d/20000\nPrice per item: %d $\nEntry price: %d $\nState: %s\nBank balance for energy payment: %d $\nElectricity tax: %d $\nLicense: %s",
 		SBizzInfo[targetid][sbMessage],mafiatext,SBizzInfo[targetid][sbTill],SBizzInfo[targetid][s2bTill],SBizzInfo[targetid][sbProducts],SBizzInfo[targetid][sbPrice],SBizzInfo[targetid][sbPriceProd],text1,SBizzInfo[targetid][sbTill],elektrich,text2);
-		SPD(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{AFAFAF}State of the Business{00BFFF}Х",bizinfo, "$", "$");
+		ShowPlayerDialog(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{AFAFAF}State of the Business{00BFFF}Х",bizinfo, "$", "$");
 	}
 }
 stock PrintBizInfo(playerid,targetid)
@@ -1616,7 +1614,7 @@ stock PrintBizInfo(playerid,targetid)
 			else text2 = "Missing";
 			format(bizinfo,sizeof(bizinfo), "======================[ %s ]======================\nUnder control: %s\nTotal earned: %d $\tEarned at this hour: %d $\nProducts: %d/2000\nPrice per item: %d $\nEntry price: %d $\nState: %s\nBank balance for energy payment: %d $\nElectricity tax: %d $\nLicense: %s",
 			BizzInfo[targetid][bMessage],mafiatext,BizzInfo[targetid][bTill],BizzInfo[targetid][b2Till],BizzInfo[targetid][bProducts],BizzInfo[targetid][bPrice],BizzInfo[targetid][bEntranceCost],text1,BizzInfo[targetid][bTill],elektrich,text2);
-			SPD(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}State of the Business{00BFFF}Х",bizinfo, "$", "$");
+			ShowPlayerDialog(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}State of the Business{00BFFF}Х",bizinfo, "$", "$");
 		}
 	}
 }
@@ -2284,7 +2282,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(!strlen(inputtext))
 				{
 					format(string,256, "{FFFFFF}Welcome to the server OpenRP\nYour nickname is registered\n\nLogin: {66CC33}%s\n{FFFFFF}enter the password:", playername);
-  					SPD(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",string, "Enter", "Cancel");
+  					ShowPlayerDialog(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",string, "Enter", "Cancel");
 					return true;
 				}
 				new pass[256];
@@ -2293,15 +2291,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				ini_getString(File, "Key",pass);
 				ini_closeFile(File);
 				for(new i = strlen(inputtext); i != 0; --i)
-				switch(inputtext[i])
-				{
-					case 'ј'..'я', 'а'..'€', ' ': return SPD(playerid,1,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Error{00BFFF}Х", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
-				}
 				if(!strcmp(MD5_Hash(inputtext),pass,true)) OnPlayerLogin(playerid,MD5_Hash(inputtext));
 				else
 				{
 					format(string,256, "{FF6347}Attention! You entered the wrong password!\nYou have 2 attempts!");
-					SPD(playerid,10008,DIALOG_STYLE_MSGBOX, "Error!",string, "Enter", "Cancel");
+					ShowPlayerDialog(playerid,10008,DIALOG_STYLE_MSGBOX, "Error!",string, "Enter", "Cancel");
 				}
 			}
 			else
@@ -2318,19 +2312,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(!strlen(inputtext))
 				{
 					format(bac,sizeof(bac),"{FFFFFF}Welcome to the server OpenRP\nTo start the game you need to register\n\nEnter the password for your account\nIt will be requested every time you log into the server\n\n{66CC33}	Notes:\n	- The password can consist of Russian and Latin characters\n	- Password is case sensitive\n	- Password length from 6 to 15 characters", playername);
-  					SPD(playerid,2,DIALOG_STYLE_INPUT, "{3DBAF8}Registration",bac, "Ready", "Cancel"); return true;
+  					ShowPlayerDialog(playerid,2,DIALOG_STYLE_INPUT, "{3DBAF8}Registration",bac, "Ready", "Cancel"); return true;
 				}
 				format(bac, sizeof(bac), "Users/%s.ini", playername); dini_Create(bac); OnPlayerRegister(playerid,inputtext);
 				if(!strlen(inputtext) || strlen(inputtext) < 6 || strlen(inputtext) > 15)
 				{
-			 		return SPD(playerid,2,DIALOG_STYLE_MSGBOX, "Error!", "{FF6347}Password length must be from 6 to 15 characters", "Repeat", "");
+			 		return ShowPlayerDialog(playerid,2,DIALOG_STYLE_MSGBOX, "Error!", "{FF6347}Password length must be from 6 to 15 characters", "Repeat", "");
 				}
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'ј'..'я', 'а'..'€', ' ': return SPD(playerid,2,DIALOG_STYLE_MSGBOX, "Error!", "{00FF21}The password you entered contains Russian letters.\n Change your keyboard layout!", "Repeat", "");
+					case 'ј'..'я', 'а'..'€', ' ': return ShowPlayerDialog(playerid,2,DIALOG_STYLE_MSGBOX, "Error!", "{00FF21}The password you entered contains Russian letters.\n Change your keyboard layout!", "Repeat", "");
 				}
-		 		new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); SPD(playerid,12,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Server Rules{00BFFF}Х", rulesdialog, "Agree", "Cancel"); return true;
+		 		new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); ShowPlayerDialog(playerid,12,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Server Rules{00BFFF}Х", rulesdialog, "Agree", "Cancel"); return true;
 			 }
 			 else
 			 {
@@ -2344,17 +2338,17 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    switch(listitem)
 			    {
-			        case 0: SPD(playerid, 4, DSI, "{00BFFF}[ {AFAFAF}Character Statistics {00BFFF}]", "Enter ID player", "Ready", "Back");
-			        case 1: SPD(playerid, 5, DSI, "{00BFFF}[ {AFAFAF}Teleport to player {00BFFF}]", "Enter ID player", "Ready", "Back");
+			        case 0: ShowPlayerDialog(playerid, 4, DSI, "{00BFFF}[ {AFAFAF}Character Statistics {00BFFF}]", "Enter ID player", "Ready", "Back");
+			        case 1: ShowPlayerDialog(playerid, 5, DSI, "{00BFFF}[ {AFAFAF}Teleport to player {00BFFF}]", "Enter ID player", "Ready", "Back");
 			        case 2:
 					{
 					    if(PlayerInfo[playerid][pAdmin] < 2) return SendClientMessage(playerid, COLOR_GREY, "Your administration level is too low for this function!");
-					    SPD(playerid, 6, DSI, "{00BFFF}[ {AFAFAF}Player teleport {00BFFF}]", "Enter ID player", "Ready", "Back");
+					    ShowPlayerDialog(playerid, 6, DSI, "{00BFFF}[ {AFAFAF}Player teleport {00BFFF}]", "Enter ID player", "Ready", "Back");
 					}
 					case 3:
 					{
 					    if(PlayerInfo[playerid][pAdmin] < 4) return SendClientMessage(playerid, COLOR_GREY, "Your administration level is too low for this function!");
-					    SPD(playerid, 7, DSI, "{00BFFF}[ {AFAFAF}IP player {00BFFF}]", "Enter ID player", "Ready", "Back");
+					    ShowPlayerDialog(playerid, 7, DSI, "{00BFFF}[ {AFAFAF}IP player {00BFFF}]", "Enter ID player", "Ready", "Back");
 					}
 					case 4:
 					{
@@ -2383,7 +2377,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 9:
 					{
 					    if(PlayerInfo[playerid][pAdmin] < 5) return SendClientMessage(playerid, COLOR_GREY, "Your administration level is too low for this function!");
-				 		SPD(playerid,8,DSL, "{00BFFF}[ {AFAFAF}Events {00BFFF}]", "1) Race\n2) Paintball", "Choose", "Back");
+				 		ShowPlayerDialog(playerid,8,DSL, "{00BFFF}[ {AFAFAF}Events {00BFFF}]", "1) Race\n2) Paintball", "Choose", "Back");
 					}
 					case 10:
 					{
@@ -2393,7 +2387,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 11:
 					{
 					    if(PlayerInfo[playerid][pAdmin] < 5) return SendClientMessage(playerid, COLOR_GREY, "Your administration level is too low for this function!");
-						SPD(playerid, 9, DSI, "{00BFFF}[ {AFAFAF}Weather {00BFFF}]", "Enter ID weather", "Ready", "Back");
+						ShowPlayerDialog(playerid, 9, DSI, "{00BFFF}[ {AFAFAF}Weather {00BFFF}]", "Enter ID weather", "Ready", "Back");
 					}
 					case 12:
 					{
@@ -2409,7 +2403,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 4, DSI, "{00BFFF}[ {AFAFAF}Character Statistics {00BFFF}]", "Enter ID player", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 4, DSI, "{00BFFF}[ {AFAFAF}Character Statistics {00BFFF}]", "Enter ID player", "Ready", "Back");
 			        return true;
 			    }
                 new id = strval(inputtext);
@@ -2424,7 +2418,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 5, DSI, "{00BFFF}[ {AFAFAF}Teleport to player {00BFFF}]", "Enter ID player", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 5, DSI, "{00BFFF}[ {AFAFAF}Teleport to player {00BFFF}]", "Enter ID player", "Ready", "Back");
 			        return true;
 			    }
 			    new id = strval(inputtext);
@@ -2449,7 +2443,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 6, DSI, "{00BFFF}[ {AFAFAF}Player teleport {00BFFF}]", "Enter ID player", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 6, DSI, "{00BFFF}[ {AFAFAF}Player teleport {00BFFF}]", "Enter ID player", "Ready", "Back");
 			        return true;
 			    }
 			    new id = strval(inputtext);
@@ -2481,7 +2475,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 7, DSI, "{00BFFF}[ {AFAFAF}IP player {00BFFF}]", "Enter ID player", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 7, DSI, "{00BFFF}[ {AFAFAF}IP player {00BFFF}]", "Enter ID player", "Ready", "Back");
 			        return true;
 			    }
 			    new id = strval(inputtext);
@@ -2512,7 +2506,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 9, DSI, "{00BFFF}[ {AFAFAF}Weather {00BFFF}]", "Enter ID weather", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 9, DSI, "{00BFFF}[ {AFAFAF}Weather {00BFFF}]", "Enter ID weather", "Ready", "Back");
 			        return true;
 			    }
                 new id = strval(inputtext);
@@ -2525,7 +2519,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				if(!strlen(inputtext)) return SPD(playerid,10,DSI, "{00BFFF}[ {AFAFAF}Administration complaint {00BFFF}]", "You are about to send a message to the administration with a complaint\nTry to state the essence of the problem clearly and briefly", "Send", "Back");
+				if(!strlen(inputtext)) return ShowPlayerDialog(playerid,10,DSI, "{00BFFF}[ {AFAFAF}Administration complaint {00BFFF}]", "You are about to send a message to the administration with a complaint\nTry to state the essence of the problem clearly and briefly", "Send", "Back");
 	 			GPN
 			 	format(string, sizeof(string), "Complaint from %s[%d]: %s", playername, playerid, (inputtext));
 			 	SendClientMessage(playerid, COLOR_GREEN, string); SendClientMessage(playerid, COLOR_LIGHTRED, "Your complaint has been sent to the administration");
@@ -2536,14 +2530,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else
 			{
 				new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname";
-				SPD(playerid, 9623, DSL, "{EED321}Personal menu", listitems, "Choose", "Cancel");
+				ShowPlayerDialog(playerid, 9623, DSL, "{EED321}Personal menu", listitems, "Choose", "Cancel");
 			}
 		}
 		case 11:
 		{
 	   	 	if(response)
 			{
-				if(!strlen(inputtext)) return SPD(playerid,11,DSI, "{00BFFF}[ {AFAFAF}Change Password {00BFFF}]", "To prevent your account from being hacked, we recommend creating a strong password.\nContaining a set of letters and numbers", "Change", "Back");
+				if(!strlen(inputtext)) return ShowPlayerDialog(playerid,11,DSI, "{00BFFF}[ {AFAFAF}Change Password {00BFFF}]", "To prevent your account from being hacked, we recommend creating a strong password.\nContaining a set of letters and numbers", "Change", "Back");
  				GPN
 			 	format(string,sizeof(string), "Users/%s.ini",playername);
 			 	new File = ini_openFile(string);
@@ -2557,7 +2551,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		    else
 			{
     			new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname";
-   				SPD(playerid, 9623, DSL, "{EED321}Personal menu", listitems, "Choose", "Cancel");
+   				ShowPlayerDialog(playerid, 9623, DSL, "{EED321}Personal menu", listitems, "Choose", "Cancel");
    			}
 		}
 		case 12:
@@ -2566,7 +2560,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				new rulesdialogg[1324];
 				format(rulesdialogg,sizeof(rulesdialogg), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSGG[0],RulesMSGG[1],RulesMSGG[2],RulesMSGG[3],RulesMSGG[4],RulesMSGG[5],RulesMSGG[6],RulesMSGG[7],RulesMSGG[8],RulesMSGG[9],RulesMSGG[10],RulesMSGG[11],RulesMSGG[12],RulesMSGG[13],RulesMSGG[14],RulesMSGG[15],RulesMSGG[16],RulesMSGG[17],RulesMSGG[18],RulesMSGG[19]);
-				SPD(playerid,13,DSM, "{00BFFF}[ {AFAFAF}Server Rules {00BFFF}]", rulesdialogg, "Agree", "Cancel");
+				ShowPlayerDialog(playerid,13,DSM, "{00BFFF}[ {AFAFAF}Server Rules {00BFFF}]", rulesdialogg, "Agree", "Cancel");
 			}
 			else
 			{
@@ -2668,7 +2662,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 	   	 	if(response)
 			{
-				if(!strlen(inputtext)) return SPD(playerid,14,DSI, "{00BFFF}[ {AFAFAF}Security Key {00BFFF}]", "Enter your new security key", "Ready", "Back");
+				if(!strlen(inputtext)) return ShowPlayerDialog(playerid,14,DSI, "{00BFFF}[ {AFAFAF}Security Key {00BFFF}]", "Enter your new security key", "Ready", "Back");
   				GPN
 		  		format(string,sizeof(string), "Users/%s.ini",playername);
 		  		new File = ini_openFile(string);
@@ -2683,7 +2677,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		    else
 			{
 	    		new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname";
-	    		SPD(playerid, 9623, DSL, "{00BFFF}[ {AFAFAF}Server Rules {00BFFF}]", listitems, "Choose", "Cancel");
+	    		ShowPlayerDialog(playerid, 9623, DSL, "{00BFFF}[ {AFAFAF}Server Rules {00BFFF}]", listitems, "Choose", "Cancel");
 			}
 		}
 		case 15:
@@ -2700,27 +2694,27 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 							case 12:
 							{
 							    if(!PlayerToPoint(20.0,playerid,2647.2209,-2036.4889,13.5500)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 17, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 17, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 13:
 							{
 							    if(!PlayerToPoint(30.0,playerid,2794.5901,-1619.0271,10.9219)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 18, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 18, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 15:
 							{
 							    if(!PlayerToPoint(20.0,playerid,2506.6514,-1688.9706,13.5540)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 19, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 19, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 17:
 							{
 							    if(!PlayerToPoint(20.0,playerid,1670.1708,-2108.1887,13.5469)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 20, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 20, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 18:
 							{
 							    if(!PlayerToPoint(20.0,playerid,2176.9521,-1813.6235,13.5469)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 21, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 21, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 						}
 			        }
@@ -2731,27 +2725,27 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 							case 12:
 							{
 							    if(!PlayerToPoint(20.0,playerid,2647.2209,-2036.4889,13.5500)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 22, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 22, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 13:
 							{
 							    if(!PlayerToPoint(30.0,playerid,2794.5901,-1619.0271,10.9219)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 23, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 23, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 15:
 							{
 							    if(!PlayerToPoint(20.0,playerid,2506.6514,-1688.9706,13.5540)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 24, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 24, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 17:
 							{
 							    if(!PlayerToPoint(20.0,playerid,1670.1708,-2108.1887,13.5469)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 25, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 25, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 							case 18:
 							{
 							    if(!PlayerToPoint(20.0,playerid,2176.9521,-1813.6235,13.5469)) return SendClientMessage(playerid, COLOR_GREY, "You are not at your base!");
-							    SPD(playerid, 26, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+							    ShowPlayerDialog(playerid, 26, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 							}
 						}
 			        }
@@ -2761,7 +2755,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			        case 6:
 			        {
 						if(PlayerInfo[playerid][pRank] < 9) return ESCM
-						SPD(playerid, 27, DSI, "{00BFFF}[ {AFAFAF}Fire {00BFFF}]", "Enter ID player", "Fire", "Back");
+						ShowPlayerDialog(playerid, 27, DSI, "{00BFFF}[ {AFAFAF}Fire {00BFFF}]", "Enter ID player", "Fire", "Back");
 			        }
 			        case 7: OnPlayerCommandText(playerid,"/unloading");
 			    }
@@ -2773,7 +2767,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
          		if(!strlen(inputtext))
 		 		{
-		 			SPD(playerid,16,DSI, "{00BFFF}[ {AFAFAF}Enter your security key {00BFFF}]", "    ==== Your IP the address has changed ====\n=== Enter your security key ===", "Ready", "Cancel");
+		 			ShowPlayerDialog(playerid,16,DSI, "{00BFFF}[ {AFAFAF}Enter your security key {00BFFF}]", "    ==== Your IP the address has changed ====\n=== Enter your security key ===", "Ready", "Cancel");
 				 	SetPlayerInterior(playerid,0);
 				 	SetPlayerFacingAngle(playerid, 179.5547);
 				 	SetPlayerCameraPos(playerid,-1817.0808,1112.9937,235.4244);
@@ -2802,7 +2796,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		 		}
 				else
 				{
-					SPD(playerid,69,DSM, "{00BFFF}[ {AFAFAF}You were kicked {00BFFF}]", "{FF6347}You have been kicked from the server\nCause: 'Incorrect security key'\nEnter '/q', to leave", "Close", "");
+					ShowPlayerDialog(playerid,69,DSM, "{00BFFF}[ {AFAFAF}You were kicked {00BFFF}]", "{FF6347}You have been kicked from the server\nCause: 'Incorrect security key'\nEnter '/q', to leave", "Close", "");
 					kick
 				}
 			}
@@ -2813,14 +2807,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 17, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 17, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 17, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 17, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(ballasmatbi < mats) return SendClientMessage(playerid, COLOR_GREY, "There are not enough materials in your warehouse!");
@@ -2847,14 +2841,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 18, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 18, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 18, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 18, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(vagosmatbi < mats) return SendClientMessage(playerid, COLOR_GREY, "There are not enough materials in your warehouse!");
@@ -2881,14 +2875,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 19, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 19, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 19, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 19, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(groovmatbi < mats) return SendClientMessage(playerid, COLOR_GREY, "There are not enough materials in your warehouse!");
@@ -2915,14 +2909,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 20, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 20, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 20, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 20, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(aztekmatbi < mats) return SendClientMessage(playerid, COLOR_GREY, "There are not enough materials in your warehouse!");
@@ -2949,14 +2943,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 21, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 21, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 21, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 21, DSI, "{00BFFF}[ {AFAFAF}Take materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(rifamatbi < mats) return SendClientMessage(playerid, COLOR_GREY, "There are not enough materials in your warehouse!");
@@ -2983,14 +2977,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 22, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 22, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 22, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 22, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(PlayerInfo[playerid][pMaterials] < mats) return SendClientMessage(playerid, COLOR_GREY, "You don't have enough materials!");
@@ -3018,14 +3012,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 23, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 23, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 23, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 23, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(PlayerInfo[playerid][pMaterials] < mats) return SendClientMessage(playerid, COLOR_GREY, "You don't have enough materials!");
@@ -3053,14 +3047,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 24, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 24, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 24, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 24, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(PlayerInfo[playerid][pMaterials] < mats) return SendClientMessage(playerid, COLOR_GREY, "You don't have enough materials!");
@@ -3346,14 +3340,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 25, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 25, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 25, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 25, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(PlayerInfo[playerid][pMaterials] < mats) return SendClientMessage(playerid, COLOR_GREY, "You don't have enough materials!");
@@ -3381,14 +3375,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 26, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			        ShowPlayerDialog(playerid, 26, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			        return true;
 			    }
                 new mats = strval(inputtext);
                 if(mats < 1 || mats > 500)
 				{
 			 		SendClientMessage(playerid, COLOR_GREY, "The number of materials must be from 1 to 500!");
-			 		SPD(playerid, 26, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
+			 		ShowPlayerDialog(playerid, 26, DSI, "{00BFFF}[ {AFAFAF}Put materials {00BFFF}]", "Enter quantity of materials (From 1 to 500)", "Ready", "Back");
 			 		return true;
 				}
 				if(PlayerInfo[playerid][pMaterials] < mats) return SendClientMessage(playerid, COLOR_GREY, "You don't have enough materials!");
@@ -3416,7 +3410,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    if(!strlen(inputtext))
 			    {
-			        SPD(playerid, 27, DSI, "{00BFFF}[ {AFAFAF}Fire {00BFFF}]", "Enter ID player", "Fire", "Back");
+			        ShowPlayerDialog(playerid, 27, DSI, "{00BFFF}[ {AFAFAF}Fire {00BFFF}]", "Enter ID player", "Fire", "Back");
 			        return true;
 			    }
                 new id = strval(inputtext);
@@ -3448,12 +3442,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				switch(listitem)
 				{
-					case 0:	SPD(playerid, 30, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
-					case 1:	SPD(playerid, 34, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
-					case 2:	SPD(playerid, 35, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
-					case 3:	SPD(playerid, 36, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
-					case 4:	SPD(playerid, 37, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID housea", "Further", "Back");
-					case 5:	SPD(playerid, 38, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
+					case 0:	ShowPlayerDialog(playerid, 30, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
+					case 1:	ShowPlayerDialog(playerid, 34, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
+					case 2:	ShowPlayerDialog(playerid, 35, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
+					case 3:	ShowPlayerDialog(playerid, 36, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
+					case 4:	ShowPlayerDialog(playerid, 37, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID housea", "Further", "Back");
+					case 5:	ShowPlayerDialog(playerid, 38, DSI, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Enter ID Houses", "Further", "Back");
 				}
 			}
 		}
@@ -3476,14 +3470,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 	        	if(!strlen(inputtext))
 				{
-					SPD(playerid,31,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "Ready", "Cancel");
+					ShowPlayerDialog(playerid,31,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "Ready", "Cancel");
 					return true;
 				}
          		new moneys = strval(inputtext);
 				if(moneys < 1 || moneys > 5000)
 				{
  					SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 5000!");
-			 		SPD(playerid,31,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "Ready", "Cancel");
+			 		ShowPlayerDialog(playerid,31,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "Ready", "Cancel");
 			 		return true;
 			 	}
 			 	GPN
@@ -3498,14 +3492,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
          		if(!strlen(inputtext))
 		 		{
-				 	SPD(playerid,32,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
+				 	ShowPlayerDialog(playerid,32,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
 				 	return true;
 		 		}
        	 		new moneys = strval(inputtext);
 				if(moneys < 1 || moneys > 5000)
 				{
 					SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 5000!");
-					SPD(playerid,32,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
+					ShowPlayerDialog(playerid,32,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
 					return true;
 				}
 				GPN
@@ -3520,14 +3514,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
          		if(!strlen(inputtext))
 				{
-					SPD(playerid,33,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
+					ShowPlayerDialog(playerid,33,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
 					return true;
 				}
        	 		new moneys = strval(inputtext);
 				if(moneys < 1 || moneys > 5000)
 				{
 					SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 5000!");
-					SPD(playerid,33,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
+					ShowPlayerDialog(playerid,33,DSI, "{00BFFF}[ {AFAFAF}Price per ad {00BFFF}]", "Enter amount", "OK", "Cancel");
 					return true;
 				}
 				GPN
@@ -3612,7 +3606,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    {
 	        if(response)
 			{
-	     		if(!strlen(inputtext)) SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password.\n","Enter","");
+	     		if(!strlen(inputtext)) ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password.\n","Enter","");
 	       		Dostup[playerid] = strval(inputtext);
 	         	if(Dostup[playerid] == PlayerInfo[playerid][pDostup])
 		 		{
@@ -3632,9 +3626,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case 327:
 		{
 			if(response == 1) {
-			if(!strlen(inputtext)) return SPD(playerid,327,DIALOG_STYLE_INPUT, "{FFF922}A change of the pin code", "Enter your new password for your game account", "Accept", "");
+			if(!strlen(inputtext)) return ShowPlayerDialog(playerid,327,DIALOG_STYLE_INPUT, "{FFF922}A change of the pin code", "Enter your new password for your game account", "Accept", "");
 			GPN format(string,sizeof(string), "Users/%s.ini",playername); new File = ini_openFile(string); ini_setString(File, "Key",MD5_Hash(inputtext)); ini_closeFile(File); OnPlayerUpdateAc(playerid); SendClientMessage(playerid, COLOR_LIGHTRED, "To exit the game use /q"); OnPropUpdate(); format(WantNickChange[playerid],MAX_PLAYER_NAME, ""); kick }
-			else SPD(playerid,327,DIALOG_STYLE_INPUT, "{FFF922}A change of the pin code", "	Enter your new password for your game account", "Accept", "");
+			else ShowPlayerDialog(playerid,327,DIALOG_STYLE_INPUT, "{FFF922}A change of the pin code", "	Enter your new password for your game account", "Accept", "");
 		}
 		case 10008:
 		{
@@ -3643,7 +3637,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(!strlen(inputtext))
 				{
 					format(string,256, "{FFFFFF}Welcome to the server OpenRP\nYour nickname is registered\n\nLogin: {66CC33}%s\n{FFFFFF}enter password:", playername);
-  					SPD(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",string, "Enter", "Cancel");
+  					ShowPlayerDialog(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",string, "Enter", "Cancel");
 					return true;
 				}
 				new pass[256];
@@ -3654,13 +3648,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'ј'..'я', 'а'..'€', ' ': return SPD(playerid,10008,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Error{00BFFF}Х", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
+					case 'ј'..'я', 'а'..'€', ' ': return ShowPlayerDialog(playerid,10008,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Error{00BFFF}Х", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
 				}
 				if(!strcmp(MD5_Hash(inputtext),pass,true)) OnPlayerLogin(playerid,MD5_Hash(inputtext));
 				else
 				{
 					format(string,256, "{FF6347}Attention! You entered the wrong password!\nYou have 1 try!");
-					SPD(playerid,10009,DIALOG_STYLE_MSGBOX, "Error!",string, "Enter", "Cancel");
+					ShowPlayerDialog(playerid,10009,DIALOG_STYLE_MSGBOX, "Error!",string, "Enter", "Cancel");
 				}
 			}
 			else
@@ -3676,7 +3670,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(!strlen(inputtext))
 				{
 	   			format(string,256, "{FFFFFF}Welcome to the server OpenRP\nYour nickname is registered\n\nLogin: {66CC33}%s\n{FFFFFF}enter password:", playername);
-	   			SPD(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",string, "Enter", "Cancel");
+	   			ShowPlayerDialog(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",string, "Enter", "Cancel");
 				return true;
 				}
 				new pass[256];
@@ -3687,13 +3681,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'ј'..'я', 'а'..'€', ' ': return SPD(playerid,10009,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Error{00BFFF}Х", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
+					case 'ј'..'я', 'а'..'€', ' ': return ShowPlayerDialog(playerid,10009,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Error{00BFFF}Х", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
 				}
 				if(!strcmp(MD5_Hash(inputtext),pass,true)) OnPlayerLogin(playerid,MD5_Hash(inputtext));
 				else
 				{
 					format(string,256, "{FF6347}Attention! You entered the wrong password!\nEnter /q(uit) to exit the game.");
-					SPD(playerid,10010,DIALOG_STYLE_MSGBOX, "Error!",string, "Enter", "Cancel");
+					ShowPlayerDialog(playerid,10010,DIALOG_STYLE_MSGBOX, "Error!",string, "Enter", "Cancel");
 					kick
 				}
 			}
@@ -3726,9 +3720,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response) {
             switch(listitem) {
-			case 0: SPD(playerid,11112,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","Police officer\nSoldier\nLicenser\nCity Hall employee\nMedic\nNews Worker","Choose","Cancel");
-			case 1: SPD(playerid,11113,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","LCN\nYakuza\nRussian Mafia","Choose","Cancel");
-			case 2: SPD(playerid,11114,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","The Ballas\nLos Santos Vagos\nGrove Street\nVarios Los Aztecas\nThe RIfa","Choose","Cancel");
+			case 0: ShowPlayerDialog(playerid,11112,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","Police officer\nSoldier\nLicenser\nCity Hall employee\nMedic\nNews Worker","Choose","Cancel");
+			case 1: ShowPlayerDialog(playerid,11113,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","LCN\nYakuza\nRussian Mafia","Choose","Cancel");
+			case 2: ShowPlayerDialog(playerid,11114,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","The Ballas\nLos Santos Vagos\nGrove Street\nVarios Los Aztecas\nThe RIfa","Choose","Cancel");
 			case 3: SetPlayerSkin(playerid, 100), SendClientMessage(playerid, COLOR_GREEN, "You dressed up as a Biker");
 			case 4: SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]), SendClientMessage(playerid, COLOR_GREEN, "You changed into your clothes"); } }
 		}
@@ -3750,58 +3744,58 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Landstalker"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}150,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],400); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4501,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Landstalker{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4501,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Landstalker{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Bravura"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}130.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}82 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],401); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4502,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bravura{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4502,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bravura{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Perenniel"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}120,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}74 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],404); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4503,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Perenniel{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4503,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Perenniel{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Esperanto"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}140,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],419); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4504,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Esperanto{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4504,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Esperanto{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Previon"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}135.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],436); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4505,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Previon{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4505,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Previon{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Hermes"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}160,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],474); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4506,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hermes{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4506,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hermes{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Walton"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}140,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}65 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],478); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4507,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Walton{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4507,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Walton{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Regina"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}130.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],479); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4508,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regina{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4508,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regina{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Buccaneer"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}150,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],518); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4509,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Buccaneer{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4509,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Buccaneer{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Willard"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}165.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],529); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4510,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Willard{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4510,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Willard{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Tractor"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}80,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}39 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],531); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4511,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tractor{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4511,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tractor{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Clover"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}170,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],542); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4512,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Clover{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4512,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Clover{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Sadler"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}120,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}84 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],543); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4513,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sadler{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4513,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sadler{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Hustler"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}150,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}82 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],545); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4514,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hustler{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4514,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hustler{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Tampa"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}140,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],549); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4515,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tampa{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4515,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tampa{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Broadway"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}145.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],575); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4516,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Broadway{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4516,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Broadway{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Tornado"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}170,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],576); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4517,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tornado{00BFFF}Х",avtosalon, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4517,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tornado{00BFFF}Х",avtosalon, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Picador"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}155.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}84 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],600); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4518,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Picador{00BFFF}Х",avtosalon, "Buy", "Back"); } } }
+			ShowPlayerDialog(playerid,4518,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Picador{00BFFF}Х",avtosalon, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4501:
@@ -3934,8 +3928,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response) {
 		    switch(listitem) {
-		    case 0: SPD(playerid,4101,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Sentinel\nManana\nVoodoo\nPony\nMule\nMoonbeam\nWashington\nBobcat\nPremier\nHotknife\nStallion\nRumpo\nRomero\nAdmiral\nSolair\nTopfun\nGlendale\nOceanic\nSabre\nBurrito\nRancher\nVirgo\nGreenwood", "Continue", "Cancel");
-		    case 1: SPD(playerid,4102,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Boxville\nBenson\nBanger\nElegant\nJourney\nNebula\nMajestic\nFortune\nCadrona\nRemington\nBlade\nVincent\nIntruder\nPrimo\nMerit\nWindsor\nTahoma\nBandito\nStafford\nEmperor\nCamper\nSavanna", "Continue", "Cancel"); } }
+		    case 0: ShowPlayerDialog(playerid,4101,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Sentinel\nManana\nVoodoo\nPony\nMule\nMoonbeam\nWashington\nBobcat\nPremier\nHotknife\nStallion\nRumpo\nRomero\nAdmiral\nSolair\nTopfun\nGlendale\nOceanic\nSabre\nBurrito\nRancher\nVirgo\nGreenwood", "Continue", "Cancel");
+		    case 1: ShowPlayerDialog(playerid,4102,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Boxville\nBenson\nBanger\nElegant\nJourney\nNebula\nMajestic\nFortune\nCadrona\nRemington\nBlade\nVincent\nIntruder\nPrimo\nMerit\nWindsor\nTahoma\nBandito\nStafford\nEmperor\nCamper\nSavanna", "Continue", "Cancel"); } }
 		}
 		case 4101:
 		{
@@ -3944,73 +3938,73 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Sentinel"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}270.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],405); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4519,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sentinel{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4519,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sentinel{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Manana"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}250,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}72 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],410); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4520,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Manana{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4520,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Manana{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Voodoo"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],412); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4521,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Voodoo{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4521,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Voodoo{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Pony"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}310.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}61 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],413); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4522,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Pony{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4522,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Pony{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Mule"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}340.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}59 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],414); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4523,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mule{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4523,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mule{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Moonbeam"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}320.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}64 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],418); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4524,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Moonbeam{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4524,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Moonbeam{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Washington"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}86 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],421); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4525,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Washington{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4525,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Washington{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Bobcat"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],422); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4526,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bobcat{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4526,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bobcat{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Premier"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],426); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4527,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Premier{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4527,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Premier{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Hotknife"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}340.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}93 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],434); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4528,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotknife{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4528,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotknife{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Stallion"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}320.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],439); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4529,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stallion{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4529,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stallion{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Rumpo"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}76 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],440); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4530,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Rumpo{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4530,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Rumpo{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Romero"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}77 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],442); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4531,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Romero{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4531,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Romero{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Admiral"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}350,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],445); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4532,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Admiral{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4532,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Admiral{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Solair"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],458); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4533,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Solair{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4533,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Solair{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Topfun"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}76 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],459); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4534,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Topfun{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4534,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Topfun{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Glendalen"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}285.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}82 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],466); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4535,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Glendale{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4535,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Glendale{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Oceanic"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],467); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4536,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Oceanic{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4536,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Oceanic{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 18: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Sabre"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],475); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4537,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sabre{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4537,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sabre{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 19: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Burrito"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}310.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],482); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4538,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Burrito{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4538,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Burrito{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 20: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Rancher"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}400,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],489); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4539,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Rancher{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4539,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Rancher{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 21: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Virgo"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}270.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],491); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4540,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Virgo{00BFFF}Х",avtosalon2, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4540,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Virgo{00BFFF}Х",avtosalon2, "Buy", "Back"); }
 			case 22: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Greenwood"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],492); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4541,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Greenwood{00BFFF}Х",avtosalon2, "Buy", "Back"); } } }
+			ShowPlayerDialog(playerid,4541,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Greenwood{00BFFF}Х",avtosalon2, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4519:
@@ -4181,70 +4175,70 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Boxville"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}60 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],498); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4542,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Boxville{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4542,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Boxville{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Benson"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}68 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],499); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4543,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Benson{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4543,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Benson{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Banger"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}350,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],504); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4544,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Banger{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4544,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Banger{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Elegant"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}92 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],507); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4545,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Elegant{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4545,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Elegant{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Journey"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}305.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}60 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],508); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4546,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Journey{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4546,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Journey{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Nebula"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}250,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],516); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4547,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Nebula{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4547,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Nebula{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Majestic"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],517); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4548,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Majestic{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4548,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Majestic{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Fortune"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}240,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],526); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4549,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Fortune{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4549,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Fortune{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Cadrona"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}255,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],527); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4550,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Cadrona{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4550,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Cadrona{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Remington"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],534); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4551,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Remington{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4551,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Remington{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Blade"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}320.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],536); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4552,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Blade{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4552,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Blade{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Vincent"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],540); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4553,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Vincent{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4553,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Vincent{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Intruder"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}270.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],546); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4554,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Intruder{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4554,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Intruder{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Primo"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}250,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}79 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],547); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4561,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Primo{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4561,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Primo{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Merit"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],551); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4562,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Merit{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4562,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Merit{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Windsor"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],555); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4557,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Windsor{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4557,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Windsor{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Tahoma"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}89 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],566); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4558,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tahoma{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4558,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Tahoma{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Bandito"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}380.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}81 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],568); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4559,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bandito{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4559,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bandito{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 18: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Stafford"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}360.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],580); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4560,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stafford{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4560,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stafford{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 19: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Emperor"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],585); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4563,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Emperor{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4563,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Emperor{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 20: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Camper"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}68 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],483); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4564,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Camper{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4564,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Camper{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 21: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Savanna"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],567); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4565,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Savanna{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
+			ShowPlayerDialog(playerid,4565,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Savanna{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4542:
@@ -4572,28 +4566,28 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}PCJ-600"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}650,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}90 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],461); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4566,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}PCJ-600{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4566,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}PCJ-600{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Freeway"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}600,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],463); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4567,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Freeway{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4567,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Freeway{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Sanchez"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}520.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],468); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4568,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sanchez{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4568,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sanchez{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Quad"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}700.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}61 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],471); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4569,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Quad{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4569,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Quad{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}FCR-900"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}630.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],521); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4570,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}FCR-900{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4570,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}FCR-900{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}NRG-500"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}750.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}98 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],522); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4571,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}NRG-500{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4571,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}NRG-500{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}BF-400"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}570.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],581); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4572,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}BF-400{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4572,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}BF-400{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Wayfarer"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}470.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],586); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4573,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Wayfarer{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
+			ShowPlayerDialog(playerid,4573,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Wayfarer{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4566:
@@ -4659,64 +4653,64 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Buffalo"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}104 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],402); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4574,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Buffalo{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4574,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Buffalo{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Stretch"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.500.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],409); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4575,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stretch{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4575,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stretch{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}BF Injection"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}75 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],424); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4576,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}BF Injection{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4576,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}BF Injection{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Patriot"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}900.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],470); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4577,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Patriot{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4577,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Patriot{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}ZR-350"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.400.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}104 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],477); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4578,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}ZR-350{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4578,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}ZR-350{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Comet"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}103 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],480); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4579,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Comet{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4579,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Comet{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Blista"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.350.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}90 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],496); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4580,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Blista{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4580,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Blista{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Mesa"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}950.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],500); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4581,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mesa{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4581,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mesa{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Feltzer"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.250.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}93 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],533); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4582,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Feltzer{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4582,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Feltzer{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Slamvan"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.600.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],535); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4583,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Slamvan{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4583,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Slamvan{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Sunrise"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}850.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}81 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],550); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4584,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sunrise{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4584,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sunrise{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Yosemite"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],554); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4585,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Yosemite{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4585,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Yosemite{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Uranus"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.500.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],558); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4586,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Uranus{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4586,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Uranus{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Stratum"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}86 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],561); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4587,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stratum{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4587,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Stratum{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Flash"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.300.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}92 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],565); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4588,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Flash{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4588,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Flash{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Huntley"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.700.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],579); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4589,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Huntley{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4589,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Huntley{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Euros"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.400.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}92 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],587); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4590,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Euros{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4590,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Euros{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Club"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.250.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}90 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],589); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4591,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Club{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4591,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Club{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 18: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Alpha"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.300.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],602); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4592,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Alpha{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4592,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Alpha{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 19: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Pheonix"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}95 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],603); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4593,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Pheonix{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
+			ShowPlayerDialog(playerid,4593,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Pheonix{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4574:
@@ -4866,43 +4860,43 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Infernus"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4.500.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}123 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],411); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4594,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Infernus{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4594,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Infernus{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Cheetah"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.600.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}107 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],415); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4595,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Cheetah{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4595,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Cheetah{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Banshee"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}112 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],429); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4596,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Banshee{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4596,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Banshee{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Turismo"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}5,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}108 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],451); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4597,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Turismo{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4597,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Turismo{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Hotring Racer"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}120 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],494); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4598,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotring Racer{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4598,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotring Racer{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Sandking"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4.300.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}98 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],495); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4599,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sandking{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4599,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sandking{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Hotring Racer 2"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}120 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],502); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4600,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotring Racer 2{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4600,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotring Racer 2{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Hotring Racer 3"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}120 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],503); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4601,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotring Racer 3{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4601,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Hotring Racer 3{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Super GT"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}100 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],506); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4602,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Super GT{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4602,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Super GT{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Bullet"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4.450.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}113 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],541); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4603,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bullet{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4603,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bullet{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Jester"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.800.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}99 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],559); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4604,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Jester{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4604,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Jester{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Sultan"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.900.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],560); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4605,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sultan{00BFFF}Х",avtosalon3, "Buy", "Back"); }
+			ShowPlayerDialog(playerid,4605,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Sultan{00BFFF}Х",avtosalon3, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Elegy"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.850.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}99 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],562); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4606,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Elegy{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
+			ShowPlayerDialog(playerid,4606,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Elegy{00BFFF}Х",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4594:
@@ -5546,31 +5540,31 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case 3001:
 		{
 	        if(response) {
-         	if(!strlen(inputtext))return  SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+         	if(!strlen(inputtext))return  ShowPlayerDialog(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
           	new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 600) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+			if(moneys < 1 || moneys > 600) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); ShowPlayerDialog(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
 			GPN format(string, sizeof(string), "[SFN] Price for Calls and SMS, at the rate of %d $ set by the Editor-in-Chief %s.", moneys, playername); SendFamilyMessage(9,COLOR_YELLOW2, string); smspricesf = moneys; }
 	    }
 		case 3002:
 	    {
 	        if(response) {
-         	if(!strlen(inputtext))return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+         	if(!strlen(inputtext))return ShowPlayerDialog(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
          	new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 600) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+			if(moneys < 1 || moneys > 600) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); ShowPlayerDialog(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
 			GPN format(string, sizeof(string), "[LSN] Price for Calls and SMS, at the rate of %d $ set by the Editor-in-Chief %s.", moneys, playername); SendFamilyMessage(16,COLOR_YELLOW2, string); smspricels = moneys; }
 	    }
 	    case 3003:
 	    {
 	        if(response) {
-         	if(!strlen(inputtext)) { SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+         	if(!strlen(inputtext)) { ShowPlayerDialog(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
          	new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 600) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+			if(moneys < 1 || moneys > 600) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); ShowPlayerDialog(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
 			GPN format(string, sizeof(string), "[LVN] Price for Calls and SMS, at the rate of %d $ set by the Editor-in-Chief %s.", moneys, playername); SendFamilyMessage(20,COLOR_YELLOW2, string); smspricelv = moneys; }
 	    }
 		case 11518:
 		{
 			if(!response) return true;
-			SetPVarInt(playerid, "AdvertID", listitem+1); SPD(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+			SetPVarInt(playerid, "AdvertID", listitem+1); ShowPlayerDialog(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		}
 		case 11519:
 		{
@@ -5587,23 +5581,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 20: { format(string, 128, "        Edited by employee LV News: %s", playername); SCMTA(COLOR_SALMON, string); } }
 			for(new i = GetPVarInt(playerid, "AdvertID"); i <= TOTALADVERT[full] - 1; i++) memcpy(AdvertInfo[i][full], AdvertInfo[i+1][full], 0, 512);
 			TOTALADVERT[full] --; AdvertTime = gettime()+15; DeletePVar(playerid, "AdvertID"); AdvertList(playerid); }
-			case 1: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); SPD(playerid, 11520, 0, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", string, "Back", ""); }
- 			case 2: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); SPD(playerid, 11521, 1, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", string, "Accept", "Back"); }
+			case 1: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); ShowPlayerDialog(playerid, 11520, 0, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", string, "Back", ""); }
+ 			case 2: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); ShowPlayerDialog(playerid, 11521, 1, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", string, "Accept", "Back"); }
  			case 3: { for(new i = GetPVarInt(playerid, "AdvertID"); i <= TOTALADVERT[full] - 1; i++) memcpy(AdvertInfo[i][full], AdvertInfo[i+1][full], 0, 512); TOTALADVERT[full]--; SendClientMessage(playerid, COLOR_GREEN, "Advertisement removed"); DeletePVar(playerid, "AdvertID"); AdvertList(playerid); }
  			case 4: {
   			GPN format(string, 128, "[AD] Announcement: %s. Sent: %s (Sent: %s)",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText], AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName], playername); ABroadCast(COLOR_LIGHTRED, string, 1); for(new i = GetPVarInt(playerid, "AdvertID"); i <= TOTALADVERT[full] - 1; i++) memcpy(AdvertInfo[i][full], AdvertInfo[i+1][full], 0, 512);
 			TOTALADVERT[full]--; SendClientMessage(playerid, COLOR_LIGHTRED, "The announcement has been sent to the administration"); DeletePVar(playerid, "AdvertID"); AdvertList(playerid); } }
 		}
-		case 11520: SPD(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+		case 11520: ShowPlayerDialog(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		case 11521:
 		{
-		    if(!response) return SPD(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+		    if(!response) return ShowPlayerDialog(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		    new full = 0;
 	    	switch(PlayerInfo[playerid][pMember]) { case 9: full = 1; case 16: full = 0; case 20: full = 2; }
 		    if(!strlen(inputtext)) {
 			format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]);
-			return SPD(playerid, 11521, 1, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", string, "Accept", "Back"); }
-			strmid(AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText], inputtext, 0, 128, 128); SendClientMessage(playerid, COLOR_LIGHTGREEN, "Advertisement edited and saved"); SPD(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+			return ShowPlayerDialog(playerid, 11521, 1, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", string, "Accept", "Back"); }
+			strmid(AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText], inputtext, 0, 128, 128); SendClientMessage(playerid, COLOR_LIGHTGREEN, "Advertisement edited and saved"); ShowPlayerDialog(playerid, 11519, 2, "{00BFFF}Х{FFFFFF}ads{00BFFF}Х", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		}
 		case 2223:
 		{
@@ -5620,8 +5614,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else return SendClientMessage(playerid, COLOR_GREY, "You're off the air"); }
 			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = true;
 			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = false;
-			case 4: if(PlayerInfo[playerid][pLeader] == 9) SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-			case 5: if(PlayerInfo[playerid][pLeader] == 9) return SPD(playerid,31,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+			case 4: if(PlayerInfo[playerid][pLeader] == 9) ShowPlayerDialog(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+			case 5: if(PlayerInfo[playerid][pLeader] == 9) return ShowPlayerDialog(playerid,31,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
 		}
 		case 2224:
@@ -5638,8 +5632,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else SendClientMessage(playerid, COLOR_GREY, "You're off the air"); }
 			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 1;
 			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 0;
-			case 4: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-			case 5: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,32,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+			case 4: if(PlayerInfo[playerid][pLeader] == 16) return ShowPlayerDialog(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+			case 5: if(PlayerInfo[playerid][pLeader] == 16) return ShowPlayerDialog(playerid,32,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
 		}
 		case 2225:
@@ -5656,15 +5650,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else SendClientMessage(playerid, COLOR_GREY, "You're off the air"); }
 			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 1;
 			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 0;
-			case 4: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-			case 5: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,33,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+			case 4: if(PlayerInfo[playerid][pLeader] == 20) return ShowPlayerDialog(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per Calls|SMS{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+			case 5: if(PlayerInfo[playerid][pLeader] == 20) return ShowPlayerDialog(playerid,33,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Ad Price{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
 		}
 		case 10092:
 		{
 		    if(response)
 			{
-				SPD(playerid, 10098, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Job{00BFFF}Х", "{FFFFFF}1 lvl. {FE0808}Bus driver\n{FFFFFF}1 lvl. {FE0808}Garbage Truck Driver\n{FFFFFF}2 lvl. {FE0808}Taxi driver\n{FFFFFF}3 lvl. {FE0808}Mechanic\n{FFFFFF}3 lvl. {FE0808}Collector\n{FFFFFF}4 lvl. {FE0808}Product Delivery Man\n{FFFFFF}5 lvl. {FE0808}Train Driver", "Join", "Exit");
+				ShowPlayerDialog(playerid, 10098, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Job{00BFFF}Х", "{FFFFFF}1 lvl. {FE0808}Bus driver\n{FFFFFF}1 lvl. {FE0808}Garbage Truck Driver\n{FFFFFF}2 lvl. {FE0808}Taxi driver\n{FFFFFF}3 lvl. {FE0808}Mechanic\n{FFFFFF}3 lvl. {FE0808}Collector\n{FFFFFF}4 lvl. {FE0808}Product Delivery Man\n{FFFFFF}5 lvl. {FE0808}Train Driver", "Join", "Exit");
 			}
 			else return true;
 		}
@@ -5679,7 +5673,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response) {
 			if(PlayerInfo[playerid][pCash] < 500) return SendClientMessage(playerid, COLOR_GREY, "Not enough money!");
-			format(string,sizeof(string), "Your lesson has begun. Go to the driving school parking lot and get into an empty car.\nNext you will be shown the route you will have to take\nIf the car is involved in an accident during the test, it will be completed"); SPD(playerid,10023,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Driving Test{00BFFF}Х",string, "Ready", "Cancel"); }
+			format(string,sizeof(string), "Your lesson has begun. Go to the driving school parking lot and get into an empty car.\nNext you will be shown the route you will have to take\nIf the car is involved in an accident during the test, it will be completed"); ShowPlayerDialog(playerid,10023,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Driving Test{00BFFF}Х",string, "Ready", "Cancel"); }
 		}
 		case 10023:
 		{
@@ -5689,9 +5683,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case 554:
 		{
 		    if(response) {
-			if(!strlen(inputtext)) return SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Directions{00BFFF}Х", "Enter the fare:", "Accept", "Cancel");
+			if(!strlen(inputtext)) return ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Directions{00BFFF}Х", "Enter the fare:", "Accept", "Cancel");
 			new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 100) return SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Directions{00BFFF}Х", "Fare must be at least 1 $,\nand no more than 100 $ \n\nEnter the fare:", "Accept", "Cancel");
+			if(moneys < 1 || moneys > 100) return ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Directions{00BFFF}Х", "Fare must be at least 1 $,\nand no more than 100 $ \n\nEnter the fare:", "Accept", "Cancel");
 			AutoBusMoney[playerid] = moneys; AutoBusCheck[playerid] = 0; GPN
 			if(AutoBusJob[playerid] == 1) {
    			format(string, sizeof(string), "%s started working as a bus driver. Route: AB LS - Inside City LS. Directions %d $", playername, AutoBusMoney[playerid]); ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE); format(string, sizeof(string), "<< AB LS - Inside City LS >>\nFare price: %d $",AutoBusMoney[playerid]); fare3dtext[playerid] = Create3DTextLabel(string, COLOR_GREEN,9999.0,9999.0,9999.0,50.0,0,1);
@@ -5715,13 +5709,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    switch(listitem)
 				{
-		   			case 0: SPD(playerid, 556, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Driver license{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 1: SPD(playerid, 557, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Flight License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 2: SPD(playerid, 559, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Boat license{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 3: SPD(playerid, 558, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Motorcycle License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 4: SPD(playerid, 561, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Business License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-				   	case 5: SPD(playerid, 560, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Weapon License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-				   	case 6: SPD(playerid, 555, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}License set{00BFFF}Х", "Enter ID the person you want to give the kit to", "Issue", "Cancel");
+		   			case 0: ShowPlayerDialog(playerid, 556, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Driver license{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 1: ShowPlayerDialog(playerid, 557, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Flight License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 2: ShowPlayerDialog(playerid, 559, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Boat license{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 3: ShowPlayerDialog(playerid, 558, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Motorcycle License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 4: ShowPlayerDialog(playerid, 561, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Business License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+				   	case 5: ShowPlayerDialog(playerid, 560, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Weapon License{00BFFF}Х", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+				   	case 6: ShowPlayerDialog(playerid, 555, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}License set{00BFFF}Х", "Enter ID the person you want to give the kit to", "Issue", "Cancel");
 			   }
 	   		}
 	   		else OnPlayerCommandText(playerid,"/apanel");
@@ -5823,8 +5817,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    switch(listitem)
 				{
-		   			case 0: SPD(playerid, 670, DIALOG_STYLE_INPUT, "{00BFFF}Х Minister of Internal Affairs", "Enter ID whoever you want to appoint to the post of Minister of Internal Affairs", "Issue", "Cancel");
-		   			case 1: SPD(playerid, 671, DIALOG_STYLE_INPUT, "{00BFFF}Х Minister of the Ministry of Defense", "Enter ID whoever you want to appoint to the post of Minister of Defense", "Issue", "Cancel");
+		   			case 0: ShowPlayerDialog(playerid, 670, DIALOG_STYLE_INPUT, "{00BFFF}Х Minister of Internal Affairs", "Enter ID whoever you want to appoint to the post of Minister of Internal Affairs", "Issue", "Cancel");
+		   			case 1: ShowPlayerDialog(playerid, 671, DIALOG_STYLE_INPUT, "{00BFFF}Х Minister of the Ministry of Defense", "Enter ID whoever you want to appoint to the post of Minister of Defense", "Issue", "Cancel");
 			   }
 	   		}
 	   		else return 1;
@@ -5877,22 +5871,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
    			switch(listitem) {
 			case 0: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 437) { SendClientMessage(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-		 	AutoBusJob[playerid] = 1; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Travel Price{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
+		 	AutoBusJob[playerid] = 1; ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Travel Price{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 1: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 437) { SendClientMessage(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 2; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 2; ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 2: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 437) { SendClientMessage(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 3; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 3; ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 3: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 431) { SendClientMessage(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 4; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 4; ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 4: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 431) { SendClientMessage(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 5; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 5; ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 5: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 431) { SendClientMessage(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 6; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; } } }
+			AutoBusJob[playerid] = 6; ShowPlayerDialog(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price Travel{00BFFF}Х", "Enter the fare:", "Ready", "Cancel"); return true; } } }
 		}
 	 	case 10098:
 	    {
@@ -5946,14 +5940,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				switch(listitem)
 				{
-					case 0:	SPD(playerid, 100, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Take away your Driver's License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 1:	SPD(playerid, 102, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Get a Motorcycle License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 2:	SPD(playerid, 103, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Retrieve a Flight License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 3:	SPD(playerid, 105, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Get a Boat License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 4:	SPD(playerid, 106, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Take away a Weapon License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 5:	SPD(playerid, 108, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Select Drugs{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 6:	SPD(playerid, 109, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Take Weapons{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
-					case 7: SPD(playerid, 110, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Select Materials{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 0:	ShowPlayerDialog(playerid, 100, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Take away your Driver's License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 1:	ShowPlayerDialog(playerid, 102, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Get a Motorcycle License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 2:	ShowPlayerDialog(playerid, 103, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Retrieve a Flight License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 3:	ShowPlayerDialog(playerid, 105, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Get a Boat License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 4:	ShowPlayerDialog(playerid, 106, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Take away a Weapon License{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 5:	ShowPlayerDialog(playerid, 108, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Select Drugs{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 6:	ShowPlayerDialog(playerid, 109, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Take Weapons{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
+					case 7: ShowPlayerDialog(playerid, 110, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Select Materials{00BFFF}Х", "Enter [ID] player", "Select", "Cancel");
 				}
 			}
 			else OnPlayerCommandText(playerid,"/apanel");
@@ -6086,96 +6080,96 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if(response) {
         	switch(listitem) {
-         	case 0: SPD(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-         	case 1: SPD(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel");
-         	case 2: SPD(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel"); } }
+         	case 0: ShowPlayerDialog(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+         	case 1: ShowPlayerDialog(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel");
+         	case 2: ShowPlayerDialog(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel"); } }
         }
 		case 10122:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid, 11231,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per bush{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-            case 1: SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the purchase price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-            case 2: SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the selling price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-            case 3: SPD(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-            case 4: SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdraw money from farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
-            case 5: SPD(playerid, 11233, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Deputy є1\nDeputy є2\nDeputy є3", "Choose", "Cancel");
-            case 6: SPD(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel");
-            case 7: SPD(playerid, 11235, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Fire the deputy{00BFFF}Х", "Deputy є1\nDeputy є2\nDeputy є3", "Choose", "Cancel");
-            case 8: SPD(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel"); } }
+            case 0: ShowPlayerDialog(playerid, 11231,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per bush{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            case 1: ShowPlayerDialog(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the purchase price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            case 2: ShowPlayerDialog(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the selling price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            case 3: ShowPlayerDialog(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            case 4: ShowPlayerDialog(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdraw money from farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            case 5: ShowPlayerDialog(playerid, 11233, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Deputy є1\nDeputy є2\nDeputy є3", "Choose", "Cancel");
+            case 6: ShowPlayerDialog(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel");
+            case 7: ShowPlayerDialog(playerid, 11235, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Fire the deputy{00BFFF}Х", "Deputy є1\nDeputy є2\nDeputy є3", "Choose", "Cancel");
+            case 8: ShowPlayerDialog(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Farmer є1\nFarmer є2\nFarmer є3\nFarmer є4\nFarmer є5", "Choose", "Cancel"); } }
         }
 		case 11231:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per bush{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per bush{00BFFF}Х", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
-            if(moneys < 10 || moneys > 199) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 10, the maximum is 199!"); SPD(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per bush{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 10 || moneys > 199) { SendClientMessage(playerid, COLOR_GREY, "The minimum amount is 10, the maximum is 199!"); ShowPlayerDialog(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Price per bush{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fEntranceCost] = moneys; format(string, sizeof(string), "The price per bush is %d $",FarmInfo[f][fEntranceCost]); SendClientMessage(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11239:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the purchase price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the purchase price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
-            if(moneys < 1 || moneys > 10) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 10"); SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the purchase price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 1 || moneys > 10) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 10"); ShowPlayerDialog(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the purchase price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fCenazerno] = moneys; format(string, sizeof(string), "The grain purchase price is %d $",FarmInfo[f][fCenazerno]); SendClientMessage(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11240:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the selling price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the selling price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
-            if(moneys < 10 || moneys > 15) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 15"); SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the selling price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 10 || moneys > 15) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 15"); ShowPlayerDialog(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change the selling price of grain{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fcenaprod] = moneys; format(string, sizeof(string), "The grain purchase price is %d $",FarmInfo[f][fcenaprod]); SendClientMessage(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11241:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdraw money from farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdraw money from farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
 			new moneys; moneys = strval(inputtext);
             if(FarmInfo[f][fTill] < moneys) return SendClientMessage(playerid, COLOR_GREY, "There's not enough money on the farm!");
-            if(moneys < 1 || moneys > 500000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdraw money from farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 1 || moneys > 500000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); ShowPlayerDialog(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdraw money from farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fTill] -= moneys; PlayerInfo[playerid][pBank] += moneys; format(string, sizeof(string), "Farm bank is %d $",FarmInfo[f][fTill]); SendClientMessage(playerid, COLOR_WHITE,string); format(string, sizeof(string), "The bank account is %d $",PlayerInfo[playerid][pBank]); SendClientMessage(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11238:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
             if(PlayerInfo[playerid][pBank] < moneys) return SendClientMessage(playerid, COLOR_GREY, "There's not enough money in the bank!");
-            if(moneys < 1 || moneys > 500000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); SPD(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 1 || moneys > 500000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); ShowPlayerDialog(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Top up your farm bank{00BFFF}Х", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fTill] += moneys; PlayerInfo[playerid][pBank] -= moneys; format(string, sizeof(string), "Farm bank is %d $",FarmInfo[f][fTill]); SendClientMessage(playerid, COLOR_WHITE,string); format(string, sizeof(string), "The bank balance is %d $",PlayerInfo[playerid][pBank]); SendClientMessage(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11233:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11221,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a Deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
-            case 1: SPD(playerid,11222,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a Deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
-            case 2: SPD(playerid,11223,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a Deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            case 0: ShowPlayerDialog(playerid,11221,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a Deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            case 1: ShowPlayerDialog(playerid,11222,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a Deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            case 2: ShowPlayerDialog(playerid,11223,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a Deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11234:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
-            case 1: SPD(playerid,11002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
-            case 2: SPD(playerid,11003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
-            case 3: SPD(playerid,11004,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
-            case 4: SPD(playerid,11005,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            case 0: ShowPlayerDialog(playerid,11001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            case 1: ShowPlayerDialog(playerid,11002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            case 2: ShowPlayerDialog(playerid,11003,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            case 3: ShowPlayerDialog(playerid,11004,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            case 4: ShowPlayerDialog(playerid,11005,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11235:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11061,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Dismiss the Deputy{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 1: SPD(playerid,11062,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Dismiss the Deputy{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 2: SPD(playerid,11063,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Dismiss the Deputy{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
+            case 0: ShowPlayerDialog(playerid,11061,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Dismiss the Deputy{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 1: ShowPlayerDialog(playerid,11062,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Dismiss the Deputy{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 2: ShowPlayerDialog(playerid,11063,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Dismiss the Deputy{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
         }
 		case 11061:
         {
@@ -6202,11 +6196,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11064,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 1: SPD(playerid,11065,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 2: SPD(playerid,11066,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 3: SPD(playerid,11067,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 4: SPD(playerid,11068,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
+            case 0: ShowPlayerDialog(playerid,11064,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 1: ShowPlayerDialog(playerid,11065,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 2: ShowPlayerDialog(playerid,11066,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 3: ShowPlayerDialog(playerid,11067,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 4: ShowPlayerDialog(playerid,11068,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Fire the farmer{00BFFF}Х", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
         }
 		case 11064:
         {
@@ -6247,98 +6241,98 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext)) return SPD(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new id = strval(inputtext);
             if(IsPlayerConnected(id)) {
             if(FarmInfo[f][f1zams] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             GetPlayerName(id, playername, sizeof(playername)); strmid(FarmInfo[f][f1zams], playername, 0, strlen(playername), 24); format(string, sizeof(string), "you have appointed %s for the post of deputy",playername); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[id][pFermajob] = 2; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11222:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext)) return SPD(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f2zams] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f2zams], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of deputy",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 2; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11223:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f3zams] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f3zams], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of deputy",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 2; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Appoint a deputy{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11001:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f1fermers] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f1fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11002:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f2fermers] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f2fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11003:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f3fermers] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f3fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11004:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f4fermers] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f4fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11005:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f5fermers] != 0) return SendClientMessage(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f5fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SendClientMessage(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
+            else SendClientMessage(playerid, COLOR_GREY, "Player not found"); ShowPlayerDialog(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nominate a farmer{00BFFF}Х", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 1322:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading grain{00BFFF}Х", "Enter the amount of grain per load\nLoading is carried out from the loaders' warehouse", "Ready", "Cancel");
-            case 1: SPD(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading grain to the farm{00BFFF}Х", "Enter the amount of grain to unload", "Ready", "Cancel");
-            case 2: SPD(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading crops from the farm{00BFFF}Х", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
-            case 3: SPD(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading crops for sale{00BFFF}Х", "Enter the amount of harvest", "Ready", "Cancel"); } }
+            case 0: ShowPlayerDialog(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading grain{00BFFF}Х", "Enter the amount of grain per load\nLoading is carried out from the loaders' warehouse", "Ready", "Cancel");
+            case 1: ShowPlayerDialog(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading grain to the farm{00BFFF}Х", "Enter the amount of grain to unload", "Ready", "Cancel");
+            case 2: ShowPlayerDialog(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading crops from the farm{00BFFF}Х", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
+            case 3: ShowPlayerDialog(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading crops for sale{00BFFF}Х", "Enter the amount of harvest", "Ready", "Cancel"); } }
         }
 		case 1358:
         {
@@ -6349,9 +6343,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(!PlayerToPoint(10, playerid,-381.8794,-1440.2821,25.7266)) return SendClientMessage(playerid,COLOR_GREY, "There are no farms nearby!");
             if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SendClientMessage(playerid,COLOR_GREY, "Not the right car!");
             if(MaterialsInTheWagon[tmpcar] >= 1000) return SendClientMessage(playerid,COLOR_GREY, "The truck is full!");
-            if(!strlen(inputtext))return SPD(playerid,1358, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading crops from the farm{00BFFF}Х", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid,1358, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading crops from the farm{00BFFF}Х", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
             new zakup; zakup = strval(inputtext);
-            if(zakup < 30 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); SPD(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading crops from the farm{00BFFF}Х", "Enter the quantity of crop to be loaded", "Ready", "Cancel"); }
+            if(zakup < 30 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); ShowPlayerDialog(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Loading crops from the farm{00BFFF}Х", "Enter the quantity of crop to be loaded", "Ready", "Cancel"); }
             if(FarmInfo[f][fAmountOfGrain]-zakup <= 0)return SendClientMessage(playerid,COLOR_GREY, "There is not enough grain in the warehouse!");
             if(PlayerInfo[playerid][pCash] <= FarmInfo[f][fcenaprod]*zakup) return SendClientMessage(playerid, COLOR_WHITE, "You don't have enough money!");
             PlayerInfo[playerid][pCash] -= FarmInfo[f][fcenaprod]*zakup; FarmInfo[f][fAmountOfGrain] -= zakup; MaterialsInTheWagon[tmpcar] += zakup;
@@ -6367,9 +6361,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(!PlayerToPoint(20, playerid,2192.3550,-2250.1377,15.0302)) return SendClientMessage(playerid,COLOR_GREY,"You are not near the movers");
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SendClientMessage(playerid,COLOR_GREY,"Not the right car");
 			if(PlayerHaul[tmpcar-comptruck[0]][pLoad] >= 1000) return SendClientMessage(playerid,COLOR_GREY,"The truck is full");
-			if(!strlen(inputtext)) return SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Buying grain for the farm{00BFFF}Х","Enter the amount of grain to purchase", "Buy", "Cancel");
+			if(!strlen(inputtext)) return ShowPlayerDialog(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Buying grain for the farm{00BFFF}Х","Enter the amount of grain to purchase", "Buy", "Cancel");
 			new zakup; zakup = strval(inputtext);
-			if(zakup < 30 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Buying grain for the farm{00BFFF}Х","Enter the amount of grain to purchase", "Buy", "Cancel"); }
+			if(zakup < 30 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); ShowPlayerDialog(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Buying grain for the farm{00BFFF}Х","Enter the amount of grain to purchase", "Buy", "Cancel"); }
 			if(zakup < PlayerHaul[tmpcar-comptruck[0]][pLoad]) return SendClientMessage(playerid,COLOR_GREY,"Incorrect value");
 			if(PlayerInfo[playerid][pCash] <= FarmInfo[f][frandoms]*zakup) return SendClientMessage(playerid, COLOR_WHITE,"You don't have enough money");
 			PlayerInfo[playerid][pCash] -= FarmInfo[f][frandoms]*zakup; PlayerHaul[tmpcar-comptruck[0]][pLoad] += zakup;
@@ -6383,10 +6377,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			new tmpcar = GetPlayerVehicleID(playerid);
 			if(!PlayerToPoint(10.0, playerid, -378.2744, -1432.7566, 25.7266)) return SendClientMessage(playerid,COLOR_GREY,"There are no farms nearby");
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SendClientMessage(playerid,COLOR_GREY,"Not the right car");
-			if(!strlen(inputtext)) return SPD(playerid,1357, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading grain to the farm{00BFFF}Х","Enter the amount of grain to unload", "Unloading", "Cancel");
+			if(!strlen(inputtext)) return ShowPlayerDialog(playerid,1357, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading grain to the farm{00BFFF}Х","Enter the amount of grain to unload", "Unloading", "Cancel");
 			if(PlayerHaul[tmpcar-comptruck[0]][pLoad] == 0) return SendClientMessage(playerid,COLOR_GREY,"The truck is empty");
 			new zakup; zakup = strval(inputtext);
-			if(zakup < 1 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); SPD(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading grain to the farm{00BFFF}Х","Enter the amount of grain to unload", "Unloading", "Cancel"); }
+			if(zakup < 1 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); ShowPlayerDialog(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading grain to the farm{00BFFF}Х","Enter the amount of grain to unload", "Unloading", "Cancel"); }
 			if(PlayerHaul[tmpcar-comptruck[0]][pLoad] < zakup) return SendClientMessage(playerid,COLOR_GREY,"Incorrect value");
 			if(FarmInfo[f][fTill] <= FarmInfo[f][fCenazerno]*zakup) return SendClientMessage(playerid, COLOR_WHITE,"The Farm doesn't have enough money");
 			PlayerInfo[playerid][pCash] += FarmInfo[f][fCenazerno]*zakup; FarmInfo[f][fTill] -= FarmInfo[f][fCenazerno]*zakup; FarmInfo[f][fzernozakup] += zakup; PlayerHaul[tmpcar-comptruck[0]][pLoad] -= zakup; Download[tmpcar] = 0; format(string, sizeof(string), "You have unloaded %d grain worth %d in the truck %d grains", zakup, FarmInfo[f][fCenazerno]*zakup, PlayerHaul[tmpcar-comptruck[0]][pLoad]); SendClientMessage(playerid, COLOR_GREEN, string); } }
@@ -6398,10 +6392,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(!PlayerToPoint(15, playerid,1640.7261,2318.2012,10.8203)) return SendClientMessage(playerid,COLOR_WHITE, "You should be near the warehouse((/gps->Important places))");
             new tmpcar = GetPlayerVehicleID(playerid);
             if(Download[tmpcar] == 1) return SendClientMessage(playerid,COLOR_GREY, "You cannot sell unripe grains, unload them to the farm");
-            if(!strlen(inputtext))return SPD(playerid,1388, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading crops for sale{00BFFF}Х", "Enter the amount of harvest", "Ready", "Cancel");
+            if(!strlen(inputtext))return ShowPlayerDialog(playerid,1388, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading crops for sale{00BFFF}Х", "Enter the amount of harvest", "Ready", "Cancel");
             if(MaterialsInTheWagon[tmpcar] == 0) return SendClientMessage(playerid,COLOR_GREY, "The truck is empty!");
             new zakup; zakup = strval(inputtext);
-            if(zakup < 1 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); SPD(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading crops for sale{00BFFF}Х", "Enter the amount of harvest", "Ready", "Cancel"); }
+            if(zakup < 1 || zakup > 1000) { SendClientMessage(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); ShowPlayerDialog(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Unloading crops for sale{00BFFF}Х", "Enter the amount of harvest", "Ready", "Cancel"); }
             if(MaterialsInTheWagon[tmpcar] < zakup) return SendClientMessage(playerid,COLOR_GREY, "Incorrect value!");
             PlayerInfo[playerid][pCash] += FarmInfo[f][frandoms2]*zakup; MaterialsInTheWagon[tmpcar] -= zakup; format(string, sizeof(string), "you sold %d crop worth %d in the truck %d harvest", zakup, FarmInfo[f][frandoms2]*zakup, MaterialsInTheWagon[tmpcar]); SendClientMessage(playerid, COLOR_GREEN,string); } }
         }
@@ -6440,13 +6434,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0:SPD(playerid, 10056, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Buying Virts{00BFFF}Х", "{FFFFFF}100 k - {FF0000}10 coins\n{FFFFFF}500 k - {FF0000}30 coins\n{FFFFFF}1 kk - {FF0000}50 coins\n{FFFFFF}3 kk - {FF0000}100 coins\n{FFFFFF}5 kk - {FF0000}150 coins\n{FFFFFF}10 kk - {FF0000}250 coins\n{FFFFFF}20 kk - {FF0000}400 coins\n{FFFFFF}50 kk - {FF0000}800 coins", "Choose", "Back");
- 			case 1:SPD(playerid, 10058, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchase V.I.P{00BFFF}Х", "{FFFFFF}BRONZE - {FF0000}50 coins\n{FFFFFF}SILVER - {FF0000}150 coins\n{FFFFFF}GOLD - {FF0000}300 coins", "Choose", "Back");
-	 		case 2:SPD(playerid, 10059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchasing personal transport{00BFFF}Х", "{FF0000}Cars\n{FF0000}Motorcycles", "Choose", "Back");
-	 		case 3:SPD(playerid, 10060, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchasing licenses{00BFFF}Х", "{FFFFFF}Car License - {FF0000}30 coins\n{FFFFFF}Motorcycle license - {FF0000}30 coins\n{FFFFFF}Boat license - {FF0000}30 coins\n{FFFFFF}Air Transport License - {FF0000}30 coins\n{FFFFFF}Weapon License - {FF0000}30 coins\n{FFFFFF}All Licenses - {FF0000}100 coins", "Choose", "Back");
-	 		case 4:SPD(playerid, 10061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Buying drugs{00BFFF}Х", "{FFFFFF}50 Gram - {FF0000}10 coins\n{FFFFFF}100g - {FF0000}15 coins\n{FFFFFF}300 grams - {FF0000}30 coins\n{FFFFFF}500 Gram - {FF0000}40 coins\n{FFFFFF}1.000 Gram - {FF0000}60 coins", "Choose", "Back");
-	 		case 5:SPD(playerid, 10062, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchasing materials{00BFFF}Х", "{FFFFFF}500 Materials - {FF0000}10 coins\n{FFFFFF}1.000 Materials - {FF0000}15 coins\n{FFFFFF}2.000 Materials - {FF0000}20 coins\n{FFFFFF}5.000 Materials - {FF0000}50 coins\n{FFFFFF}10.000 Materials - {FF0000}70 coins", "Choose", "Back");
-	 		case 6:SPD(playerid, 10063, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Miscellaneous{00BFFF}Х", "{FFFFFF}All skills - {FF0000}50 coins\n{FFFFFF}Remove all Varna - {FF0000}100 coins\n{FFFFFF}Remove all Wanted - {FF0000}30 coins", "Choose", "Back"); } }
+ 			case 0:ShowPlayerDialog(playerid, 10056, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Buying Virts{00BFFF}Х", "{FFFFFF}100 k - {FF0000}10 coins\n{FFFFFF}500 k - {FF0000}30 coins\n{FFFFFF}1 kk - {FF0000}50 coins\n{FFFFFF}3 kk - {FF0000}100 coins\n{FFFFFF}5 kk - {FF0000}150 coins\n{FFFFFF}10 kk - {FF0000}250 coins\n{FFFFFF}20 kk - {FF0000}400 coins\n{FFFFFF}50 kk - {FF0000}800 coins", "Choose", "Back");
+ 			case 1:ShowPlayerDialog(playerid, 10058, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchase V.I.P{00BFFF}Х", "{FFFFFF}BRONZE - {FF0000}50 coins\n{FFFFFF}SILVER - {FF0000}150 coins\n{FFFFFF}GOLD - {FF0000}300 coins", "Choose", "Back");
+	 		case 2:ShowPlayerDialog(playerid, 10059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchasing personal transport{00BFFF}Х", "{FF0000}Cars\n{FF0000}Motorcycles", "Choose", "Back");
+	 		case 3:ShowPlayerDialog(playerid, 10060, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchasing licenses{00BFFF}Х", "{FFFFFF}Car License - {FF0000}30 coins\n{FFFFFF}Motorcycle license - {FF0000}30 coins\n{FFFFFF}Boat license - {FF0000}30 coins\n{FFFFFF}Air Transport License - {FF0000}30 coins\n{FFFFFF}Weapon License - {FF0000}30 coins\n{FFFFFF}All Licenses - {FF0000}100 coins", "Choose", "Back");
+	 		case 4:ShowPlayerDialog(playerid, 10061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Buying drugs{00BFFF}Х", "{FFFFFF}50 Gram - {FF0000}10 coins\n{FFFFFF}100g - {FF0000}15 coins\n{FFFFFF}300 grams - {FF0000}30 coins\n{FFFFFF}500 Gram - {FF0000}40 coins\n{FFFFFF}1.000 Gram - {FF0000}60 coins", "Choose", "Back");
+	 		case 5:ShowPlayerDialog(playerid, 10062, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Purchasing materials{00BFFF}Х", "{FFFFFF}500 Materials - {FF0000}10 coins\n{FFFFFF}1.000 Materials - {FF0000}15 coins\n{FFFFFF}2.000 Materials - {FF0000}20 coins\n{FFFFFF}5.000 Materials - {FF0000}50 coins\n{FFFFFF}10.000 Materials - {FF0000}70 coins", "Choose", "Back");
+	 		case 6:ShowPlayerDialog(playerid, 10063, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Miscellaneous{00BFFF}Х", "{FFFFFF}All skills - {FF0000}50 coins\n{FFFFFF}Remove all Varna - {FF0000}100 coins\n{FFFFFF}Remove all Wanted - {FF0000}30 coins", "Choose", "Back"); } }
 		}
 		case 10056:
 		{
@@ -6572,23 +6566,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0: SPD(playerid, 10064, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Cars{00BFFF}Х", "{FF0000}Two-Door\n{FF0000}Four-Door\n{FF0000}Jeeps", "Choose", "Back");
- 			case 1: SPD(playerid, 10072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Motorcycles{00BFFF}Х", "{FF0000}PCJ-600\n{FF0000}Freeway\n{FF0000}Sanchez\n{FF0000}Quad\n{FF0000}FCR-900\n{FF0000}NRG-500\n{FF0000}BF-400\n{FF0000}Wayfarer", "Choose", "Back"); } }
+ 			case 0: ShowPlayerDialog(playerid, 10064, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Cars{00BFFF}Х", "{FF0000}Two-Door\n{FF0000}Four-Door\n{FF0000}Jeeps", "Choose", "Back");
+ 			case 1: ShowPlayerDialog(playerid, 10072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Motorcycles{00BFFF}Х", "{FF0000}PCJ-600\n{FF0000}Freeway\n{FF0000}Sanchez\n{FF0000}Quad\n{FF0000}FCR-900\n{FF0000}NRG-500\n{FF0000}BF-400\n{FF0000}Wayfarer", "Choose", "Back"); } }
 		}
 		case 10064:
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0: SPD(playerid, 10065, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Two-virgins{00BFFF}Х", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
- 			case 1: SPD(playerid, 10068, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Four-door{00BFFF}Х", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
- 			case 2: SPD(playerid, 10071, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Jeeps{00BFFF}Х", "{FF0000}Landstalker\n{FF0000}Bobcat\n{FF0000}Patriot\n{FF0000}Rancher\n{FF0000}Sandking\n{FF0000}Mesa\n{FF0000}Sadler\n{FF0000}Yosemite\n{FF0000}Huntley", "Choose", "Back"); } }
+ 			case 0: ShowPlayerDialog(playerid, 10065, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Two-virgins{00BFFF}Х", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
+ 			case 1: ShowPlayerDialog(playerid, 10068, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Four-door{00BFFF}Х", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
+ 			case 2: ShowPlayerDialog(playerid, 10071, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Jeeps{00BFFF}Х", "{FF0000}Landstalker\n{FF0000}Bobcat\n{FF0000}Patriot\n{FF0000}Rancher\n{FF0000}Sandking\n{FF0000}Mesa\n{FF0000}Sadler\n{FF0000}Yosemite\n{FF0000}Huntley", "Choose", "Back"); } }
 		}
 		case 10065:
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0: SPD(playerid, 10066, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Sports{00BFFF}Х", "{FF0000}Buffalo\n{FF0000}Infernus\n{FF0000}Cheetah\n{FF0000}Banshee\n{FF0000}Turismo\n{FF0000}ZR-350\n{FF0000}Comet\n{FF0000}Blista\n{FF0000}Super-GT\n{FF0000}Bullet\n{FF0000}Uranus\n{FF0000}Jester\n{FF0000}Elegy\n{FF0000}Flash\n{FF0000}Euros\n{FF0000}Club\n{FF0000}Alpha\n{FF0000}Pheonix", "Choose", "Back");
- 			case 1: SPD(playerid, 10067, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Regular{00BFFF}Х", "{FF0000}Bravura\n{FF0000}Manana\n{FF0000}Voodoo\n{FF0000}Esperanto\n{FF0000}Previon\n{FF0000}Stallion\n{FF0000}Hermes\n{FF0000}Sabre\n{FF0000}Virgo\n{FF0000}Majestic\n{FF0000}Buccaneer\n{FF0000}Fortune\n{FF0000}Cadrona\n{FF0000}Remington\n{FF0000}Clover\n{FF0000}Hustler\n{FF0000}Tampa\n{FF0000}Windsor\n{FF0000}Broadway\n{FF0000}Tornado\n{FF0000}Picador", "Choose", "Back"); } }
+ 			case 0: ShowPlayerDialog(playerid, 10066, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Sports{00BFFF}Х", "{FF0000}Buffalo\n{FF0000}Infernus\n{FF0000}Cheetah\n{FF0000}Banshee\n{FF0000}Turismo\n{FF0000}ZR-350\n{FF0000}Comet\n{FF0000}Blista\n{FF0000}Super-GT\n{FF0000}Bullet\n{FF0000}Uranus\n{FF0000}Jester\n{FF0000}Elegy\n{FF0000}Flash\n{FF0000}Euros\n{FF0000}Club\n{FF0000}Alpha\n{FF0000}Pheonix", "Choose", "Back");
+ 			case 1: ShowPlayerDialog(playerid, 10067, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Regular{00BFFF}Х", "{FF0000}Bravura\n{FF0000}Manana\n{FF0000}Voodoo\n{FF0000}Esperanto\n{FF0000}Previon\n{FF0000}Stallion\n{FF0000}Hermes\n{FF0000}Sabre\n{FF0000}Virgo\n{FF0000}Majestic\n{FF0000}Buccaneer\n{FF0000}Fortune\n{FF0000}Cadrona\n{FF0000}Remington\n{FF0000}Clover\n{FF0000}Hustler\n{FF0000}Tampa\n{FF0000}Windsor\n{FF0000}Broadway\n{FF0000}Tornado\n{FF0000}Picador", "Choose", "Back"); } }
 		}
 		case 10066:
 		{
@@ -6645,10 +6639,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0:SPD(playerid, 10069, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Sports{00BFFF}Х", "{FF0000}Sultan", "Choose", "Back");
+ 			case 0:ShowPlayerDialog(playerid, 10069, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Sports{00BFFF}Х", "{FF0000}Sultan", "Choose", "Back");
  			case 1: {
   			new listitems[] = "{FF0000}Prenniel\n{FF0000}Sentinel\n{FF0000}Washington\n{FF0000}Premier\n{FF0000}Romero\n{FF0000}Admiral\n{FF0000}Solair\n{FF0000}Glendale\n{FF0000}Oceanic\n{FF0000}Regina\n{FF0000}Greenwood\n{FF0000}Elegant\n{FF0000}Nebula\n{FF0000}Willard\n{FF0000}Feltzer\n{FF0000}Blade\n{FF0000}Vincent\n{FF0000}Intruder\n{FF0000}Primo\n{FF0000}Sunrise\n{FF0000}Merit\n{FF0000}Stratum\n{FF0000}Tahoma\n{FF0000}Savanna\n{FF0000}Stafford\n{FF0000}Emperor";
-   			SPD(playerid, 10070, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Regular{00BFFF}Х", listitems, "Choose", "Cancel"); } } }
+   			ShowPlayerDialog(playerid, 10070, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Regular{00BFFF}Х", listitems, "Choose", "Cancel"); } } }
 		}
 		case 10069:
 		{
@@ -6725,19 +6719,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
    			case 0: {
 		    if(PlayerInfo[playerid][pCash] < 20000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid,8001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Color selection 1{00BFFF}Х", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
+		    ShowPlayerDialog(playerid,8001,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Color selection 1{00BFFF}Х", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
 		    case 1: {
       		if(PlayerInfo[playerid][pCash] < 30000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
       		new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
 			switch(Model) {
-			case 575,576,534,535,536,483,558,559,560,561,562,565,567: SPD(playerid, 8006, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Painting work{00BFFF}Х", "Paint job є1\nPaint job є2\nPaint job є3", "Choose", "Back");
+			case 575,576,534,535,536,483,558,559,560,561,562,565,567: ShowPlayerDialog(playerid, 8006, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Painting work{00BFFF}Х", "Paint job є1\nPaint job є2\nPaint job є3", "Choose", "Back");
 			default: SendClientMessage(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
    			case 2: {
    			if(PlayerInfo[playerid][pCash] == 50000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SendClientMessage(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8004, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Nitro{00BFFF}Х", "Nitro 2's (20.000)\nNitro 5's (50.000)\nNitro 10's(100.000)", "Choose", "Back"); } }
+	        default: ShowPlayerDialog(playerid, 8004, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Nitro{00BFFF}Х", "Nitro 2's (20.000)\nNitro 5's (50.000)\nNitro 10's(100.000)", "Choose", "Back"); } }
    			case 3: {
    			if(PlayerInfo[playerid][pCash] < 200000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
@@ -6749,39 +6743,39 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SendClientMessage(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8007, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Wheels{00BFFF}Х", "Shadow\nMega\nRimshine\nWiers\nClassic\nTwist\nCutter\nSwitch\nGrove\nImport\nDollar\nTrance\nAtomic", "Choose", "Back"); } }
+	        default: ShowPlayerDialog(playerid, 8007, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Wheels{00BFFF}Х", "Shadow\nMega\nRimshine\nWiers\nClassic\nTwist\nCutter\nSwitch\nGrove\nImport\nDollar\nTrance\nAtomic", "Choose", "Back"); } }
    			case 5: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SendClientMessage(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back"); } }
+	        default: ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back"); } }
    			case 6: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SendClientMessage(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Spoilers{00BFFF}Х", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back"); } }
+	        default: ShowPlayerDialog(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Spoilers{00BFFF}Х", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back"); } }
 			case 7: {
    			if(PlayerInfo[playerid][pCash] < 30000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
-			case 401,478,518,529,549,600,426,489,492,516,551,496,550,587,589: SPD(playerid, 8057, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Hoods{00BFFF}Х", "Hood є1\nHood є2\nHood є3\nHood є4", "Choose", "Back");
+			case 401,478,518,529,549,600,426,489,492,516,551,496,550,587,589: ShowPlayerDialog(playerid, 8057, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Hoods{00BFFF}Х", "Hood є1\nHood є2\nHood є3\nHood є4", "Choose", "Back");
 			default: SendClientMessage(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 8: {
    			if(PlayerInfo[playerid][pCash] < 20000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
-			case 400,401,404,436,478,518,600,410,422,439,458,489,540,546,585,496,500,550,589,603: SPD(playerid, 8058, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Headlights{00BFFF}Х", "Round\nSquare", "Choose", "Back");
+			case 400,401,404,436,478,518,600,410,422,439,458,489,540,546,585,496,500,550,589,603: ShowPlayerDialog(playerid, 8058, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Headlights{00BFFF}Х", "Round\nSquare", "Choose", "Back");
 			default: SendClientMessage(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 9: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
 			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SendClientMessage(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Silencers{00BFFF}Х", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back"); } }
+	        default: ShowPlayerDialog(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Silencers{00BFFF}Х", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back"); } }
 			case 10: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SendClientMessage(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Air intakes{00BFFF}Х", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back"); } }
+	        default: ShowPlayerDialog(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Air intakes{00BFFF}Х", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back"); } }
 			case 11: {
 			if(PlayerInfo[playerid][pCash] < 500000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
 			if(PlayerInfo[playerid][pProcents] > 99) return SendClientMessage(playerid, COLOR_GREY, "Your Engine does not need repair!");
@@ -6797,7 +6791,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    {
 	        if(response) {
 	        PlayerInfo[playerid][pColor] = strval(inputtext);
-	 		SPD(playerid,8002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Color selection 2{00BFFF}Х", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
+	 		ShowPlayerDialog(playerid,8002,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Color selection 2{00BFFF}Х", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
 		}
 		case 8002:
 	    {
@@ -6820,7 +6814,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 2: {
    			if(PlayerInfo[playerid][pCash] < 100000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
    			PlayerInfo[playerid][pCash] -= 100000, AddVehicleComponent(vehicleid,1010), PlayerInfo[playerid][pNitro] = Nitro[playerid] = 1010, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Nitro installed!"); } } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8006:
 		{
@@ -6830,7 +6824,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			case 0: PlayerInfo[playerid][pCash] -= 30000, ChangeVehiclePaintjob(vehicleid,listitem=0), PlayerInfo[playerid][pPaintJob] = PaintJob[playerid] = 0, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Stickers installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, ChangeVehiclePaintjob(vehicleid,listitem=1), PlayerInfo[playerid][pPaintJob] = PaintJob[playerid] = 1, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Stickers installed!");
 	 		case 2: PlayerInfo[playerid][pCash] -= 30000, ChangeVehiclePaintjob(vehicleid,listitem=2), PlayerInfo[playerid][pPaintJob] = PaintJob[playerid] = 2, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Stickers installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8007:
 		{
@@ -6850,7 +6844,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 10: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1083), PlayerInfo[playerid][pKolesa] = Kolesa[playerid] = 1083, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Wheels Installed!");
 	 		case 11: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1084), PlayerInfo[playerid][pKolesa] = Kolesa[playerid] = 1084, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Wheels Installed!");
 	 		case 12: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1085), PlayerInfo[playerid][pKolesa] = Kolesa[playerid] = 1085, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Wheels Installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8008:
 		{
@@ -6858,38 +6852,38 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
    	 		if(PlayerInfo[playerid][pCar] != 576) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
- 			SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Tornado){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+ 			ShowPlayerDialog(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Tornado){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCar] != 567) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Savanna){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			ShowPlayerDialog(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Savanna){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCar] != 534) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Remington){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			ShowPlayerDialog(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Remington){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 3: {
    			if(PlayerInfo[playerid][pCar] != 536) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Blade){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			ShowPlayerDialog(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Blade){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 4: {
    			if(PlayerInfo[playerid][pCar] != 575) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Broadway){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			ShowPlayerDialog(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Broadway){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 5: {
   			if(PlayerInfo[playerid][pCar] != 559) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			ShowPlayerDialog(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 6: {
   			if(PlayerInfo[playerid][pCar] != 562) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			ShowPlayerDialog(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 7: {
   			if(PlayerInfo[playerid][pCar] != 560) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			ShowPlayerDialog(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 8: {
   			if(PlayerInfo[playerid][pCar] != 558) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			ShowPlayerDialog(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 9: {
   			if(PlayerInfo[playerid][pCar] != 561) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			ShowPlayerDialog(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 10: {
   			if(PlayerInfo[playerid][pCar] != 565) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); } } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+  			ShowPlayerDialog(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8009:
 		{
@@ -6897,11 +6891,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8010, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Tornado){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8010, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Tornado){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8011, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Tornado){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			ShowPlayerDialog(playerid, 8011, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Tornado){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8010:
 		{
@@ -6910,7 +6904,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1190), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1190, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1191), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1191, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Tornado){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Tornado){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8011:
 		{
@@ -6919,7 +6913,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
    			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1193), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1193, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
  			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1192), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1192, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Tornado){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Tornado){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8012:
 		{
@@ -6927,11 +6921,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8013, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Savanna){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8013, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Savanna){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8014, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Savanna){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			ShowPlayerDialog(playerid, 8014, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Savanna){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8015:
 		{
@@ -6939,11 +6933,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8016, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Remington){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8016, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Remington){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8017, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Remington){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			ShowPlayerDialog(playerid, 8017, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Remington){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8018:
 		{
@@ -6951,11 +6945,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
  			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8019, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Blade){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
+    		ShowPlayerDialog(playerid, 8019, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Blade){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8020, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Blade){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8020, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Blade){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8021:
 		{
@@ -6963,11 +6957,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8022, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Broadway){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8022, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Broadway){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8023, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Broadway){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8023, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Broadway){00BFFF}Х", "Slamin\nCrome", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8024:
 		{
@@ -6975,14 +6969,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8025, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8025, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8026, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8026, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8046, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8046, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8027:
 		{
@@ -6990,14 +6984,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8028, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8028, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8029, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8029, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8043, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			ShowPlayerDialog(playerid, 8043, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8030:
 		{
@@ -7005,14 +6999,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8031, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8031, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8032, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8032, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8042, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8042, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8033:
 		{
@@ -7020,14 +7014,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8034, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+    		ShowPlayerDialog(playerid, 8034, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
   			if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8035, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+   			ShowPlayerDialog(playerid, 8035, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8047, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8047, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8036:
 		{
@@ -7035,14 +7029,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8037, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8037, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8038, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+   			ShowPlayerDialog(playerid, 8038, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8045, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			ShowPlayerDialog(playerid, 8045, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8039:
 		{
@@ -7050,14 +7044,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8040, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+    		ShowPlayerDialog(playerid, 8040, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Front bumper (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8041, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+    		ShowPlayerDialog(playerid, 8041, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Rear Bumper (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8044, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+    		ShowPlayerDialog(playerid, 8044, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Side Skirt (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper{00BFFF}Х", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8013:
 		{
@@ -7066,7 +7060,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1188), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1188, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1189), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1189, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Savanna){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Savanna){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8014:
 		{
@@ -7075,7 +7069,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1186), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1186, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1187), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1187, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Savanna){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Savanna){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8016:
 		{
@@ -7084,7 +7078,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1185), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1185, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1179), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1179, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Remington){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Remington){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8017:
 		{
@@ -7093,7 +7087,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1178), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1178, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1180), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1180, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Remington){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Remington){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8019:
 		{
@@ -7102,7 +7096,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1181), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1181, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1182), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1182, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Blade){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Blade){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8020:
 		{
@@ -7111,7 +7105,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1183), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1183, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1184), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1184, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Blade){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Blade){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8022:
 		{
@@ -7120,7 +7114,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1174), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1174, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1175), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1175, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Broadway){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Broadway){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8023:
 		{
@@ -7129,7 +7123,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1176), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1176, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1177), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1177, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Broadway){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Broadway){00BFFF}Х", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8025:
 		{
@@ -7138,7 +7132,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1173), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1173, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1160), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1160, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8026:
 		{
@@ -7147,7 +7141,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1161), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1161, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1159), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1159, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8028:
 		{
@@ -7156,7 +7150,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1172), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1172, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1171), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1171, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8029:
 		{
@@ -7165,7 +7159,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1148), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1148, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
  			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1149), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1149, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8031:
 		{
@@ -7174,7 +7168,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 		 	case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1170), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1170, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1169), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1169, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8032:
 		{
@@ -7183,7 +7177,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1140), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1140, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1141), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1141, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8034:
 		{
@@ -7192,7 +7186,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1165), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1165, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1166), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1166, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8035:
 		{
@@ -7201,7 +7195,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1167), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1167, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1168), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1168, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8037:
 		{
@@ -7210,7 +7204,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1157), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1157, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1155), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1155, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8038:
 		{
@@ -7219,7 +7213,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1156), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1156, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1154), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1154, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8040:
 		{
@@ -7228,7 +7222,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1152), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1152, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1153), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1153, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8041:
 		{
@@ -7237,7 +7231,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1151), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1151, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1150), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1150, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8042:
 		{
@@ -7246,7 +7240,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1030), AddVehicleComponent(vehicleid,1031), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1030, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1031, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1026), AddVehicleComponent(vehicleid,1027), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1026, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1027, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Sultan){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8043:
 		{
@@ -7255,7 +7249,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1039), AddVehicleComponent(vehicleid,1041), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1039, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1041, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1036), AddVehicleComponent(vehicleid,1040), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1036, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1040, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Elegy){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8044:
 		{
@@ -7264,7 +7258,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1048), AddVehicleComponent(vehicleid,1052), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1048, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1052, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1047), AddVehicleComponent(vehicleid,1051), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1047, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1051, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Flash){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8045:
 		{
@@ -7273,7 +7267,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1057), AddVehicleComponent(vehicleid,1063), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1057, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1063, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1056), AddVehicleComponent(vehicleid,1062), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1056, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1062, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Stratum){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8046:
 		{
@@ -7282,7 +7276,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1070), AddVehicleComponent(vehicleid,1072), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1070, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1072, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1069), AddVehicleComponent(vehicleid,1071), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1069, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1071, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Jester){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8047:
 		{
@@ -7291,7 +7285,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1093), AddVehicleComponent(vehicleid,1095), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1093, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1095, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1094), AddVehicleComponent(vehicleid,1090), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1094, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1090, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Bumper (Uranus){00BFFF}Х", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8048:
   		{
@@ -7300,11 +7294,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  		    case 0: {
             if(PlayerInfo[playerid][pCash] < 30000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
 			switch(Model) {
-			case 401,404,436,518,529,542,543,549,405,410,418,421,426,439,458,489,491,492,527,540,546,547,551,580,585,496,550,561,565,579,587,589,603,559,560: SPD(playerid, 8049, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Regular Spoilers{00BFFF}Х", "Spoiler є1\nSpoiler є2\nSpoiler є3\nSpoiler є4\nSpoiler є5\nSpoiler є6\nSpoiler є7\nSpoiler є8", "Choose", "Back");
+			case 401,404,436,518,529,542,543,549,405,410,418,421,426,439,458,489,491,492,527,540,546,547,551,580,585,496,550,561,565,579,587,589,603,559,560: ShowPlayerDialog(playerid, 8049, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Regular Spoilers{00BFFF}Х", "Spoiler є1\nSpoiler є2\nSpoiler є3\nSpoiler є4\nSpoiler є5\nSpoiler є6\nSpoiler є7\nSpoiler є8", "Choose", "Back");
 			default: SendClientMessage(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 1: {
 			if(PlayerInfo[playerid][pCash] < 50000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-			SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back"); } }
+			ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back"); } }
 		}
 		case 8049:
 		{
@@ -7319,7 +7313,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 5: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1014), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1014, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 6: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1015), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1015, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 7: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1023), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1023, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Spoilers{00BFFF}Х", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Spoilers{00BFFF}Х", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
 		}
 		case 8050:
 		{
@@ -7327,23 +7321,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: {
 		    if(PlayerInfo[playerid][pCar] != 565) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8051, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8051, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
 		    if(PlayerInfo[playerid][pCar] != 561) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8052, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8052, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
 		    if(PlayerInfo[playerid][pCar] != 560) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8053, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8053, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 3: {
 		    if(PlayerInfo[playerid][pCar] != 562) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8054, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8054, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 4: {
 		    if(PlayerInfo[playerid][pCar] != 559) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8055, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8055, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 5: {
 		    if(PlayerInfo[playerid][pCar] != 558) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8056, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Spoilers{00BFFF}Х", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8056, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoiler (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Spoilers{00BFFF}Х", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
 		}
 		case 8051:
 		{
@@ -7352,7 +7346,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1050), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1050, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1049), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1049, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8052:
 		{
@@ -7361,7 +7355,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1060), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1060, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1058), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1058, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8053:
 		{
@@ -7370,7 +7364,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				switch(listitem) {
 			 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1139), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1139, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 			 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1138), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1138, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8054:
 		{
@@ -7379,7 +7373,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1146), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1146, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1147), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1147, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8055:
 		{
@@ -7388,7 +7382,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1158), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1158, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1162), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1162, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8056:
 		{
@@ -7397,7 +7391,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1163), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1163, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1164), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1164, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Spoilers{00BFFF}Х", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8057:
 		{
@@ -7408,7 +7402,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1005), PlayerInfo[playerid][pKapot] = Kapot[playerid] = 1005, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Hood Installed!");
 	 		case 2: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1011), PlayerInfo[playerid][pKapot] = Kapot[playerid] = 1011, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Hood Installed!");
 	 		case 3: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1012), PlayerInfo[playerid][pKapot] = Kapot[playerid] = 1012, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Hood Installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8058:
 		{
@@ -7417,7 +7411,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1013), PlayerInfo[playerid][pFar] = Far[playerid] = 1013, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Headlights Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1024), PlayerInfo[playerid][pFar] = Far[playerid] = 1024, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Headlights Installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8059:
   		{
@@ -7426,11 +7420,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
      	    case 0: {
             if(PlayerInfo[playerid][pCash] < 20000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
 			switch(Model) {
-			case 400,401,404,419,436,474,478,479,518,529,542,545,549,575,576,600,405,410,414,418,421,422,426,439,440,445,491,492,498,499,504,507,508,516,517,526,527,536,540,546,547,551,566,580,585,609,483,567,409,477,480,496,500,533,535,550,554,579,587,589,603,415,506: SPD(playerid, 8060, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Conventional Silencers{00BFFF}Х", "Muffler є1\nMuffler є2\nMuffler є3\nMuffler є4\nMuffler є5", "Choose", "Back");
+			case 400,401,404,419,436,474,478,479,518,529,542,545,549,575,576,600,405,410,414,418,421,422,426,439,440,445,491,492,498,499,504,507,508,516,517,526,527,536,540,546,547,551,566,580,585,609,483,567,409,477,480,496,500,533,535,550,554,579,587,589,603,415,506: ShowPlayerDialog(playerid, 8060, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Conventional Silencers{00BFFF}Х", "Muffler є1\nMuffler є2\nMuffler є3\nMuffler є4\nMuffler є5", "Choose", "Back");
 			default: SendClientMessage(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 1: {
 			if(PlayerInfo[playerid][pCash] < 30000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-			SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back"); } }
+			ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back"); } }
 		}
 		case 8060:
 		{
@@ -7442,7 +7436,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 2: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1020), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1020, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 3: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1021), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1021, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 4: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1022), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1022, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Silencers{00BFFF}Х", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Silencers{00BFFF}Х", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
 		}
 		case 8061:
 		{
@@ -7450,35 +7444,35 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: {
 		    if(PlayerInfo[playerid][pCar] != 562) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8062, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8062, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
 		    if(PlayerInfo[playerid][pCar] != 575) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8063, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Broadway){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8063, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Broadway){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
 			case 2: {
 		    if(PlayerInfo[playerid][pCar] != 565) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8064, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8064, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 3: {
 		    if(PlayerInfo[playerid][pCar] != 561) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8065, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8065, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 4: {
 		    if(PlayerInfo[playerid][pCar] != 559) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8066, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8066, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 5: {
 		    if(PlayerInfo[playerid][pCar] != 558) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8067, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8067, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 6: {
 		    if(PlayerInfo[playerid][pCar] != 536) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8068, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Blade){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8068, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Blade){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
 			case 7: {
 		    if(PlayerInfo[playerid][pCar] != 534) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8069, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Remington){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8069, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Remington){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
 			case 8: {
 		    if(PlayerInfo[playerid][pCar] != 567) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8070, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Savanna){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8070, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Savanna){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); }
 			case 9: {
 		    if(PlayerInfo[playerid][pCar] != 576) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8071, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Tornado){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Silencers{00BFFF}Х", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8071, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers (Tornado){00BFFF}Х", "Slamin\nChrome", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Silencers{00BFFF}Х", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
 		}
 		case 8062:
 		{
@@ -7487,7 +7481,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1037), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1037, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1034), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1034, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8063:
 		{
@@ -7496,7 +7490,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1043), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1043, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1044), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1044, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8064:
 		{
@@ -7505,7 +7499,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1045), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1045, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1046), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1046, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8065:
 		{
@@ -7514,7 +7508,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1059), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1059, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1064), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1064, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8066:
 		{
@@ -7523,7 +7517,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1066), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1066, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1065), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1065, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8067:
 		{
@@ -7532,7 +7526,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1089), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1089, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1092), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1092, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8068:
 		{
@@ -7541,7 +7535,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1105), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1105, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1104), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1104, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8069:
 		{
@@ -7550,7 +7544,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1127), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1127, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1126), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1126, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8070:
 		{
@@ -7559,7 +7553,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1132), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1132, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1129), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1129, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8071:
 		{
@@ -7568,7 +7562,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1135), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1135, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1136), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1136, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Silencers{00BFFF}Х", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8072:
   		{
@@ -7577,11 +7571,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
      	    case 0: {
             if(PlayerInfo[playerid][pCash] < 20000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
 			switch(Model) {
-			case 401,436,518,529,543,600,410,418,426,489,492,527,540,580,585,477,496,550,558,561,565,579,589,603,559,560,562: SPD(playerid, 8073, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Conventional Air Intakes{00BFFF}Х", "Air intake є1\nAir intake є2", "Choose", "Back");
+			case 401,436,518,529,543,600,410,418,426,489,492,527,540,580,585,477,496,550,558,561,565,579,589,603,559,560,562: ShowPlayerDialog(playerid, 8073, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Conventional Air Intakes{00BFFF}Х", "Air intake є1\nAir intake є2", "Choose", "Back");
 			default: SendClientMessage(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 1: {
 			if(PlayerInfo[playerid][pCash] < 30000) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money!");
-			SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back"); } }
+			ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back"); } }
 		}
 		case 8073:
 		{
@@ -7590,7 +7584,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1006), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1006, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1007), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1007, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Air intakes{00BFFF}Х", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Air intakes{00BFFF}Х", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
 		}
 		case 8074:
 		{
@@ -7598,23 +7592,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: {
 		    if(PlayerInfo[playerid][pCar] != 560) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8075, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8075, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Sultan){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
 		    if(PlayerInfo[playerid][pCar] != 562) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8076, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8076, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Elegy){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
 		    if(PlayerInfo[playerid][pCar] != 565) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8077, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8077, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Flash){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 3: {
 		    if(PlayerInfo[playerid][pCar] != 561) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8078, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8078, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Stratum){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 4: {
 		    if(PlayerInfo[playerid][pCar] != 559) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8079, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
+		    ShowPlayerDialog(playerid, 8079, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Jester){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); }
 			case 5: {
 		    if(PlayerInfo[playerid][pCar] != 558) return SendClientMessage(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8080, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Air intakes{00BFFF}Х", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
+		    ShowPlayerDialog(playerid, 8080, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes (Uranus){00BFFF}Х", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else ShowPlayerDialog(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Air intakes{00BFFF}Х", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
 		}
 		case 8075:
 		{
@@ -7623,7 +7617,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1033), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1033, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1032), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1032, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8076:
 		{
@@ -7632,7 +7626,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1035), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1035, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1038), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1038, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8077:
 		{
@@ -7641,7 +7635,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1053), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1053, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1054), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1054, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8078:
 		{
@@ -7650,7 +7644,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1061), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1061, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1055), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1055, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8079:
 		{
@@ -7659,7 +7653,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1068), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1068, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1067), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1067, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8080:
 		{
@@ -7668,7 +7662,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1091), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1091, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1088), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1088, SendClientMessage(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else ShowPlayerDialog(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Specialist. Air intakes{00BFFF}Х", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 7777:
 		{
@@ -7676,7 +7670,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				switch(listitem)
 				{
-			 		case 0: SPD(playerid, 7701, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Faction Bases{00BFFF}Х", "Police\nFBI\nArmy\nDoctors\nMafia\nCity Hall\nStreet Racers\nNews\nDriving school\nGangs\nSons of Silcense MC\nS.W.A.T.\nHitmans", "Choose", "Back");
+			 		case 0: ShowPlayerDialog(playerid, 7701, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Faction Bases{00BFFF}Х", "Police\nFBI\nArmy\nDoctors\nMafia\nCity Hall\nStreet Racers\nNews\nDriving school\nGangs\nSons of Silcense MC\nS.W.A.T.\nHitmans", "Choose", "Back");
 					case 1:
 					{
 		            	if(GetPlayerState(playerid) == 2)
@@ -7692,8 +7686,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						}
 						SendClientMessage(playerid, COLOR_BLUE, "You have been teleported");
 					}
-		 			case 2: SPD(playerid, 7703, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Car showrooms{00BFFF}Х", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back");
-			 		case 3: SPD(playerid, 7704, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Misc{00BFFF}Х", "Auto repair shop\nRace\nPaint Ball\nLoaders\nFarm\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
+		 			case 2: ShowPlayerDialog(playerid, 7703, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Car showrooms{00BFFF}Х", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back");
+			 		case 3: ShowPlayerDialog(playerid, 7704, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Misc{00BFFF}Х", "Auto repair shop\nRace\nPaint Ball\nLoaders\nFarm\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
 			 	}
 		 	}
 		 	else OnPlayerCommandText(playerid,"/apanel");
@@ -7703,14 +7697,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		    GPN
 			if(response) {
 			switch(listitem) {
-	 		case 0: SPD(playerid, 7705, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Police{00BFFF}Х", "LSPD\nSFPD\nLVPD", "Choose", "Back");
+	 		case 0: ShowPlayerDialog(playerid, 7705, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Police{00BFFF}Х", "LSPD\nSFPD\nLVPD", "Choose", "Back");
 	 		case 1: {
             if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, -2450.0598,503.2686,30.0861); SetPlayerFacingAngle(playerid, 89.3330); }
 			else { SetPlayerPos(playerid, -2450.0598,503.2686,30.0861); SetPlayerFacingAngle(playerid, 89.3330); }
 			SendClientMessage(playerid, COLOR_BLUE, "You have been teleported"); }
-	 		case 2: SPD(playerid, 7706, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Army{00BFFF}Х", "SFa\nLVa\nLSa", "Choose", "Back");
-	 		case 3: SPD(playerid, 7707, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Doctors{00BFFF}Х", "Doctors SF\nDoctors LS\nDoctors LV", "Choose", "Back");
-	 		case 4: SPD(playerid, 7708, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Mafia{00BFFF}Х", "LCN\nYakuza\nRM", "Choose", "Back");
+	 		case 2: ShowPlayerDialog(playerid, 7706, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Army{00BFFF}Х", "SFa\nLVa\nLSa", "Choose", "Back");
+	 		case 3: ShowPlayerDialog(playerid, 7707, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Doctors{00BFFF}Х", "Doctors SF\nDoctors LS\nDoctors LV", "Choose", "Back");
+	 		case 4: ShowPlayerDialog(playerid, 7708, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Mafia{00BFFF}Х", "LCN\nYakuza\nRM", "Choose", "Back");
 	 		case 5: {
  		    if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, 1479.3794,-1742.5985,13.5469); SetPlayerFacingAngle(playerid, 185.2652); }
 			else { SetPlayerPos(playerid, 1479.3794,-1742.5985,13.5469); SetPlayerFacingAngle(playerid, 185.2652); }
@@ -7730,12 +7724,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				SendClientMessage(playerid, COLOR_BLUE, "You have been teleported");
 	 		}
-	 		case 7: SPD(playerid, 7709, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}News{00BFFF}Х", "SF News\nLS News\nLV News", "Choose", "Back");
+	 		case 7: ShowPlayerDialog(playerid, 7709, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}News{00BFFF}Х", "SF News\nLS News\nLV News", "Choose", "Back");
 	 		case 8: {
  		    if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, -2026.0851,-97.2020,35.1641); SetPlayerFacingAngle(playerid, 176.3287); }
 			else { SetPlayerPos(playerid, -2026.0851,-97.2020,35.1641); SetPlayerFacingAngle(playerid, 176.3287); }
 			SendClientMessage(playerid, COLOR_BLUE, "You have been teleported"); }
-	 		case 9:SPD(playerid, 7710, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gangs{00BFFF}Х", "Ballas\nVagos\nGrove\nAztecs\nRifa", "Choose", "Back");
+	 		case 9:ShowPlayerDialog(playerid, 7710, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gangs{00BFFF}Х", "Ballas\nVagos\nGrove\nAztecs\nRifa", "Choose", "Back");
 	 		case 10: {
  		    if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, 683.2881,-476.2363,16.3359); SetPlayerFacingAngle(playerid, 28.1572); }
 			else { SetPlayerPos(playerid, 683.2881,-476.2363,16.3359); SetPlayerFacingAngle(playerid, 28.1572); }
@@ -7965,10 +7959,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        if(response) {
 	        switch(listitem) {
 			case 0: DisablePlayerRaceCheckpoint(playerid), RaceCP[playerid] = 0, SendClientMessage(playerid, COLOR_BLUE, "{FF0000}[GPS]{FFFFFF}: {00BFFF}You have successfully turned off GPS");
-			case 1: SPD(playerid, 10001, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Important places{00BFFF}Х", "Race\nPaint Ball\nCity Hall\nBank\nClothing store\nDriving school\nAuto repair shop\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
-			case 2: SPD(playerid, 10002, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Faction Bases{00BFFF}Х", "LSPD\nSFPD\nLVPD\nFBI\nSFa\nLVa\nLSa\nMedics SF\nMedics LS\nMedics LV\nLCN\nYakuza\nRussian Mafia\nStreet Racers\nSF News\nLS News\nLV News\nThe Ballas Gang\nLos Santos Vagos Gang\nGrove Street Gang\nVarios Los Aztecas Gang\nThe Rifa Gang\nHell's Angels MC\nS.W.A.T.\nHitmans", "Choose", "Back");
-			case 3: SPD(playerid, 10003, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Works{00BFFF}Х", "State Transport\nLoader\nFarm", "Choose", "Back");
-			case 4: SPD(playerid, 10004, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Car showrooms{00BFFF}Х", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back"); } }
+			case 1: ShowPlayerDialog(playerid, 10001, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Important places{00BFFF}Х", "Race\nPaint Ball\nCity Hall\nBank\nClothing store\nDriving school\nAuto repair shop\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
+			case 2: ShowPlayerDialog(playerid, 10002, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Faction Bases{00BFFF}Х", "LSPD\nSFPD\nLVPD\nFBI\nSFa\nLVa\nLSa\nMedics SF\nMedics LS\nMedics LV\nLCN\nYakuza\nRussian Mafia\nStreet Racers\nSF News\nLS News\nLV News\nThe Ballas Gang\nLos Santos Vagos Gang\nGrove Street Gang\nVarios Los Aztecas Gang\nThe Rifa Gang\nHell's Angels MC\nS.W.A.T.\nHitmans", "Choose", "Back");
+			case 3: ShowPlayerDialog(playerid, 10003, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Works{00BFFF}Х", "State Transport\nLoader\nFarm", "Choose", "Back");
+			case 4: ShowPlayerDialog(playerid, 10004, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Car showrooms{00BFFF}Х", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back"); } }
 	    }
 	    case 10001:
 	    {
@@ -8038,20 +8032,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			GPN
 			if(response) {
 			switch(listitem) {
-			case 0: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), SPD(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdrawal from account{00BFFF}Х",string, "Ready", "Back");
-			case 1: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), SPD(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Put on the account{00BFFF}Х",string, "Ready", "Back");
-			case 2: format(string, sizeof(string), " Name: %s\n Bank account: %d $", playername, PlayerInfo[playerid][pBank]), SPD(playerid, 8817, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Information{00BFFF}Х", string, "Ready", "Back");
+			case 0: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), ShowPlayerDialog(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdrawal from account{00BFFF}Х",string, "Ready", "Back");
+			case 1: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), ShowPlayerDialog(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Put on the account{00BFFF}Х",string, "Ready", "Back");
+			case 2: format(string, sizeof(string), " Name: %s\n Bank account: %d $", playername, PlayerInfo[playerid][pBank]), ShowPlayerDialog(playerid, 8817, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Information{00BFFF}Х", string, "Ready", "Back");
 			case 3: {
 			if(PlayerInfo[playerid][pPBiskey] == 255) return SendClientMessage(playerid, COLOR_GREY, "You are not a businessman");
-			SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Transfer to business account{00BFFF}Х", "Enter the amount you want to transfer", "Ready", "Cancel"); } } }
+			ShowPlayerDialog(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Transfer to business account{00BFFF}Х", "Enter the amount you want to transfer", "Ready", "Cancel"); } } }
 		}
 		case 2929:
 		{
 			if(response) {
 			new bouse = PlayerInfo[playerid][pPBiskey];
-			if(!strlen(inputtext)) return SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Transferring money to a business account{00BFFF}Х",string, "Ready", "Cancel");
+			if(!strlen(inputtext)) return ShowPlayerDialog(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Transferring money to a business account{00BFFF}Х",string, "Ready", "Cancel");
 			new moneys; moneys = strval(inputtext);
-			if(moneys < 1000 || moneys > 1000000) return SendClientMessage(playerid, COLOR_GREY, "Minimum amount 1000 $, maximum 1000000 $"), format(string,sizeof(string), "Enter the amount you want to deposit into your business account"), SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Transferring money to a business account{00BFFF}Х",string, "Ready", "Cancel");
+			if(moneys < 1000 || moneys > 1000000) return SendClientMessage(playerid, COLOR_GREY, "Minimum amount 1000 $, maximum 1000000 $"), format(string,sizeof(string), "Enter the amount you want to deposit into your business account"), ShowPlayerDialog(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Transferring money to a business account{00BFFF}Х",string, "Ready", "Cancel");
 			if(PlayerInfo[playerid][pBank] < moneys) return	SendClientMessage(playerid, COLOR_GREY, "You don't have that much money");
 			if(bouse >=100) { PlayerInfo[playerid][pBank] -= moneys; SBizzInfo[bouse-100][sbTill] += moneys; format(string, sizeof(string), "You deposited into your business account %d $", moneys); SendClientMessage(playerid, 0x6495EDFF, string); SetPlayerChatBubble(playerid, "deposits into the business account",COLOR_PURPLE,30.0,10000); }
 			if(bouse < 100) { PlayerInfo[playerid][pBank] -= moneys; BizzInfo[bouse][bTill] += moneys; format(string, sizeof(string), "You deposited into your business account %d $", moneys); SendClientMessage(playerid, 0x6495EDFF, string); SetPlayerChatBubble(playerid, "deposits into the business account",COLOR_PURPLE,30.0,10000); } }
@@ -8060,7 +8054,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			new summa;
-			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); SPD(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Put on the account{00BFFF}Х",string, "Ready", "Cancel"); }
+			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); ShowPlayerDialog(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Put on the account{00BFFF}Х",string, "Ready", "Cancel"); }
 			summa = strval(inputtext);
 			if(PlayerInfo[playerid][pCash] < summa) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money");
 			if(summa < 1 || summa > 1000000) { SendClientMessage(playerid, COLOR_GREY, "You cannot deposit more than 1,000,000 $!"); return true; }
@@ -8068,23 +8062,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SendClientMessage(playerid, COLOR_WHITE, string); }
 			else {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
+			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
 		}
 		case 8817:
 		{
 			if(response) {
 			if(listitem == 0) {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); } }
+			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); } }
 			else {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
+			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
 		}
 		case 8814:
 		{
 			if(response) {
 			new summa;
-			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); SPD(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdrawals from the account{00BFFF}Х",string, "Ready", "Back"); }
+			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); ShowPlayerDialog(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Withdrawals from the account{00BFFF}Х",string, "Ready", "Back"); }
 			summa = strval(inputtext);
 			if(PlayerInfo[playerid][pBank] < summa) return SendClientMessage(playerid, COLOR_GREY, "You don't have that much money");
 			if(summa < 1 || summa > 1000000) { SendClientMessage(playerid, COLOR_GREY, "You cannot withdraw more than 1,000,000!"); return true; }
@@ -8092,17 +8086,17 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SendClientMessage(playerid, COLOR_WHITE, string); }
 			else {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
+			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
 		}
 		case 8900:
 	    {
 			if(response) {
 			switch(listitem) {
-	        case 0: format(string,sizeof(string), "Your account balance: %d $", PlayerInfo[playerid][pBank]), SPD(playerid,8904,DIALOG_STYLE_LIST,string, "500 $\n1000 $\n5000 $\n10000 $\n20000 $\n50000 $\n100000 $", "Ready", "Back");
- 	        case 1: { GPN format(string,sizeof(string), "{FFFFFF}Check:\nClient: %s\nBalance: %d $", playername, PlayerInfo[playerid][pBank]); SPD(playerid,8905,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х",string, "Back", ""); }
+	        case 0: format(string,sizeof(string), "Your account balance: %d $", PlayerInfo[playerid][pBank]), ShowPlayerDialog(playerid,8904,DIALOG_STYLE_LIST,string, "500 $\n1000 $\n5000 $\n10000 $\n20000 $\n50000 $\n100000 $", "Ready", "Back");
+ 	        case 1: { GPN format(string,sizeof(string), "{FFFFFF}Check:\nClient: %s\nBalance: %d $", playername, PlayerInfo[playerid][pBank]); ShowPlayerDialog(playerid,8905,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х",string, "Back", ""); }
 			case 2: {
 			if(PlayerInfo[playerid][pPHousekey] == 255) return SendClientMessage(playerid, COLOR_GREY, "You don't own real estate");
-            SPD(playerid, 9521, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х","Other Amount\nFor an hour\nFor a day\nFor 3 days\nFor a week\nFor 2 week\nFor a month(+50% collects the bank for the service)","Translate", "Exit"); } } }
+            ShowPlayerDialog(playerid, 9521, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х","Other Amount\nFor an hour\nFor a day\nFor 3 days\nFor a week\nFor 2 week\nFor a month(+50% collects the bank for the service)","Translate", "Exit"); } } }
 	 	}
 		case 8454:
 	    {
@@ -8139,13 +8133,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 4: money = 20000;
 			case 5: money = 50000;
 			case 6: money = 100000; }
-			if(money > PlayerInfo[playerid][pBank]) { SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", ""); return 1; }
+			if(money > PlayerInfo[playerid][pBank]) { ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", ""); return 1; }
 			PlayerInfo[playerid][pCash] += money; PlayerInfo[playerid][pBank] = PlayerInfo[playerid][pBank]-money; format(string, sizeof(string), "You have withdrawn from your account: %d $ Remainder: %d $", money,PlayerInfo[playerid][pBank]); SendClientMessage(playerid, 0x6495EDFF, string); format(string, sizeof(string), "~b~+%d", money); GameTextForPlayer(playerid, string, 3000, 1); return 1; }
-			else { new listitems[] = "Withdraw cash\nBalance\nHome account"; SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit"); }
+			else { new listitems[] = "Withdraw cash\nBalance\nHome account"; ShowPlayerDialog(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit"); }
 		}
 		case 8905:
 	    {
-	        if(response) { new listitems[] = "Withdraw cash\nBalance\nHome account"; SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit"); }
+	        if(response) { new listitems[] = "Withdraw cash\nBalance\nHome account"; ShowPlayerDialog(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit"); }
 		}
 		case 7000:
 		{
@@ -8404,7 +8398,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						case 0:
 						{
 							format(string,sizeof(string), "Home account: %d $\nEnter the amount you want to deposit into your home account",HouseInfo[bouse][hTakings]);
-						 	SPD(playerid,9523,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Home account{00BFFF}Х",string, "Ready", "Cancel");
+						 	ShowPlayerDialog(playerid,9523,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Home account{00BFFF}Х",string, "Ready", "Cancel");
 						}
 						case 1:
 						{
@@ -8413,7 +8407,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(50 > PlayerInfo[playerid][pBank])
 								{
 									SendClientMessage(playerid, COLOR_GREY, "To replenish your account you need 50 virtuals in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
+									ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 50;
@@ -8431,7 +8425,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(1200 > PlayerInfo[playerid][pBank])
 								{
 									SendClientMessage(playerid, COLOR_GREY, "To replenish your account you need 1,200 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
+									ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 1200;
@@ -8449,7 +8443,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(3600 > PlayerInfo[playerid][pBank])
 								{
 									SendClientMessage(playerid, COLOR_GREY, "To replenish your account you need 3,600 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
+									ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 3600;
@@ -8467,7 +8461,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(6000 > PlayerInfo[playerid][pBank])
 								{
 									SendClientMessage(playerid, COLOR_GREY, "To replenish your account you need 6,000 virtuals in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
+									ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 6000;
@@ -8485,7 +8479,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(8400 > PlayerInfo[playerid][pBank])
 								{
 									SendClientMessage(playerid, COLOR_GREY, "To replenish your account you need 8,400 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
+									ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 8400;
@@ -8503,7 +8497,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(24000 > PlayerInfo[playerid][pBank])
 								{
 									SendClientMessage(playerid, COLOR_GREY, "To replenish your account you need 24,000 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
+									ShowPlayerDialog(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 24000;
@@ -8526,7 +8520,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        	if(!strlen(inputtext))
 				{
 					format(string,sizeof(string), "Enter the amount you want to deposit into your home account");
-					SPD(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}Х{FFFFFF}Home account{00BFFF}Х",string,"Ready","Cancel");
+					ShowPlayerDialog(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}Х{FFFFFF}Home account{00BFFF}Х",string,"Ready","Cancel");
 					return true;
 				}
 	        	new moneys; moneys = strval(inputtext);
@@ -8534,7 +8528,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				{
 					SendClientMessage(playerid, COLOR_GREY, "The minimum transfer amount is 1 $, the maximum is 100,000 $");
 					format(string,sizeof(string), "Enter the amount you want to deposit into your home account");
-					SPD(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}Х{FFFFFF}Home account{00BFFF}Х",string,"Ready","Cancel");
+					ShowPlayerDialog(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}Х{FFFFFF}Home account{00BFFF}Х",string,"Ready","Cancel");
 					return true;
 				}
 	        	if(PlayerInfo[playerid][pBank] < moneys) return	SendClientMessage(playerid, COLOR_GREY, "You don't have that much money in your bank account!");
@@ -8700,7 +8694,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm1, 1000, "%s\n{FFFF00}/kick {FFFFFF}- {00BFFF}Kick a Player from the Server",adm1);
    			format(adm1, 1000, "%s\n{FFFF00}/warn {FFFFFF}- {00BFFF}Give to Player Warn",adm1);
 		   	format(adm1, 1000, "%s\n{FFFF00}/apanel {FFFFFF}- {00BFFF}Admin Panel",adm1);
-		   	SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}1st Level Administration{00BFFF}Х",adm1, "Back", ""); } }
+		   	ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}1st Level Administration{00BFFF}Х",adm1, "Back", ""); } }
 			case 1: {
 			if(PlayerInfo[playerid][pAdmin] >= 1) {
    			new adm1[1200];
@@ -8709,7 +8703,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
    			format(adm1, 1000, "%s\n{FFFF00}/warnmans {FFFFFF}- {00BFFF}View Players on the server with warns",adm1);
    			format(adm1, 1000, "%s\n{FFFF00}/akey {FFFFFF}- {00BFFF}Change Your Admin Password",adm1);
    			format(adm1, 1000, "%s\n{FFFF00}/alogin {FFFFFF}- {00BFFF}Log in as Server Administrator",adm1);
-     		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}1st Level Administration{00BFFF}Х",adm1, "Back", ""); } }
+     		ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}1st Level Administration{00BFFF}Х",adm1, "Back", ""); } }
 			case 2: {
 			if(PlayerInfo[playerid][pAdmin] >= 2) {
    			new adm2[1200];
@@ -8722,7 +8716,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm2, 1000, "%s\n{FFFF00}/ban {FFFFFF}- {00BFFF}Ban a Player",adm2);
 	  		format(adm2, 1000, "%s\n{FFFF00}/unjail {FFFFFF}- {00BFFF}Release the Player from Prison",adm2);
 	  		format(adm2, 1000, "%s\n{FFFF00}/alock {FFFFFF}- {00BFFF}Open Car/Motorcycle",adm2);
-	  		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}2 Administration Level{00BFFF}Х",adm2, "Back", ""); } }
+	  		ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}2 Administration Level{00BFFF}Х",adm2, "Back", ""); } }
 			case 3: {
 			if(PlayerInfo[playerid][pAdmin] >= 3) {
    			new adm3[1200];
@@ -8734,7 +8728,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
      		format(adm3, 1000, "%s\n{FFFF00}/biz {FFFFFF}- {00BFFF}Teleport to the specified business",adm3);
 		 	format(adm3, 1000, "%s\n{FFFF00}/spawncars {FFFFFF}- {00BFFF}Respawn all vehicles",adm3);
 		 	format(adm3, 1000, "%s\n{FFFF00}/fuelcars {FFFFFF}- {00BFFF}Refuel all vehicles",adm3);
-		 	SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}3 Administration Level{00BFFF}Х",adm3, "Back", ""); } }
+		 	ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}3 Administration Level{00BFFF}Х",adm3, "Back", ""); } }
 			case 4: {
 			if(PlayerInfo[playerid][pAdmin] >= 4) {
 	  		new adm4[1200];
@@ -8742,7 +8736,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm4, 1000, "%s\n{FFFF00}/geton {FFFFFF}- {00BFFF}Find out when the Player last logged in",adm4);
 	  		format(adm4, 1000, "%s\n{FFFF00}/givevip {FFFFFF}- {00BFFF}Give to Player VIP",adm4);
 	  		format(adm4, 1000, "%s\n{FFFF00}/take {FFFFFF}- {00BFFF}Take items from the Player.",adm4);
-	  		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}4 Administration Level{00BFFF}Х",adm4, "Back", ""); } }
+	  		ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}4 Administration Level{00BFFF}Х",adm4, "Back", ""); } }
 			case 5: {
 			if(PlayerInfo[playerid][pAdmin] >= 5) {
 		    new adm5[1200];
@@ -8754,7 +8748,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	       	format(adm5, 1000, "%s\n{FFFF00}/paint {FFFFFF}- {00BFFF}Activate Paint Ball event",adm5);
 		 	format(adm5, 1200, "%s\n{FFFF00}/setleader {FFFFFF}- {00BFFF}Assign a Player to control the selected Faction",adm5);
    			format(adm5, 1000, "%s\n{FFFF00}/arace {FFFFFF}- {00BFFF}Activate Racing event",adm5);
-   			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}5 Administration Level{00BFFF}Х",adm5, "Back", ""); } }
+   			ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}5 Administration Level{00BFFF}Х",adm5, "Back", ""); } }
 			case 6: {
 			if(PlayerInfo[playerid][pAdmin] >= 6) {
    			new adm6[1200];
@@ -8766,7 +8760,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm6, 1000, "%s\n{FFFF00}/asellsbiz {FFFFFF}- {00BFFF}Sell the specified business",adm6);
 	  		format(adm6, 1000, "%s\n{FFFF00}/banip {FFFFFF}- {00BFFF}Ban a player by IP address",adm6);
 	  		format(adm6, 1000, "%s\n{FFFF00}/unbanip {FFFFFF}- {00BFFF}Unban a player by IP address",adm6);
-     		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}6 Administration Level{00BFFF}Х",adm6, "Back", ""); } }
+     		ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}6 Administration Level{00BFFF}Х",adm6, "Back", ""); } }
 			case 7: {
 			if(PlayerInfo[playerid][pAdmin] >= 7) {
 		    new adm7[1200];
@@ -8777,7 +8771,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			format(adm7, 1000, "%s\n{FFFF00}/setmats {FFFFFF}- {00BFFF}Give the specified amount of materials to the Faction",adm7);
 			format(adm7, 1000, "%s\n{FFFF00}/asellbiz {FFFFFF}- {00BFFF}Sell ??the specified Business",adm7);
 			format(adm7, 1000, "%s\n{FFFF00}/asellhouse {FFFFFF}- {00BFFF}Sell ??the specified House",adm7);
-			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}7 Administration Level{00BFFF}Х",adm7, "Back", ""); } }
+			ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}7 Administration Level{00BFFF}Х",adm7, "Back", ""); } }
 			case 8: {
 			if(PlayerInfo[playerid][pAdmin] >= 8) {
    			new adm8[1500];
@@ -8801,7 +8795,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		  	format(adm8, 1500, "%s\n{FFFF00}/editint {FFFFFF}- {00BFFF}Change the interior of the house",adm8);
 		  	format(adm8, 1500, "%s\n{FFFF00}/payday {FFFFFF}- {00BFFF}Call ahead of schedule PayDay",adm8);
 		   	format(adm8, 1500, "%s\n{FFFF00}/unwarn {FFFFFF}- {00BFFF}Take off Warn from Player",adm8);
-       		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}8 Administration Level{00BFFF}Х",adm8, "Back", ""); } } } }
+       		ShowPlayerDialog(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}8 Administration Level{00BFFF}Х",adm8, "Back", ""); } } } }
 		}
 		case 2001:
 		{
@@ -8962,7 +8956,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 0: {
 			if(PlayerInfo[playerid][pCheckip] == 1) { PlayerInfo[playerid][pCheckip] = 0; SendClientMessage(playerid, COLOR_WHITE, "Check by IP address blackout"); }
 			PlayerInfo[playerid][pCheckip] = 1; SendClientMessage(playerid, COLOR_WHITE, "Check by IP address included!"); }
-			case 1: SPD(playerid,14,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change key{00BFFF}Х", "Enter your new security key", "Ready", "Back");
+			case 1: ShowPlayerDialog(playerid,14,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change key{00BFFF}Х", "Enter your new security key", "Ready", "Back");
 			case 2: {
 			new vdata = PlayerInfo[playerid][pVhoddata]; new vmes = PlayerInfo[playerid][pVhodMes]; new vchas = PlayerInfo[playerid][pVhodchas]; new vminute = PlayerInfo[playerid][pVhodminute]; new mtext[20];
 			if(vmes == 1) { mtext = "January"; }
@@ -8981,32 +8975,32 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(file < 0) print("no file");
 			else {
 		 	ini_closeFile(file); new coordsstring[100]; new msg[] = "This system allows you to see\nTime of your last login to the server.\n\nInformation is updated upon exit\n\n{FEBC41}-------------------------------------------------- -\ndate: %d %s\nTime:  %d:%d\nYour IP address: %s\nLast IP address: %s\n-------------------------------------------------- -"; format(coordsstring, 2000, msg, vdata,mtext,vchas,vminute,playersip,string);
-			SPD(playerid,3025,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Information about the last login to the game{00BFFF}Х",coordsstring, "Ready", ""); return true; } }
-			case 3: { new rulesdialog[1024]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s",IPMSG[0],IPMSG[1],IPMSG[2],IPMSG[3],IPMSG[4]); SPD(playerid,165,DIALOG_STYLE_MSGBOX, "INFO",rulesdialog, "Ready", ""); } } }
-			else { new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname"; SPD(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel"); }
+			ShowPlayerDialog(playerid,3025,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Information about the last login to the game{00BFFF}Х",coordsstring, "Ready", ""); return true; } }
+			case 3: { new rulesdialog[1024]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s",IPMSG[0],IPMSG[1],IPMSG[2],IPMSG[3],IPMSG[4]); ShowPlayerDialog(playerid,165,DIALOG_STYLE_MSGBOX, "INFO",rulesdialog, "Ready", ""); } } }
+			else { new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname"; ShowPlayerDialog(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel"); }
 		}
 		case 9943:
 		{
 			if(response) {
- 			if(!strlen(inputtext)) return SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Application to change nickname{00BFFF}Х", "Write a new nickname (according to the form Name_Surname)", "Send", "Back");
+ 			if(!strlen(inputtext)) return ShowPlayerDialog(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Application to change nickname{00BFFF}Х", "Write a new nickname (according to the form Name_Surname)", "Send", "Back");
    			format(string,sizeof(string), "Users/%s.ini",inputtext);
-			if(fexist(string)) { SendClientMessage(playerid,COLOR_GREY, "Nick is busy"); SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Application to change nickname{00BFFF}Х", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); return true; }
+			if(fexist(string)) { SendClientMessage(playerid,COLOR_GREY, "Nick is busy"); ShowPlayerDialog(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Application to change nickname{00BFFF}Х", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); return true; }
  			format(WantNickChange[playerid],MAX_PLAYER_NAME, "%s",inputtext); GPN format(string, sizeof(string), "[Application to change nickname] %s[%d] asks to change nickname to: %s", playername,playerid,(inputtext)); ABroadCast(COLOR_USE, string, 1); SendClientMessage(playerid, COLOR_LIGHTRED, "Your application has been sent. Wait for approval from the administration"); }
-		 	else { new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname"; SPD(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel"); }
+		 	else { new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname"; ShowPlayerDialog(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel"); }
 		}
 		case 1005:
   		{
    			if(response) {
-   			if(!strlen(inputtext))return SPD(playerid,11198,DIALOG_STYLE_INPUT,"Question","{FFFFFF}Enter a message to contact helpers(assistants) servers\n","Ready","Back");
+   			if(!strlen(inputtext))return ShowPlayerDialog(playerid,11198,DIALOG_STYLE_INPUT,"Question","{FFFFFF}Enter a message to contact helpers(assistants) servers\n","Ready","Back");
    			GPN format(string, sizeof(string), "{33ccff}Your question: %s",(inputtext)); SendClientMessage(playerid, COLOR_WHITE, string); SendClientMessage(playerid, COLOR_LIGHTRED,"Your question has been sent to server helpers"); format(string, sizeof(string), "{33ccff}Question from %s[%d]: %s", playername, playerid, (inputtext)); HBroadCast(0xA85400AA,string,1); }
    			else {
-   			if(!strlen(inputtext))return SPD(playerid,10,DIALOG_STYLE_INPUT,"Report","{FFFFFF}Enter a message to contact the server administration\n","Ready","Back");
+   			if(!strlen(inputtext))return ShowPlayerDialog(playerid,10,DIALOG_STYLE_INPUT,"Report","{FFFFFF}Enter a message to contact the server administration\n","Ready","Back");
    			GPN format(string, sizeof(string), "{d53e07}Your complaint: %s",(inputtext)); SendClientMessage(playerid, COLOR_WHITE, string); SendClientMessage(playerid, COLOR_LIGHTRED,"Your complaint has been sent to the server administration"); format(string, sizeof(string), "Complaint from %s[%d]: %s", playername, playerid, (inputtext)); ABroadCast(COLOR_YELLOW,string,1); }
   		}
 	 	case 11198:
   		{
    			if(response) {
-   			if(!strlen(inputtext))return SPD(playerid,11,DIALOG_STYLE_INPUT,"Question","{FFFFFF}Enter a message to contact helpers(assistants) servers\n","Ready","Back");
+   			if(!strlen(inputtext))return ShowPlayerDialog(playerid,11,DIALOG_STYLE_INPUT,"Question","{FFFFFF}Enter a message to contact helpers(assistants) servers\n","Ready","Back");
    			GPN format(string, sizeof(string), "{33ccff}Your question: %s",(inputtext)); SendClientMessage(playerid, COLOR_WHITE, string); SendClientMessage(playerid, COLOR_LIGHTRED,"Your question has been sent to server helpers"); format(string, sizeof(string), "{33ccff}Question from %s[%d]: %s", playername, playerid, (inputtext)); HBroadCast(0xA85400AA,string,1); }
    			else OnPlayerCommandText(playerid,"/mm");
   		}
@@ -9032,7 +9026,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(obichnie, 1000, "%s\n{FFFF00}/time {FFFFFF}- {00BFFF}View Time",obichnie);
         	format(obichnie, 1000, "%s\n{FFFF00}/ad {FFFFFF}- {00BFFF}Submit an ad to the Editorial Office News",obichnie);
         	format(obichnie, 1000, "%s\n{FFFF00}/showlicenses {FFFFFF}- {00BFFF}Show the Player your Licenses",obichnie);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regular{00BFFF}Х",obichnie, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regular{00BFFF}Х",obichnie, "Back", ""); }
 			case 1: {
   			new obichnie2[1200];
     		format(obichnie2, 1000, "{FFFF00}/licenses {FFFFFF}- {00BFFF}View your Licenses");
@@ -9048,7 +9042,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(obichnie2, 1000, "%s\n{FFFF00}/endlesson {FFFFFF}- {00BFFF}Finish your driving license",obichnie2);
         	format(obichnie2, 1000, "%s\n{FFFF00}/getbizstats {FFFFFF}- {00BFFF}View Business Statistics",obichnie2);
         	format(obichnie2, 1000, "%s\n{FFFF00}/finfo {FFFFFF}- {00BFFF}View Farm Information",obichnie2);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regular{00BFFF}Х",obichnie2, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regular{00BFFF}Х",obichnie2, "Back", ""); }
 			case 2: {
   			new obichnie3[1200];
   			format(obichnie3, 1000, "{FFFF00}/leaders {FFFFFF}- {00BFFF}View Faction Leaders Online");
@@ -9059,7 +9053,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(obichnie3, 1000, "%s\n{FFFF00}/box {FFFFFF}- {00BFFF}Change fighting style to Boxing",obichnie3);
         	format(obichnie3, 1000, "%s\n{FFFF00}/kickbox {FFFFFF}- {00BFFF}Change fighting style to Kick Boxing",obichnie3);
         	format(obichnie3, 1000, "%s\n{FFFF00}/kungfu {FFFFFF}- {00BFFF}Change fighting style to Kung Fu",obichnie3);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regular{00BFFF}Х",obichnie3, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Regular{00BFFF}Х",obichnie3, "Back", ""); }
 			case 3: {
   			new chat[1200];
     		format(chat, 1000, "{FFFF00}/w {FFFFFF}- {00BFFF}Whisper");
@@ -9075,7 +9069,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(chat, 1000, "%s\n{FFFF00}/gov {FFFFFF}- {00BFFF}State News",chat);
         	format(chat, 1000, "%s\n{FFFF00}/try {FFFFFF}- {00BFFF}Execute case action",chat);
         	format(chat, 1000, "%s\n{FFFF00}/nacional {FFFFFF}- {00BFFF}Talk to the Acecent of your Nationality",chat);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Chat{00BFFF}Х",chat, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Chat{00BFFF}Х",chat, "Back", ""); }
 			case 4: {
   			new telefon[1200];
     		format(telefon, 1000, "{FFFF00}/c {FFFFFF}- {00BFFF}Call Special Service");
@@ -9083,7 +9077,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
       		format(telefon, 1000, "%s\n{FFFF00}/p {FFFFFF}- {00BFFF}Answer the call",telefon);
        		format(telefon, 1000, "%s\n{FFFF00}/call {FFFFFF}- {00BFFF}Call Player",telefon);
         	format(telefon, 1000, "%s\n{FFFF00}/number {FFFFFF}- {00BFFF}Find out the Player's Phone Number",telefon);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Telephone{00BFFF}Х",telefon, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Telephone{00BFFF}Х",telefon, "Back", ""); }
 			case 5: {
   			new dom[1200];
     		format(dom, 1000, "{FFFF00}/changehouse {FFFFFF}- {00BFFF}Sell ??House to Player");
@@ -9095,7 +9089,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(dom, 1000, "%s\n{FFFF00}/housewithdraw {FFFFFF}- {00BFFF}Take Money for the House",dom);
         	format(dom, 1000, "%s\n{FFFF00}/buyhouse {FFFFFF}- {00BFFF}To buy a house",dom);
         	format(dom, 1000, "%s\n{FFFF00}/home {FFFFFF}- {00BFFF}Find your Home",dom);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}House{00BFFF}Х",dom, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}House{00BFFF}Х",dom, "Back", ""); }
 			case 6: {
   			new avto2[1200];
     		format(avto2, 1000, "{FFFF00}/changecar {FFFFFF}- {00BFFF}Sell ??Car to Player");
@@ -9107,7 +9101,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(avto2, 1000, "%s\n{FFFF00}/lock {FFFFFF}- {00BFFF}Open/Close Vehicle",avto2);
         	format(avto2, 1000, "%s\n{FFFF00}/fill {FFFFFF}- {00BFFF}Refuel your car at a gas station",avto2);
         	format(avto2, 1000, "%s\n{FFFF00}/fillcar {FFFFFF}- {00BFFF}Refuel the Car from a Canister",avto2);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Automobile{00BFFF}Х",avto2, "Back", ""); }
+        	ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Automobile{00BFFF}Х",avto2, "Back", ""); }
 			case 7: {
    			if(PlayerInfo[playerid][pHelper] >= 1) {
     		new helper[1200];
@@ -9116,7 +9110,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     		format(helper, 1000, "%s\n{FFFF00}/hc {FFFFFF}- {00BFFF}Helper Chat",helper);
     		format(helper, 1000, "%s\n{FFFF00}/otvet {FFFFFF}- {00BFFF}Reply to Player",helper);
     		format(helper, 1000, "%s\n{FFFF00}/helpers {FFFFFF}- {00BFFF}Helpers online",helper);
-    		SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Helpers{00BFFF}Х",helper, "Back", ""); }
+    		ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Helpers{00BFFF}Х",helper, "Back", ""); }
      		else SendClientMessage(playerid, COLOR_GREY, "You are not a Helper!"); }
 			case 8: {
   			new ferma[1200];
@@ -9126,14 +9120,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
   			format(ferma, 1000, "%s\n{FFFF00}/ffpanel {FFFFFF}- {00BFFF}Open Deputy Farm Panel",ferma);
   			format(ferma, 1000, "%s\n{FFFF00}/funload {FFFFFF}- {00BFFF}Unload Harvest to Farm",ferma);
   			format(ferma, 1000, "%s\n{FFFF00}/buyferm {FFFFFF}- {00BFFF}Buy a Farm",ferma);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Farm{00BFFF}Х",ferma, "Back", ""); }
+  			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Farm{00BFFF}Х",ferma, "Back", ""); }
 			case 9: {
   			new bank[1200];
   			format(bank, 1000, "{FFFF00}/withdraw {FFFFFF}- {00BFFF}Withdraw cash from the Bank");
   			format(bank, 1000, "%s\n{FFFF00}/transfer {FFFFFF}- {00BFFF}Send Money from your account to another Player's account",bank);
   			format(bank, 1000, "%s\n{FFFF00}/housebank {FFFFFF}- {00BFFF}Deposit money into your home account",bank);
   			format(bank, 1000, "%s\n{FFFF00}/balance {FFFFFF}- {00BFFF}View your Bank Account Balance",bank);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bank{00BFFF}Х",bank, "Back", ""); }
+  			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bank{00BFFF}Х",bank, "Back", ""); }
 			case 10: {
   			new biznes[1200];
   			format(biznes, 1000, "{FFFF00}/bizmafia {FFFFFF}- {00BFFF}Install the Roof of your Business");
@@ -9143,7 +9137,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
   			format(biznes, 1000, "%s\n{FFFF00}/bizwithdraw {FFFFFF}- {00BFFF}Withdraw Money from your Business account",biznes);
   			format(biznes, 1000, "%s\n{FFFF00}/bizfee {FFFFFF}- {00BFFF}Set the price for Entry/Gasoline",biznes);
   			format(biznes, 1000, "%s\n{FFFF00}/sellbiz {FFFFFF}- {00BFFF}Sell ??business",biznes);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Business{00BFFF}Х",biznes, "Back", ""); }
+  			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Business{00BFFF}Х",biznes, "Back", ""); }
 			case 11: {
   			new frac[1200];
   			format(frac, 1000, "{FFFF00}/members {FFFFFF}- {00BFFF}View Faction Members Online");
@@ -9151,7 +9145,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
   			format(frac, 1000, "%s\n{FFFF00}/uninvite {FFFFFF}- {00BFFF}Fire a Player",frac);
   			format(frac, 1000, "%s\n{FFFF00}/invite {FFFFFF}- {00BFFF}Accept a Player into a Faction",frac);
   			format(frac, 1000, "%s\n{FFFF00}/warehouse {FFFFFF}- {00BFFF}Check Material Warehouse",frac);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}General Faction Commands{00BFFF}Х",frac, "Back", ""); }
+  			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}General Faction Commands{00BFFF}Х",frac, "Back", ""); }
 			case 12: {
    			if(PlayerInfo[playerid][pDonateRank] >= 1) {
  			new vip[1200];
@@ -9159,24 +9153,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(vip, 1000, "%s\n{FFFF00}/vipuninvite {FFFFFF}- {00BFFF}Leave the Faction",vip);
  			format(vip, 1000, "%s\n{FFFF00}/admins {FFFFFF}- {00BFFF}Administrators Online",vip);
  			format(vip, 1000, "%s\n{FFFF00}/vc {FFFFFF}- {00BFFF}VIP Chat",vip);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}VIP{00BFFF}Х",vip, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}VIP{00BFFF}Х",vip, "Back", ""); }
   			else SendClientMessage(playerid, COLOR_GREY, "You do not VIP!"); }
 			case 13: {
    			if(PlayerInfo[playerid][pJob] == 1) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/route {FFFFFF}- {00BFFF}Start/End Working Day");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bus driver{00BFFF}Х",job, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bus driver{00BFFF}Х",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 2) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/refill {FFFFFF}- {00BFFF}Refuel the Player");
  			format(job, 1000, "%s\n{FFFF00}/repair {FFFFFF}- {00BFFF}Repair Auto Player",job);
  			format(job, 1000, "%s\n{FFFF00}/mcontract {FFFFFF}- {00BFFF}Conclude a Contract with Auto Gas Station",job);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mechanic{00BFFF}Х",job, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mechanic{00BFFF}Х",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 4) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/fare {FFFFFF}- {00BFFF}Start/End Working Day");
  			format(job, 1000, "%s\n{FFFF00}/fr {FFFFFF}- {00BFFF}Taxi Driver Radio",job);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Taxi driver{00BFFF}Х",job, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Taxi driver{00BFFF}Х",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 5) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/sellprods {FFFFFF}- {00BFFF}Unload Products to the Store/Snack/Club");
@@ -9184,19 +9178,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(job, 1000, "%s\n{FFFF00}/loadgas {FFFFFF}- {00BFFF}Load Gasoline",job);
  			format(job, 1000, "%s\n{FFFF00}/load {FFFFFF}- {00BFFF}Load with Products",job);
  			format(job, 1000, "%s\n{FFFF00}/pmenu {FFFFFF}- {00BFFF}Product Delivery Menu",job);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Product Delivery Man{00BFFF}Х",job, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Product Delivery Man{00BFFF}Х",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 6) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/mduty {FFFFFF}- {00BFFF}Start Flight.");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Garbage Truck Driver{00BFFF}Х",job, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Garbage Truck Driver{00BFFF}Х",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 7) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/mfare {FFFFFF}- {00BFFF}Start/End Working Day");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Driver{00BFFF}Х",job, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Driver{00BFFF}Х",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 8) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/startbank {FFFFFF}- {00BFFF}Start/End Working Day");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Collector{00BFFF}Х",job, "Back", ""); } }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Collector{00BFFF}Х",job, "Back", ""); } }
 			case 14: {
   			if(PlayerInfo[playerid][pMember] == 1 || PlayerInfo[playerid][pMember] == 10 || PlayerInfo[playerid][pMember] == 21 || PlayerInfo[playerid][pMember] == 27 || PlayerInfo[playerid][pMember] == 28) {
  			new member[1200];
@@ -9217,24 +9211,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/ram {FFFFFF}- {00BFFF}Break into the House",member);
  			format(member, 1000, "%s\n{FFFFFF}/mvduval - Fire an employee [For the minister]",member);
  			format(member, 1000, "%s\n{FFFFFF}/mvdgiverank - Fire an employee [For the minister]",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Police{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Police{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 2) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/tazer {FFFFFF}- {00BFFF}Hit a Player with a Taser");
  			format(member, 1000, "%s\n{FFFF00}/bizlock {FFFFFF}- {00BFFF}Close Business",member);
  			format(member, 1000, "%s\n{FFFF00}/spy {FFFFFF}- {00BFFF}Disguise yourself",member);
  			format(member, 1000, "%s\n{FFFF00}/untie {FFFFFF}- {00BFFF}Unleash the Hostage",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}FBI{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}FBI{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 3) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/givebilsf {FFFFFF}- {00BFFF}Give the Player a Military Card");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army SF{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army SF{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 4 || PlayerInfo[playerid][pMember] == 22 || PlayerInfo[playerid][pMember] == 24) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/sethealcost {FFFFFF}- {00BFFF}Set a Price for Treatment");
  			format(member, 1000, "%s\n{FFFF00}/heal {FFFFFF}- {00BFFF}Cure Player",member);
  			format(member, 1000, "%s\n{FFFF00}/lomka {FFFFFF}- {00BFFF}Conduct a session for drug addiction",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Doctors{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Doctors{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 5 || PlayerInfo[playerid][pMember] == 6 || PlayerInfo[playerid][pMember] == 14) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/untie {FFFFFF}- {00BFFF}Unleash the Hostage");
@@ -9249,14 +9243,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/getgun {FFFFFF}- {00BFFF}Take up a weapon",member);
  			format(member, 1000, "%s\n{FFFF00}/bizlist {FFFFFF}- {00BFFF}View Captured Businesses",member);
  			format(member, 1000, "%s\n{FFFF00}/mafiawar {FFFFFF}- {00BFFF}Start a war for Business",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mafia{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Mafia{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 7) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/free {FFFFFF}- {00BFFF}Offer the Player to get out of prison");
  			format(member, 1000, "%s\n{FFFF00}/treasury {FFFFFF}- {00BFFF}View the amount of money in the City Hall account",member);
  			format(member, 1000, "%s\n{FFFF00}/treasuryput {FFFFFF}- {00BFFF}Deposit money into City Hall account",member);
  			format(member, 1000, "%s\n{FFFF00}/treasurywithdraw {FFFFFF}- {00BFFF}Withdraw money from City Hall account",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}City Hall{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}City Hall{00BFFF}Х",member, "Back", ""); }
  			else if(PlayerInfo[playerid][pMember] == 8)
 		 	{
 	 			new member[1200];
@@ -9287,11 +9281,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/newsbank {FFFFFF}- {00BFFF}View the amount of money in the account News",member);
  			format(member, 1000, "%s\n{FFFF00}/n {FFFFFF}- {00BFFF}Go to menu News",member);
  			format(member, 1000, "%s\n{FFFF00}/givenewskeys {FFFFFF}- {00BFFF}Give the Player a pass to the studio News",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}News{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}News{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 11) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/givelicenses {FFFFFF}- {00BFFF}Open the menu for issuing Licenses to the Player");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Instructors{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Instructors{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 12 || PlayerInfo[playerid][pMember] == 13 || PlayerInfo[playerid][pMember] == 15 || PlayerInfo[playerid][pMember] == 17 || PlayerInfo[playerid][pMember] == 18) {
  			new member[1200];
 			format(member, 1000, "{FFFF00}/switchskin {FFFFFF}- {00BFFF}Dress in military uniform");
@@ -9311,14 +9305,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/gc {FFFFFF}- {00BFFF}General chat Gangs",member);
  			format(member, 1000, "%s\n{FFFF00}/carm {FFFFFF}- {00BFFF}Open the menu for transporting materials on a truck",member);
  			format(member, 1000, "%s\n{FFFF00}/gmenu {FFFFFF}- {00BFFF}Bandit menu",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Gangs{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Gangs{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 19) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/carm {FFFFFF}- {00BFFF}Open the Materials Delivery menu on Matovozka");
  			format(member, 1000, "%s\n{FFFF00}/givebillv {FFFFFF}- {00BFFF}Give the Player a Military Card",member);
  			format(member, 1000, "%s\n{FFFF00}/camera {FFFFFF}- {00BFFF}Start surveillance",member);
  			format(member, 1000, "%s\n{FFFF00}/cameraoff {FFFFFF}- {00BFFF}Turn off surveillance",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army LV{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army LV{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 29) {
  			new member[1200];
  			format(member, 1000, "%s\n{FFFF00}/mouval {FFFFFF}- {00BFFF}Fire a player[LSa,SFa,LVa]",member);
@@ -9330,7 +9324,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/givebilsf {FFFFFF}- {00BFFF}Issue a Military Card[SFa]",member);
  			format(member, 1000, "%s\n{FFFF00}/camera {FFFFFF}- {00BFFF}Start surveillance",member);
  			format(member, 1000, "%s\n{FFFF00}/cameraoff {FFFFFF}- {00BFFF}Turn off surveillance",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army LV{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army LV{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 23) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/bbalance {FFFFFF}- {00BFFF}Check the amount of Money in the Bikers' account");
@@ -9340,24 +9334,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/bsellgun {FFFFFF}- {00BFFF}Make a Weapon",member);
  			format(member, 1000, "%s\n{FFFF00}/gunlist {FFFFFF}- {00BFFF}List of weapons",member);
  			format(member, 1000, "%s\n{FFFF00}/unloading {FFFFFF}- {00BFFF}Unload Materials from the Truck",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bikers{00BFFF}Х",member, "Back", ""); }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Bikers{00BFFF}Х",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 25) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/givebills {FFFFFF}- {00BFFF}Issue a Military Card to the Player");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army LV{00BFFF}Х",member, "Back", ""); } } } }
+ 			ShowPlayerDialog(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Army LV{00BFFF}Х",member, "Back", ""); } } } }
 		}
 		case 9623:
 	    {
 			if(response) {
 			switch(listitem) {
 			case 0: ShowStats(playerid,playerid);
-			case 1: SPD(playerid, 10025, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Server commands{00BFFF}Х", "Regular\nRegular {00BFFF}(Part 2)\nRegular {00BFFF}(Part 3)\nChat\nTelephone\nHouse\nAutomobile\nHelpers\nFarm\nBank\nBusiness\nGeneral Faction Commands\nVIP\nMy Teams (Job)\nMy Teams (Fraction)", "Choose", "Back");
-			case 2: SPD(playerid, 1005,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Support{00BFFF}Х","{FFFFFF}Choose to submit a support message\nFor offtopic/flood/spam you will be punished","Question","Report");
-			case 3: SPD(playerid,11,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change Password{00BFFF}Х", "    Enter your new password     ", "Accept", "Back");
-			case 4: { new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); SPD(playerid,9980,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Server Rules{00BFFF}Х", rulesdialog, "Agree", "Cancel"); }
-	        case 5: { if(PlayerInfo[playerid][pCheckip]== 0) return SPD(playerid,14,DIALOG_STYLE_INPUT, "Security Key", "You do not have a security key installed!\nEnter a security key consisting of 5 - 16 characters", "Ready", "Back"); SPD(playerid, 2323, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Safety{00BFFF}Х", "[0] On/Off check by IP\n[1] Change key\n[2] Last entrance\n[3] Help", "Choose", "Back"); }
+			case 1: ShowPlayerDialog(playerid, 10025, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Server commands{00BFFF}Х", "Regular\nRegular {00BFFF}(Part 2)\nRegular {00BFFF}(Part 3)\nChat\nTelephone\nHouse\nAutomobile\nHelpers\nFarm\nBank\nBusiness\nGeneral Faction Commands\nVIP\nMy Teams (Job)\nMy Teams (Fraction)", "Choose", "Back");
+			case 2: ShowPlayerDialog(playerid, 1005,DIALOG_STYLE_MSGBOX,"{00BFFF}Х{FFFFFF}Support{00BFFF}Х","{FFFFFF}Choose to submit a support message\nFor offtopic/flood/spam you will be punished","Question","Report");
+			case 3: ShowPlayerDialog(playerid,11,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Change Password{00BFFF}Х", "    Enter your new password     ", "Accept", "Back");
+			case 4: { new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); ShowPlayerDialog(playerid,9980,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Server Rules{00BFFF}Х", rulesdialog, "Agree", "Cancel"); }
+	        case 5: { if(PlayerInfo[playerid][pCheckip]== 0) return ShowPlayerDialog(playerid,14,DIALOG_STYLE_INPUT, "Security Key", "You do not have a security key installed!\nEnter a security key consisting of 5 - 16 characters", "Ready", "Back"); ShowPlayerDialog(playerid, 2323, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Safety{00BFFF}Х", "[0] On/Off check by IP\n[1] Change key\n[2] Last entrance\n[3] Help", "Choose", "Back"); }
 		    case 6: OnPlayerCommandText(playerid,"/donate");
-		    case 7: SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nick's replacement has been requested{00BFFF}Х", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); } }
+		    case 7: ShowPlayerDialog(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}Х{FFFFFF}Nick's replacement has been requested{00BFFF}Х", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); } }
 		}
 		case 560:
 	    {
@@ -9429,7 +9423,7 @@ stock SetPlayerSpawn(playerid)
 	if(PlayerInfo[playerid][pWantedLevel] >= 1) { WantedPoints[playerid] = PlayerInfo[playerid][pWantedLevel]; WantedLevel[playerid] = PlayerInfo[playerid][pWantedLevel]; SetPlayerWantedLevel(playerid, PlayerInfo[playerid][pWantedLevel]); }
 	if(PlayerInfo[playerid][pTut] == 0) {
 	SetPlayerInterior(playerid, 0);
-	SetPlayerHealth(playerid, 100); SetPlayerWeapons(playerid); PlayerInfo[playerid][pHP] = 100; SetPlayerInterior(playerid,0); SetPlayerFacingAngle(playerid, 179.5547); SetPlayerCameraPos(playerid,-1817.0808,1112.9937,235.4244); SetPlayerCameraLookAt(playerid,-1816.5471,949.6590,235.4244); SPD(playerid,789,DIALOG_STYLE_MSGBOX, " ", "{00BFFF}What gender will your character be?:\n", "Man", "Woman"); TogglePlayerControllable(playerid, 0); DelGun(playerid); }
+	SetPlayerHealth(playerid, 100); SetPlayerWeapons(playerid); PlayerInfo[playerid][pHP] = 100; SetPlayerInterior(playerid,0); SetPlayerFacingAngle(playerid, 179.5547); SetPlayerCameraPos(playerid,-1817.0808,1112.9937,235.4244); SetPlayerCameraLookAt(playerid,-1816.5471,949.6590,235.4244); ShowPlayerDialog(playerid,789,DIALOG_STYLE_MSGBOX, " ", "{00BFFF}What gender will your character be?:\n", "Man", "Woman"); TogglePlayerControllable(playerid, 0); DelGun(playerid); }
 	if(PlayerInfo[playerid][pMember] >= 5 && PlayerInfo[playerid][pMember] <= 6) { FormaFrac[playerid] = 35; SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]); SetPlayerToTeamColor(playerid); }
 	if(PlayerInfo[playerid][pMember] == 8) FormaFrac[playerid] = 35, SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]), SetPlayerToTeamColor(playerid);
 	if(PlayerInfo[playerid][pMember] >= 12 && PlayerInfo[playerid][pMember] <= 15) { FormaFrac[playerid] = 35; SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]); SetPlayerToTeamColor(playerid); }
@@ -9929,7 +9923,7 @@ public OnPlayerEnterCheckpoint(playerid)
 	if(CP[playerid] == 500) { SendClientMessage(playerid, COLOR_GREEN, "You received a bonus in the amount: 600 $"); PlayerInfo[playerid][pCash] += 600; DisablePlayerCheckpoint(playerid); CP[playerid] = 0; }
 	if(PicCP[playerid] == 2)
 	{
-		SPD(playerid, 10092, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Apparatus employed{00BFFF}Х","View a list of available jobs?", "Yes", "No");
+		ShowPlayerDialog(playerid, 10092, DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Apparatus employed{00BFFF}Х","View a list of available jobs?", "Yes", "No");
 		return true;
 	}
 	else if(CP[playerid] == 50) {
@@ -11463,7 +11457,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
     {
 		if(PlayerInfo[playerid][pNkeys] == 1 || PlayerInfo[playerid][pMember] == 16 || PlayerInfo[playerid][pMember] == 28)
 		{
-			SPD(playerid,190,DIALOG_STYLE_LIST,"Menu:","Office\nParking","Choose","Cancel");
+			ShowPlayerDialog(playerid,190,DIALOG_STYLE_LIST,"Menu:","Office\nParking","Choose","Cancel");
 		}
 		else
 		{
@@ -11474,7 +11468,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
     {
 		if(PlayerInfo[playerid][pNkeys] == 1 || PlayerInfo[playerid][pMember] == 16 || PlayerInfo[playerid][pMember] == 28)
 		{
-			SPD(playerid,193,DIALOG_STYLE_LIST,"Menu:","Office\nRoof","Choose","Cancel");
+			ShowPlayerDialog(playerid,193,DIALOG_STYLE_LIST,"Menu:","Office\nRoof","Choose","Cancel");
 		}
 		else
 		{
@@ -11570,7 +11564,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	    if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) { return true; }
 		ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch",4.0,0,0,0,0,0);
 		new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-		SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close");
+		ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close");
 	}
 	if(pickupid == passs[0])
 	{
@@ -12134,7 +12128,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	}
  	else if(pickupid == lvpd[4])
 	{
-		SPD(playerid,8240,DIALOG_STYLE_MSGBOX, "Entrance", "Where do you want to enter?", "Stock", "On the roof");
+		ShowPlayerDialog(playerid,8240,DIALOG_STYLE_MSGBOX, "Entrance", "Where do you want to enter?", "Stock", "On the roof");
 	}
 	else if(pickupid == lvpd[5])
 	{
@@ -12145,7 +12139,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	}
 	else if(pickupid == lvpd[6])
 	{
-		SPD(playerid,8241,DIALOG_STYLE_MSGBOX, "Entrance", "Where do you want to enter?", "Stock", "Down");
+		ShowPlayerDialog(playerid,8241,DIALOG_STYLE_MSGBOX, "Entrance", "Where do you want to enter?", "Stock", "Down");
 	}
 	else if(pickupid >= chekmaterialslv[0] && pickupid <= chekmaterialslv[9])
   	{
@@ -12178,7 +12172,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 12)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12189,7 +12183,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 13)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12200,7 +12194,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 15)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12211,7 +12205,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 17)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12222,7 +12216,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 18)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Gang Menu{00BFFF}Х", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12463,7 +12457,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
 	    if(PlayerInfo[playerid][pPasport] == 0)
 	    {
-			SPD(playerid,228,DIALOG_STYLE_MSGBOX,"Obtaining a Passport","\
+			ShowPlayerDialog(playerid,228,DIALOG_STYLE_MSGBOX,"Obtaining a Passport","\
 			{FFFFFF}Hello. Do you want to become a citizen of this state?\n\
 			Х{00BFFF}The passport will indicate that you will be a new citizen of this state.\n\
 			{FFFFFF}Х{00BFFF}As a citizen of the state, you can get a job, buy a house, a car, or join one of the organizations.\n\
@@ -12489,7 +12483,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
     }
     else if(pickupid == clothes)
 	{
-		SPD(playerid,405,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+		ShowPlayerDialog(playerid,405,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 	}
 	else if(pickupid == skinshop[0] || pickupid == skinshop[2])
 	{
@@ -12814,125 +12808,125 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerFacingAngle(playerid, 355.8037);
 		SetPlayerVirtualWorld(playerid, 3);
 	}
-	else if(pickupid == FarmInfoPic) SPD(playerid,134,DIALOG_STYLE_MSGBOX, "Job information", "Here you can work as a harvester.\n\nTo get started, find a farmer\nhe will explain everything to you.\n\nThere is a locker room nearby\nget money there.\n\nTo start work you need to change into a robe,\nThen they will tell you where to get the cargo.\n\nAs soon as you want to end your work day,\ngo to the locker room.", "Ready", "");
-    else if(pickupid == CloakroomFarm) SPD(playerid,135,DIALOG_STYLE_MSGBOX, "Locker room", "Do you want to start your work day?", "Begin", "Complete");
+	else if(pickupid == FarmInfoPic) ShowPlayerDialog(playerid,134,DIALOG_STYLE_MSGBOX, "Job information", "Here you can work as a harvester.\n\nTo get started, find a farmer\nhe will explain everything to you.\n\nThere is a locker room nearby\nget money there.\n\nTo start work you need to change into a robe,\nThen they will tell you where to get the cargo.\n\nAs soon as you want to end your work day,\ngo to the locker room.", "Ready", "");
+    else if(pickupid == CloakroomFarm) ShowPlayerDialog(playerid,135,DIALOG_STYLE_MSGBOX, "Locker room", "Do you want to start your work day?", "Begin", "Complete");
 	else if(pickupid == FormaFracPic[0])// LSPD
 	{
 		if(PlayerInfo[playerid][pMember] == 1)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[1])// FBI
 	{
 		if(PlayerInfo[playerid][pMember] == 2)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[16])// FBI_2
 	{
 		if(PlayerInfo[playerid][pMember] == 2)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[2])// SFa
 	{
 		if(PlayerInfo[playerid][pMember] == 3)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[3])// Medics SF
 	{
 		if(PlayerInfo[playerid][pMember] == 4)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[4])// Mayor
 	{
 		if(PlayerInfo[playerid][pMember] == 7)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[5])// SFPD
 	{
 		if(PlayerInfo[playerid][pMember] == 10)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[6])// Instructors
 	{
 		if(PlayerInfo[playerid][pMember] == 11)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[7])// LVa
 	{
 		if(PlayerInfo[playerid][pMember] == 19)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[8])// LVPD
 	{
 		if(PlayerInfo[playerid][pMember] == 21)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[9])// Medics LS
 	{
 		if(PlayerInfo[playerid][pMember] == 22)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[10])// Medics LV
 	{
 		if(PlayerInfo[playerid][pMember] == 24)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[11])// LSa
 	{
 		if(PlayerInfo[playerid][pMember] == 25)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[12])// SF News
 	{
 		if(PlayerInfo[playerid][pMember] == 9)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[13])// LS News
 	{
 		if(PlayerInfo[playerid][pMember] == 16)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[14])// LV News
 	{
 		if(PlayerInfo[playerid][pMember] == 20)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == FormaFracPic[15])// SWAT
 	{
 		if(PlayerInfo[playerid][pMember] == 27)
 		{
-			SPD(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
+			ShowPlayerDialog(playerid,1010,DIALOG_STYLE_MSGBOX, "Locker room", "Choose clothes", "Form", "Regular");
 		}
 	}
 	else if(pickupid == lsamaterials)
@@ -13012,7 +13006,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	            SelectChar[playerid] = 0;
 	            PicCP[playerid] = 0;
 	            PlayerInfo[playerid][pRank] = 0;
-	            SPD(playerid,229,DIALOG_STYLE_MSGBOX,"{FFFFFF}Information","\
+	            ShowPlayerDialog(playerid,229,DIALOG_STYLE_MSGBOX,"{FFFFFF}Information","\
 				{FFFFFF}Welcome to the city of Los Santos!\n\n\
 				You will start your journey from this wonderful city\n\
 				You have some money with you. Great enough for a start\n\
@@ -13069,7 +13063,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	            SelectChar[playerid] = 0;
 	            PicCP[playerid] = 0;
 	            PlayerInfo[playerid][pRank] = 0;
-	            SPD(playerid,229,DIALOG_STYLE_MSGBOX,"{FFFFFF}Information","\
+	            ShowPlayerDialog(playerid,229,DIALOG_STYLE_MSGBOX,"{FFFFFF}Information","\
 				{FFFFFF}Welcome to the city of Los Santos!\n\n\
 				You will start your journey from this wonderful city\n\
 				You have some money with you. Great enough for a start\n\
@@ -14149,7 +14143,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
         {
         	if(arenda[caridi] != 1)
         	{
-        		SPD(playerid,9226,DIALOG_STYLE_MSGBOX,"car showroom SF","Do you want to rent a motorcycle for 5000 $?","Yes","No");
+        		ShowPlayerDialog(playerid,9226,DIALOG_STYLE_MSGBOX,"car showroom SF","Do you want to rent a motorcycle for 5000 $?","Yes","No");
         		TogglePlayerControllable(playerid, 0);
         	}
         }
@@ -14157,7 +14151,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
         {
         	if(arenda[caridi] != 1)
         	{
-        		SPD(playerid,9326,DIALOG_STYLE_MSGBOX,"car showroom LV","Do you want to rent a car for 10,000 $?","Yes","No");
+        		ShowPlayerDialog(playerid,9326,DIALOG_STYLE_MSGBOX,"car showroom LV","Do you want to rent a car for 10,000 $?","Yes","No");
         		TogglePlayerControllable(playerid, 0);
         	}
         }
@@ -14165,7 +14159,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
         {
         	if(arenda[caridi] != 1)
         	{
-        		SPD(playerid,9126,DIALOG_STYLE_MSGBOX,"car showroom LS","Do you want to rent a car for 2000 $?","Yes","No");
+        		ShowPlayerDialog(playerid,9126,DIALOG_STYLE_MSGBOX,"car showroom LS","Do you want to rent a car for 2000 $?","Yes","No");
         		TogglePlayerControllable(playerid, 0);
         	}
         }
@@ -14175,7 +14169,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			{
                 if(arenda[caridi] != 1)
 			    {
-                    SPD(playerid,9127,DIALOG_STYLE_MSGBOX,"Taxi park","Do you want to rent a taxi for 500 $?","Yes","No");
+                    ShowPlayerDialog(playerid,9127,DIALOG_STYLE_MSGBOX,"Taxi park","Do you want to rent a taxi for 500 $?","Yes","No");
                     TogglePlayerControllable(playerid, 0);
                 }
 	        }
@@ -14263,7 +14257,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			{
 				if(arenda[playerid] != 1)
 				{
-					SPD(playerid,9131,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
+					ShowPlayerDialog(playerid,9131,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
 				}
 			}
 			else
@@ -14278,7 +14272,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			{
 				if(arenda[playerid] != 1)
 				{
-					SPD(playerid,9132,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
+					ShowPlayerDialog(playerid,9132,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
 				}
 			}
 			else
@@ -14365,7 +14359,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			{
 				if(arenda[playerid] != 1)
 				{
-					SPD(playerid,9128,DIALOG_STYLE_MSGBOX, " ", "<< Car rental >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
+					ShowPlayerDialog(playerid,9128,DIALOG_STYLE_MSGBOX, " ", "<< Car rental >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
 				}
 			}
 			else
@@ -14380,7 +14374,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			{
 				if(arenda[playerid] != 1)
 				{
-					SPD(playerid,9129,DIALOG_STYLE_MSGBOX, " ", "<< Car rental >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
+					ShowPlayerDialog(playerid,9129,DIALOG_STYLE_MSGBOX, " ", "<< Car rental >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
 				}
 			}
 			else
@@ -14395,7 +14389,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 		    {
 				if(arenda[playerid] != 1)
 				{
-					SPD(playerid,9133,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
+					ShowPlayerDialog(playerid,9133,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
 				}
 			}
 			else
@@ -14510,7 +14504,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 		    {
 				if(arenda[playerid] != 1)
 				{
-					SPD(playerid,9134,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
+					ShowPlayerDialog(playerid,9134,DIALOG_STYLE_MSGBOX, " ", "<< Car park >>\nRental price: 500\nDo you want to rent a car?", "Yes", "No");
 				}
 			}
 			else
@@ -14734,14 +14728,14 @@ public OnPlayerRequestClass(playerid, classid)
 		{
   			gPlayerAccount[playerid] = true;
 			format(bac, sizeof(bac), "{FFFFFF}Welcome to the server Open RolePlay\nYour nickname is registered\n\nLogin: {66CC33}%s\n{FFFFFF}Enter your password:", playername);
-  			SPD(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",bac, "Enter", "Cancel");
+  			ShowPlayerDialog(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",bac, "Enter", "Cancel");
 			return true;
 		}
 		if(gPlayerAccount[playerid] == false)
 		{
 			gPlayerAccount[playerid] = false;
  			format(bac, sizeof(bac), "{FFFFFF}Welcome to the server Open RolePlay\nTo start the game you need to register\n\nEnter the password for your account\nIt will be requested every time you log into the server\n\n{66CC33}Notes:\n-	The password can consist of Latin characters\n	- Password is case sensitive\n	- Password length from 6 to 15 characters", playername);
-  			SPD(playerid,2,DIALOG_STYLE_INPUT, "{3DBAF8}Registration",bac, "Ready", "Cancel");
+  			ShowPlayerDialog(playerid,2,DIALOG_STYLE_INPUT, "{3DBAF8}Registration",bac, "Ready", "Cancel");
 	    	return true;
 		}
 	}
@@ -15680,7 +15674,7 @@ stock ShowStats(playerid,targetid)
 			new coordsstring[512];
 			new msg[] = "{41A7E3}Name:\t\t\t\t{EB0606}%s\n\n{41A7E3}Level:\t\t\t%d\nExp:\t\t\t\t%d/%d\nMoney:\t\t\t%d\nTelephone:\t\t\t%d\nVarnov:\t\t\t%d\nLaw-abiding:\t\t%d\nCrimes:\t\t%d\nArrests:\t\t\t%d\nDeaths wanted:\t\t%d\nWanted level:\t\t%d\nRegistration date:\t\t%s\nAddiction:\t\t\t%d\nDrugs:\t\t\t%d\nMaterials:\t\t\t%d\nOrganization:\t\t\t%s\nRank:\t\t\t\t%s\nJob:\t\t\t%s\nStatus:\t\t\t\t{EB0606}%s{41A7E3}\nFloor:\t\t\t\t%s";
 			format(coordsstring, 1000, msg, playername,level,exp,expamount,cash,pnumber,warns,zakon,kills,arrests,wdeaths,wanted,stringi,addiction,drugs,mats,ttext,rangz,jtext,drank,atext);
-			SPD(playerid,10004,DIALOG_STYLE_MSGBOX, "{FFEA21}Character Statistics",coordsstring, "Ready", "");
+			ShowPlayerDialog(playerid,10004,DIALOG_STYLE_MSGBOX, "{FFEA21}Character Statistics",coordsstring, "Ready", "");
 		}
 	}
 }
@@ -16793,7 +16787,7 @@ publics OnPlayerLogin(playerid, password[])
 	}
 	if(PlayerInfo[playerid][pBan] == 1)
 	{
-		SPD(playerid,0,DIALOG_STYLE_MSGBOX, "{FFFFFF}Ban", "{FF6347}Your account is blocked\nEnter /q to exit the game", "Exit", "");
+		ShowPlayerDialog(playerid,0,DIALOG_STYLE_MSGBOX, "{FFFFFF}Ban", "{FF6347}Your account is blocked\nEnter /q to exit the game", "Exit", "");
 		kick
 	}
 	new playersip[256];
@@ -16820,7 +16814,7 @@ publics OnPlayerLogin(playerid, password[])
 				SetPlayerCameraPos(playerid, -1817.0808, 1112.9937, 235.4244);
 				SetPlayerCameraLookAt(playerid, -1816.5471, 949.6590, 235.4244);
 				TogglePlayerControllable(playerid, 0);
-				SPD(playerid,16,DIALOG_STYLE_INPUT, "Enter security key", "    ==== Your IP the address has changed ====\n=== Enter your security key ===", "Ready", "Cancel");
+				ShowPlayerDialog(playerid,16,DIALOG_STYLE_INPUT, "Enter security key", "    ==== Your IP the address has changed ====\n=== Enter your security key ===", "Ready", "Cancel");
 				gPlayerLogged[playerid] = 0;
 				return true;
 			}
@@ -17342,7 +17336,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
             giveplayerid = ReturnUser(tmp);
             tmp = strtok(cmdtext, idx);
             level = strval(tmp);
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
             if(PlayerInfo[playerid][pHelper] == 5 || PlayerInfo[playerid][pAdmin] >= 7)
             {
                 if(IsPlayerConnected(giveplayerid))
@@ -17541,7 +17535,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "::: Enter: /givedonate [eid] [sum]");
 			new playa;
@@ -17708,9 +17702,9 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
 			switch(FormaFrac[playerid])
 			{
-				case 9: SPD(playerid, 2223, DIALOG_STYLE_LIST, "[ NEWS MENU ]", " [ 1 ] Live\n [ 2 ] Leave live broadcast\n [ 3 ] Start receiving calls/sms\n [ 4 ] Stop receiving calls/sms\n [ 5 ] Set the price for calls and SMS\n [ 6 ] Set the price for ads\n [ 7 ] ads", "Enter", "Cancel");
-				case 16: SPD(playerid,2224, DIALOG_STYLE_LIST, "[ NEWS MENU ]", " [ 1 ] Live\n [ 2 ] Leave live broadcast\n [ 3 ] Start receiving calls/sms\n [ 4 ] Stop receiving calls/sms\n [ 5 ] Set the price for calls and SMS\n [ 6 ] Set the price for ads\n [ 7 ] ads", "Enter", "Cancel");
-				case 20: SPD(playerid,2225, DIALOG_STYLE_LIST, "[ NEWS MENU ]", " [ 1 ] Live\n [ 2 ] Leave live broadcast\n [ 3 ] Start receiving calls/sms\n [ 4 ] Stop receiving calls/sms\n [ 5 ] Set the price for calls and SMS\n [ 6 ] Set the price for ads\n [ 7 ] ads", "Enter", "Cancel");
+				case 9: ShowPlayerDialog(playerid, 2223, DIALOG_STYLE_LIST, "[ NEWS MENU ]", " [ 1 ] Live\n [ 2 ] Leave live broadcast\n [ 3 ] Start receiving calls/sms\n [ 4 ] Stop receiving calls/sms\n [ 5 ] Set the price for calls and SMS\n [ 6 ] Set the price for ads\n [ 7 ] ads", "Enter", "Cancel");
+				case 16: ShowPlayerDialog(playerid,2224, DIALOG_STYLE_LIST, "[ NEWS MENU ]", " [ 1 ] Live\n [ 2 ] Leave live broadcast\n [ 3 ] Start receiving calls/sms\n [ 4 ] Stop receiving calls/sms\n [ 5 ] Set the price for calls and SMS\n [ 6 ] Set the price for ads\n [ 7 ] ads", "Enter", "Cancel");
+				case 20: ShowPlayerDialog(playerid,2225, DIALOG_STYLE_LIST, "[ NEWS MENU ]", " [ 1 ] Live\n [ 2 ] Leave live broadcast\n [ 3 ] Start receiving calls/sms\n [ 4 ] Stop receiving calls/sms\n [ 5 ] Set the price for calls and SMS\n [ 6 ] Set the price for ads\n [ 7 ] ads", "Enter", "Cancel");
 			}
 		}
 		else return SendClientMessage(playerid, COLOR_GREY, "You are not in a reporter's car/helicopter/office");
@@ -17785,7 +17779,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
         if(PlayerInfo[playerid][pJob] != 5) return SendClientMessage(playerid, COLOR_GREY, "You are not a food delivery person");
         if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SendClientMessage(playerid,COLOR_GREY, "You are not in a food delivery vehicle");
-        SPD(playerid, 1322, DIALOG_STYLE_LIST, "Loading/unloading grain", "Load grain\nUnload grain\nLoad harvest\nUnloading the crop", "Choose", "Cancel");
+        ShowPlayerDialog(playerid, 1322, DIALOG_STYLE_LIST, "Loading/unloading grain", "Load grain\nUnload grain\nLoad harvest\nUnloading the crop", "Choose", "Cancel");
     }
 	if(strcmp(cmd, "/sellbiz", true) == 0)
 	{
@@ -17899,7 +17893,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 3)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			for(new i = 0;i<MAX_VEHICLES;i++)
 			{
 				Fuell[i] = 200;
@@ -17949,7 +17943,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			GetPlayerName(i, playername, sizeof(playername));
 			format(string,sizeof(string),"%s%s: %s [%d]\n",string,ttext,playername,i);
 		}
-		SPD(playerid,139, DIALOG_STYLE_MSGBOX, "Leaders Online:", string, "OK", "Cancel");
+		ShowPlayerDialog(playerid,139, DIALOG_STYLE_MSGBOX, "Leaders Online:", string, "OK", "Cancel");
 		return 1;
 	}
 	else if(strcmp(cmd, "/lomka", true) == 0)
@@ -18188,7 +18182,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
     else if(strcmp(cmd, "/fullferm", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 6)
- 		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+ 		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		{
   			for(new f = 0; f < sizeof(FarmInfo); f++)
   			{
@@ -18203,7 +18197,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /givemoney [eid] [sum]");
 			new playa;
@@ -18243,7 +18237,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		    if(PlayerInfo[playerid][pCarLic] == 1) return SendClientMessage(playerid, COLOR_GREY, "You already have a driver's license");
 			new avtosdacha[256];
 			format(avtosdacha,sizeof(avtosdacha), "Welcome to the Driving School.\nIf you want to pass your license, click Next");
-			SPD(playerid,10022,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Driving test{00BFFF}Х",avtosdacha, "Further", "Cancel");
+			ShowPlayerDialog(playerid,10022,DIALOG_STYLE_MSGBOX, "{00BFFF}Х{FFFFFF}Driving test{00BFFF}Х",avtosdacha, "Further", "Cancel");
 		}
 		else SendClientMessage(playerid, COLOR_GREY, "You are not in driving school");
 	}
@@ -18251,7 +18245,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 4)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /givepass [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -18276,7 +18270,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 4)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /freeze [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -18315,7 +18309,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		    tmp = strtok(cmdtext, idx);
 		    new benz;
 		    if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /setbenz [quantity]");
@@ -18337,7 +18331,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		    tmp = strtok(cmdtext, idx);
 		    new prods;
 		    if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /setprod [quantity]");
@@ -18359,7 +18353,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /slap [id]");
 			new playa;
@@ -18601,7 +18595,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 								new hp = 100-PlayerInfo[giveplayerid][pHP];
 								new hpprice = hp*healpricsf;
 								format(healdialog,sizeof(healdialog), "The doctor wants to cure you for %d $\nDo you agree?", hpprice);
-								SPD(giveplayerid,5522,DIALOG_STYLE_MSGBOX, "Treatment", healdialog, "Yes", "No");
+								ShowPlayerDialog(giveplayerid,5522,DIALOG_STYLE_MSGBOX, "Treatment", healdialog, "Yes", "No");
 								HealOffer[giveplayerid] = playerid;
 								HealPrice[giveplayerid] = hpprice;
 							}
@@ -18612,7 +18606,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 								new hp = 100-PlayerInfo[giveplayerid][pHP];
 								new hpprice = hp*healpricls;
 								format(healdialog,sizeof(healdialog), "The doctor wants to cure you for %d $\nDo you agree?", hpprice);
-								SPD(giveplayerid,5522,DIALOG_STYLE_MSGBOX, "Treatment", healdialog, "Yes", "No");
+								ShowPlayerDialog(giveplayerid,5522,DIALOG_STYLE_MSGBOX, "Treatment", healdialog, "Yes", "No");
 								HealOffer[giveplayerid] = playerid;
 								HealPrice[giveplayerid] = hpprice;
 							}
@@ -18623,7 +18617,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 								new hp = 100-PlayerInfo[giveplayerid][pHP];
 								new hpprice = hp*healpriclv;
 								format(healdialog,sizeof(healdialog), "The doctor wants to cure you for %d $\nDo you agree?", hpprice);
-								SPD(giveplayerid,5522,DIALOG_STYLE_MSGBOX, "Treatment", healdialog, "Yes", "No");
+								ShowPlayerDialog(giveplayerid,5522,DIALOG_STYLE_MSGBOX, "Treatment", healdialog, "Yes", "No");
 								HealOffer[giveplayerid] = playerid;
 								HealPrice[giveplayerid] = hpprice;
 							}
@@ -18716,7 +18710,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
             if(!PlayerToPoint(10, playerid,-381.8794,-1440.2821,25.7266)) return SendClientMessage(playerid, COLOR_GREY, "There are no farms nearby");
             if(PlayerInfo[playerid][pFermajob] == 2) { }
             else { SendClientMessage(playerid, COLOR_GREY, "You are not a farm deputy"); return true; }
-            SPD(playerid, 10222, DIALOG_STYLE_LIST, "Farm control panel", "Top up your farm bank\nHire a Farmer\nFire the Farmer", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 10222, DIALOG_STYLE_LIST, "Farm control panel", "Top up your farm bank\nHire a Farmer\nFire the Farmer", "Choose", "Cancel");
         }
         return true;
     }
@@ -18727,7 +18721,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
             if(PlayerInfo[playerid][pFerma] != 255) { }
             else { SendClientMessage(playerid, COLOR_GREY, "You are not the farm owner"); return true; }
             if(!PlayerToPoint(10, playerid,-381.8794,-1440.2821,25.7266)) return SendClientMessage(playerid, COLOR_GREY, "There are no farms nearby");
-            SPD(playerid, 10122, DIALOG_STYLE_LIST, "Farm control panel", "Change the price per bush\nChange the purchase price of grain\nChange the selling price of grain\nTop up your farm bank\nWithdraw money from farm bank\nHire a Deputy\nHire a Farmer\nDismiss the Deputy\nFire the Farmer", "Choose", "Cancel");
+            ShowPlayerDialog(playerid, 10122, DIALOG_STYLE_LIST, "Farm control panel", "Change the price per bush\nChange the purchase price of grain\nChange the selling price of grain\nTop up your farm bank\nWithdraw money from farm bank\nHire a Deputy\nHire a Farmer\nDismiss the Deputy\nFire the Farmer", "Choose", "Cancel");
         }
         return true;
     }
@@ -18783,7 +18777,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
         if(PlayerInfo[playerid][pAdmin] >= 7)
         for(new f = 0; f < sizeof(FarmInfo); f++)
         {
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
             FarmInfo[f][f1zams] = 0;
             FarmInfo[f][f2zams] = 0;
             FarmInfo[f][f3zams] = 0;
@@ -18824,7 +18818,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
         {
             if(!IsPlayerInRangeOfPoint(playerid,2.0,210.2006,187.1392,1003.0313)) return SendClientMessage(playerid,COLOR_GREY,"You're not in the locker room!");
             {
-                    SPD(playerid,11111,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","State Organizations\nMafia\nBandits\nBikers\nRegular Clothes","Choose","Cancel");
+                    ShowPlayerDialog(playerid,11111,2,"{00BFFF}Х{FFFFFF}Disguise{00BFFF}Х","State Organizations\nMafia\nBandits\nBikers\nRegular Clothes","Choose","Cancel");
             }
         }
 		else
@@ -19282,7 +19276,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				if(PlayerToPoint(2.0, playerid, BizzInfo[bizz][bEntranceX], BizzInfo[bizz][bEntranceY], BizzInfo[bizz][bEntranceZ]) && BizzInfo[bizz][bOwned] == 0)
 				{
 					format(string,sizeof(string), "Your business can be taken away if:\n	1.It stays closed for 12 hours or more.\n	2.Products less than 10 percent, 12 hours or more.\n	3. There is a debt on the allocated account to pay for electricity.\n\nWhen a business is sold by the state, you will get nothing back!\nDo you agree to these terms?");
-					SPD(playerid,9828,DIALOG_STYLE_MSGBOX, "Warning", string, "Agree", "Cancel");
+					ShowPlayerDialog(playerid,9828,DIALOG_STYLE_MSGBOX, "Warning", string, "Agree", "Cancel");
 					return true;
 				}
 			}
@@ -19379,7 +19373,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(IsAGang(playerid) || IsABiker(playerid))
 		{
-			SPD(playerid,0,DSM, "Clist of weapons", "SD Pistol [ID: 23] - 1 cartridge = 1 mat material\nDesert Eagle [ID: 24] - 1 cartridge = 3 materials\nShotGun [ID: 25] - 1 cartridge = 3 materials\nSMG [ID: 29] - 1 cartridge = 2 materials\nAK-47 [ID: 30] - 1 cartridge = 3 materials\nM4 [ID: 31] - 1 cartridge = 3 materials\nRifle [ID: 33] - 1 cartridge = 5 materials", "Close", "");
+			ShowPlayerDialog(playerid,0,DSM, "Clist of weapons", "SD Pistol [ID: 23] - 1 cartridge = 1 mat material\nDesert Eagle [ID: 24] - 1 cartridge = 3 materials\nShotGun [ID: 25] - 1 cartridge = 3 materials\nSMG [ID: 29] - 1 cartridge = 2 materials\nAK-47 [ID: 30] - 1 cartridge = 3 materials\nM4 [ID: 31] - 1 cartridge = 3 materials\nRifle [ID: 33] - 1 cartridge = 5 materials", "Close", "");
 			return true;
 		}
 	 	return true;
@@ -19481,7 +19475,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					{
 						format(dialogexx,sizeof(dialogexx), "{FFFFFF}You were offered to buy a weapon:\nRifle\nPrice %d\nAmmo %d",priceplayer,ammogunxx);
 					}
-		            SPD(playeridxx, 22572, DIALOG_STYLE_MSGBOX, "Buying weapons",dialogexx, "Buy", "Cancel");
+		            ShowPlayerDialog(playeridxx, 22572, DIALOG_STYLE_MSGBOX, "Buying weapons",dialogexx, "Buy", "Cancel");
 					SendClientMessage(playerid, COLOR_WHITE, "Wait for player approval");
 				}
         		else return SendClientMessage(playerid, COLOR_GREY, "You are not authorized to use this command");
@@ -19592,7 +19586,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 								{
 									format(dialogexx,sizeof(dialogexx), "{FFFFFF}You were offered to buy a weapon:\nRifle\nPrice %d\nAmmo %d",priceplayer,ammogunxx);
 								}
-					            SPD(playeridxx, 22572, DIALOG_STYLE_MSGBOX, "Buying weapons",dialogexx, "Buy", "Cancel");
+					            ShowPlayerDialog(playeridxx, 22572, DIALOG_STYLE_MSGBOX, "Buying weapons",dialogexx, "Buy", "Cancel");
 					            SendClientMessage(playerid, COLOR_WHITE, "Wait for player approval");
 							}
 						}
@@ -19613,7 +19607,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(10.0,playerid,1258.4004,-791.0316,1084.0078))
 					{
-						SPD(playerid, 6000, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6000, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19621,7 +19615,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(10.0,playerid,1258.4004,-791.0316,1084.0078))
 					{
-						SPD(playerid, 6001, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6001, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19629,7 +19623,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(10.0,playerid,1258.4004,-791.0316,1084.0078))
 					{
-						SPD(playerid, 6002, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6002, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19637,7 +19631,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(10.0,playerid,496.7966,-75.8150,998.7578))
 					{
-						SPD(playerid, 6003, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6003, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19645,7 +19639,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(20.0,playerid,2647.2209,-2036.4889,13.5500))
 					{
-						SPD(playerid, 6004, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6004, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19653,7 +19647,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(30.0,playerid,2794.5901,-1619.0271,10.9219))
 					{
-						SPD(playerid, 6005, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6005, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19661,7 +19655,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(20.0,playerid,2506.6514,-1688.9706,13.5540))
 					{
-						SPD(playerid, 6006, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6006, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19669,7 +19663,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(20.0,playerid,1670.1708,-2108.1887,13.5469))
 					{
-						SPD(playerid, 6007, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6007, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19677,7 +19671,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(PlayerToPoint(20.0,playerid,2176.9521,-1813.6235,13.5469))
 					{
-						SPD(playerid, 6008, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
+						ShowPlayerDialog(playerid, 6008, DSL, "{00BFFF}[ {AFAFAF}Weapon Selection {00BFFF}]", "SD Pistol (80 cartridge | 80 Mats)\nDeagle (70 cartridge | 210 Mats)\nShotGun (50 cartridge | 150 Mats)\nSMG (150 cartridge | 300 Mats)\nAK-47 (150 cartridge | 450 Mats)\nM4 (150 cartridge | 450 Mats)\nRifle (50 cartridge | 250 Mats)", "Choose", "Back");
 					}
 					else SendClientMessage(playerid, COLOR_GREY, "You must be at your base");
 				}
@@ -19689,7 +19683,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pGunLic] == 0) return SendClientMessage(playerid, COLOR_GREY, "You don't have a gun license");
 	    if(PlayerToPoint(25.0,playerid,286.9145,-38.6596,1001.5156) || PlayerToPoint(25.0,playerid,285.9187,-86.7644,1001.5229) || PlayerToPoint(25.0,playerid,313.7110,-140.3784,999.6016)) {
-		SPD(playerid, 7000, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Weapon Selection{00BFFF}Х", "SD Pistol 100 cartridge (10,000 $)\nDeagle 100 cartridge (20,000 $)\nShotGun 100 cartridge (25,000 $)\nSMG 100 cartridge (20,000 $)\nAK-47 100 cartridge (30,000 $)\nM4 100 cartridge (30,000 $)\nRifle 100 cartridge (50,000 $)", "Choose", "Back"); }
+		ShowPlayerDialog(playerid, 7000, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Weapon Selection{00BFFF}Х", "SD Pistol 100 cartridge (10,000 $)\nDeagle 100 cartridge (20,000 $)\nShotGun 100 cartridge (25,000 $)\nSMG 100 cartridge (20,000 $)\nAK-47 100 cartridge (30,000 $)\nM4 100 cartridge (30,000 $)\nRifle 100 cartridge (50,000 $)", "Choose", "Back"); }
 	    else SendClientMessage(playerid,COLOR_GREY, "You are not a gun store!");
 	}
 	else if(strcmp(cmd,"/unloading",true)==0)
@@ -19923,7 +19917,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(IsPlayerConnected(playerid)) AdvertiseTimer();
 		}
 		else
@@ -20408,7 +20402,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				if(PlayerInfo[playerid][pMember] == 5 || PlayerInfo[playerid][pMember] == 6 || PlayerInfo[playerid][pMember] == 14 && PlayerInfo[playerid][pRank] >= 8)
 				{
 					format(string, sizeof(string), "Do you really want to buy 50,000 materials for 100,000?");
-					SPD(playerid,9298,DIALOG_STYLE_MSGBOX, "Purchasing materials",string, "Yes", "No");
+					ShowPlayerDialog(playerid,9298,DIALOG_STYLE_MSGBOX, "Purchasing materials",string, "Yes", "No");
 					return true;
  				}
  			}
@@ -20580,7 +20574,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		    if(IsPlayerConnected(playerid))
 		    {
 				format(string, sizeof(string), "Yakuza: %d $", MafiaBank[0][nYakuza]);
@@ -20611,7 +20605,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			format(string, sizeof(string), "At the Area 51 warehouse: %d/300000 materials", armmatbi);
 			SendClientMessage(playerid, COLOR_GREY, string);
 			format(string, sizeof(string), "At the Army Aircraft Carrier warehouse: %d/200000 materials", armmatsf);
@@ -20780,14 +20774,14 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		else if(PlayerInfo[playerid][pMafiaRoof] == 5) { mafiatext = "LCN"; }
 		else if(PlayerInfo[playerid][pMafiaRoof] == 0) { mafiatext = "No"; }
 		format(form,sizeof(form), "Roof: %s\nDuty: %d $",mafiatext,PlayerInfo[playerid][pDebt]);
-   		SPD(playerid,69,DIALOG_STYLE_MSGBOX, "Personal information",form, "Ready", "");
+   		ShowPlayerDialog(playerid,69,DIALOG_STYLE_MSGBOX, "Personal information",form, "Ready", "");
    		return true;
 	}
 	if(strcmp(cmd, "/spawn", true) == 0)
     {
 		if(PlayerInfo[playerid][pAdmin] >= 2)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			SpawnPlayer(playerid);
 			SetPlayerWeapons(playerid);
 		}
@@ -20808,7 +20802,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		ToDevelopRating(radiols,points[0]),radiols,percent,radiols,
 		ToDevelopRating(radiosf,points[1]),radiosf,percent,radiosf,
 		ToDevelopRating(radiolv,points[2]),radiolv,percent,radiolv);
-		SPD(playerid, 69, DIALOG_STYLE_MSGBOX, "Radio station rating:", radiolist, "Ready", "");
+		ShowPlayerDialog(playerid, 69, DIALOG_STYLE_MSGBOX, "Radio station rating:", radiolist, "Ready", "");
         return true;
     }
 	if(strcmp(cmd, "/spcar", true) == 0)
@@ -20827,7 +20821,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			SCMTA(COLOR_WHITE, "");
 			SCMTA(COLOR_WHITE, "");
 			SCMTA(COLOR_WHITE, "");
@@ -20913,7 +20907,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 3)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new newname[256];
 			new stringo[256];
 			tmp = strtok(cmdtext, idx);
@@ -20955,7 +20949,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 3)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /forceskin [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -21001,7 +20995,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 2)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /skin [skin]");
 			new level;
@@ -21024,7 +21018,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 3)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /setskin [id] [skin]");
 			new level;
@@ -21107,7 +21101,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp))
 			{
@@ -21226,7 +21220,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] == 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp))
 			{
@@ -21376,7 +21370,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /sethouseclass [house] [Class]");
 			new house = strval(tmp);
@@ -21399,7 +21393,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 8)
 	 	{
-	 	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	 	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp))return SendClientMessage(playerid, COLOR_WHITE, "Enter: /sethouseprice [house] [price]");
 			new house = strval(tmp);
@@ -21422,7 +21416,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 8)
 	 	{
-	 	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	 	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /setpos [house]");
 			new Float: lwx, Float:lwy, Float:lwz;
@@ -21444,7 +21438,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /setposcar [house]");
 			new Float:X,Float:Y,Float:Z,Float:Angle; GetPlayerPos(playerid,X,Y,Z); GetPlayerFacingAngle(playerid,Angle);
@@ -21465,7 +21459,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 6)
 	 	{
-	 	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	 	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /setbizprice [business] [price]");
 			new bizz = strval(tmp);
@@ -21491,7 +21485,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 6)
 	 	{
-	 	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	 	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /setbizprod [business] [prod]");
 			new bizz = strval(tmp);
@@ -21515,7 +21509,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{00BFFF}[ {AFAFAF}Administrator authorization {00BFFF}]", "{FFFFFF}Enter the Admin Password to confirm that you are the Server Administrator\n{FFFFFF}Password:", "Entrance", "Cancel");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{00BFFF}[ {AFAFAF}Administrator authorization {00BFFF}]", "{FFFFFF}Enter the Admin Password to confirm that you are the Server Administrator\n{FFFFFF}Password:", "Entrance", "Cancel");
 			if(noooc == 0)
 			{
 				noooc = 1;
@@ -21536,7 +21530,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/getip", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] < 4) return ESCM
-  		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+  		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		tmp = strtok(cmdtext,idx);
 		new playersip[40];
 		if(!strlen(tmp)) return SendClientMessage(playerid,COLOR_WHITE, "Enter: /getip [id]");
@@ -21549,7 +21543,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/getstats", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] < 1) return ESCM
-  		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter the password for the Admin Panel.\n","Enter","");
+  		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter the password for the Admin Panel.\n","Enter","");
 		tmp = strtok(cmdtext, idx);
 		if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /getstats [id]");
   		giveplayerid = ReturnUser(tmp);
@@ -21609,12 +21603,12 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			    if(inter == 10 || inter == 4)
 			 	{
 					format(bizinfo,sizeof(bizinfo), "Burger\t\t\t[%d $]\nFish soup\t\t[%d $]\nBig burger\t[%d $]\nCutlets\t\t[%d $]\nDumplings\t\t[%d $]\nHamburger\t\t[%d $]",cena,cena2,cena3,cena4,cena5,cena6);
-	        		SPD(playerid, 3389, DIALOG_STYLE_LIST, "Restaurant", bizinfo, "Choose", "Cancel");
+	        		ShowPlayerDialog(playerid, 3389, DIALOG_STYLE_LIST, "Restaurant", bizinfo, "Choose", "Cancel");
 	 			}
 		 		if(inter == 5 || inter == 9 || inter == 17)
 				{
 					format(bizinfo,sizeof(bizinfo), "Pizza is small\t\t[%d $]\nPizza with mushrooms\t\t[%d $]\nPizza with cheese\t\t[%d $]\nPizza big\t\t[%d $]\nPizza with ham\t\t[%d $]\nPizza with chicken meat\t[%d $]",cena,cena2,cena3,cena4,cena5,cena6);
-        			SPD(playerid, 4489, DIALOG_STYLE_LIST, "Pizzeria", bizinfo, "Choose", "Cancel");
+        			ShowPlayerDialog(playerid, 4489, DIALOG_STYLE_LIST, "Pizzeria", bizinfo, "Choose", "Cancel");
  				}
 			}
 		}
@@ -21638,7 +21632,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			    if(inter == 17 ||  inter == 16 ||  inter == 10 ||  inter == 18)
 			    {
 					format(bizinfo,sizeof(bizinfo), " Phone number\t[$%d]\n Phone book\t[$%d]\n MP3-Player\t\t[$%d]\n Gas canister\t[$%d]\n First aid kit(25 pcs.)\t[$%d]\n camera(10 pieces.)\t[$%d]",cena1,cena2,cena3,cena4,cena5,cena6,cena7);
-		        	SPD(playerid, 5589, DIALOG_STYLE_LIST, "Shop 24/7", bizinfo, "Buy", "Cancel");
+		        	ShowPlayerDialog(playerid, 5589, DIALOG_STYLE_LIST, "Shop 24/7", bizinfo, "Buy", "Cancel");
 				}
 			}
 		}
@@ -21660,7 +21654,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		    	if (PlayerToPoint(3, playerid,BizzInfo[i][bBarX], BizzInfo[i][bBarY], BizzInfo[i][bBarZ]))
 				{
 					format(bizinfo,sizeof(bizinfo), "Water\t\t[%d $]\nSoda\t\t[%d $]\nCoca Cola\t[%d $]\nBeer\t\t[%d $]\nWine\t\t[%d $]\nAbsinthe\t\t[%d $]",cena,cena2,cena3,cena4,cena5,cena6);
-	  				SPD(playerid, 2289, DIALOG_STYLE_LIST, "Bar", bizinfo, "Choose", "Cancel");
+	  				ShowPlayerDialog(playerid, 2289, DIALOG_STYLE_LIST, "Bar", bizinfo, "Choose", "Cancel");
 				}
 	   		}
 	   	}
@@ -21670,7 +21664,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
         if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 437 || GetVehicleModel(GetPlayerVehicleID(playerid)) != 431)
         {
-			SPD(playerid, 10000, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}GPS{00BFFF}Х", "Switch off GPS\nImportant Places\nFaction Bases\nWorks\nCar showrooms", "Choose", "Cancel");
+			ShowPlayerDialog(playerid, 10000, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}GPS{00BFFF}Х", "Switch off GPS\nImportant Places\nFaction Bases\nWorks\nCar showrooms", "Choose", "Cancel");
 		}
 		else
 		{
@@ -22418,7 +22412,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		if(IsACop(playerid) || PlayerInfo[playerid][pAdmin] >= 4)
 		{
 			new listitems[] = "Take away your driver's license\nSelect a license for Motorcycles\nSelect a flight license\nSelect a license to drive water transport\nTake away a weapons license\nDrugs\nWeapon\nMaterials";
-			SPD(playerid, 7779, DIALOG_STYLE_LIST, "Select licenses", listitems, "Ready", "Back");
+			ShowPlayerDialog(playerid, 7779, DIALOG_STYLE_LIST, "Select licenses", listitems, "Ready", "Back");
 		}
 		else SendClientMessage(playerid, COLOR_GREY, "You are not authorized to use this command");
 	}
@@ -22797,7 +22791,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				}
 				if(Veh >= bus[0] && Veh <= bus[13])
 				{
-  					SPD(playerid, 20000, DIALOG_STYLE_LIST, "Choose a route", "AB LS - Inside City LS\nAB LS - Inside the City SF\nAB LS - Inside City LV\nAB LS - AB SF\nAB LS - AB LV", "Accept", "Cancel");
+  					ShowPlayerDialog(playerid, 20000, DIALOG_STYLE_LIST, "Choose a route", "AB LS - Inside City LS\nAB LS - Inside the City SF\nAB LS - Inside City LV\nAB LS - AB SF\nAB LS - AB LV", "Accept", "Cancel");
 				}
 				else
 				{
@@ -24013,7 +24007,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
- 	    	if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+ 	    	if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /pm [id] [text]");
 			giveplayerid = ReturnUser(tmp);
@@ -24332,19 +24326,19 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			{
 				ReportQ[playerid] = result;
 				format(string,sizeof(string),"{B8B8B8}Are you about to post an ad?:\n               {00FF5E}%s\n\n{B8B8B8}Price:{00FF5E} %d $\n\n\n{56839C}The advertisement will be submitted after verification!\nThank you for using the services Grace Global-Rp LS NEWS",(result),addd[0]);
-				SPD(playerid,8454,DIALOG_STYLE_MSGBOX,"{FFFFFF}Examination",string,"Send","Cancel");
+				ShowPlayerDialog(playerid,8454,DIALOG_STYLE_MSGBOX,"{FFFFFF}Examination",string,"Send","Cancel");
 			}
 			else if(gNews[playerid] == 0)
 			{
 				ReportQ[playerid] = result;
 				format(string,sizeof(string),"{B8B8B8}Are you about to post an ad?:\n               {00FF5E}%s\n\n{B8B8B8}Price:{00FF5E} %d $\n\n\n{56839C}The advertisement will be submitted after verification!\nThank you for using the services Grace Global-Rp SF NEWS",(result),addd[1]);
-				SPD(playerid,8455,DIALOG_STYLE_MSGBOX,"{FFFFFF}Examination",string,"Send","Cancel");
+				ShowPlayerDialog(playerid,8455,DIALOG_STYLE_MSGBOX,"{FFFFFF}Examination",string,"Send","Cancel");
 			}
 			else if(LvNews[playerid] == 0)
 			{
 				ReportQ[playerid] = result;
 				format(string,sizeof(string),"{B8B8B8}Are you about to post an ad?:\n               {00FF5E}%s\n\n{B8B8B8}Price:{00FF5E} %d $\n\n\n{56839C}The advertisement will be submitted after verification!\nThank you for using the services Grace Global-Rp LV NEWS",(result),addd[2]);
-				SPD(playerid,8456,DIALOG_STYLE_MSGBOX,"{FFFFFF}Examination",string,"Send","Cancel");
+				ShowPlayerDialog(playerid,8456,DIALOG_STYLE_MSGBOX,"{FFFFFF}Examination",string,"Send","Cancel");
 			}
 		}
 		return true;
@@ -24409,7 +24403,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /house [housenumber]");
 			new housenum = strval(tmp);
@@ -24426,7 +24420,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
  	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(IsPlayerConnected(playerid))
 		    {
 				tmp = strtok(cmdtext, idx);
@@ -24455,7 +24449,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(GetPlayerState(playerid) == PLAYER_STATE_SPECTATING)
 			{
 				StopSpectate(playerid);
@@ -24474,7 +24468,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GPN
 			new length = strlen(cmdtext);
 			while ((idx < length) && (cmdtext[idx] <= ' '))
@@ -24520,7 +24514,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /jail [id] [minutes], /jail [id] 0 - get out of jail");
 			new playa;
@@ -24560,7 +24554,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 6)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /settime [hour] (0-23)");
 			new hour;
@@ -26082,7 +26076,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /fire [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -26124,7 +26118,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		    if(IsPlayerConnected(playerid))
 		    {
 				tmp = strtok(cmdtext, idx);
@@ -26165,7 +26159,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 4)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new akk[256],ssss[256];
 			akk = strtok(cmdtext, idx);
 			if(!strlen(akk)) return SendClientMessage(playerid,COLOR_GREY, "Enter: /geton [account]");
@@ -26195,7 +26189,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 5)
 	    {
-	        if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	        if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /setleader [id] [Number(1 - 27)]");
 			new level;
@@ -27144,13 +27138,13 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	else if(strcmp(cmd, "/tp", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] < 1) return ESCM
-  		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-		SPD(playerid, 7777, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Teleport Menu{00BFFF}Х", "Faction Bases\nWorks\nCar showrooms\nMisc", "Choose", "Back");
+  		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		ShowPlayerDialog(playerid, 7777, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Teleport Menu{00BFFF}Х", "Faction Bases\nWorks\nCar showrooms\nMisc", "Choose", "Back");
 	}
 	if(strcmp(cmd, "/goto", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] < 1) return ESCM
-  		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+  		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		tmp = strtok(cmdtext, idx);
 		if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /goto [id]");
 		giveplayerid = ReturnUser(tmp);
@@ -27291,7 +27285,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			PayDay();
  		}
 		return true;
@@ -27299,7 +27293,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/gethere", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] < 2) return ESCM
-  		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+  		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		tmp = strtok(cmdtext, idx);
 		if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /gethere [id]");
 		giveplayerid = ReturnUser(tmp);
@@ -27326,7 +27320,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /givegun [id] [id weapons] [cartridges]");
 			new playa;
@@ -27362,7 +27356,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(IsPlayerInAnyVehicle(playerid))
 			{
 				RepairVehicle(GetPlayerVehicleID(playerid));
@@ -27486,7 +27480,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 2)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /sethp [id] [Level HP]");
 			new playa;
@@ -27514,7 +27508,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color є1] [Color є2]");
 			new car;
@@ -27558,7 +27552,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
 			if(PlayerInfo[playerid][pAdmin] < 3)
 			{
-			    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+			    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 				SendClientMessage(playerid, COLOR_GRAD1, "   You cannot use this command!");
 				return true;
 			}
@@ -27579,7 +27573,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new akk[256],ssss[256];
 			akk = strtok(cmdtext, idx);
 			if(!strlen(akk)) return SendClientMessage(playerid,COLOR_GREY, "Enter: /delacc [account]");
@@ -27599,7 +27593,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(IsPlayerConnected(playerid))
 			{
 				if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
@@ -27624,7 +27618,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /weather [id weather]");
 			new weather;
@@ -27642,7 +27636,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /money [id] [sum]");
 			new playa;
@@ -27675,7 +27669,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 2)
 	    {
-	        if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	        if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GPN
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /gm [id]");
@@ -27712,14 +27706,14 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
         if(PlayerInfo[playerid][pAdmin] >= 6)
         {
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-            SPD(playerid,9991,DIALOG_STYLE_LIST, "Issuance of licenses", "Driving license\nFlight license\nLicense to drive water transport\nMotorcycle License\nBusiness License\nWeapon License\nLicense set", "Choose", "Back");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+            ShowPlayerDialog(playerid,9991,DIALOG_STYLE_LIST, "Issuance of licenses", "Driving license\nFlight license\nLicense to drive water transport\nMotorcycle License\nBusiness License\nWeapon License\nLicense set", "Choose", "Back");
         }
         else ESCM
     }
     if(strcmp(cmd, "/givelicenses", true) == 0)
     {
-        if(FormaFrac[playerid] == 11) SPD(playerid,9991,DIALOG_STYLE_LIST, "Issuance of licenses", "Driving license\nFlight license\nLicense to drive water transport\nMotorcycle License\nBusiness License\nWeapon license", "Continue", "Cancel");
+        if(FormaFrac[playerid] == 11) ShowPlayerDialog(playerid,9991,DIALOG_STYLE_LIST, "Issuance of licenses", "Driving license\nFlight license\nLicense to drive water transport\nMotorcycle License\nBusiness License\nWeapon license", "Continue", "Cancel");
         else SendClientMessage(playerid, COLOR_GREY, "You don't work at a driving school!");
     }
     if(strcmp(cmd, "/hmute", true) == 0)
@@ -27954,7 +27948,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 3)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GPN
 			new length = strlen(cmdtext);
 			while ((idx < length) && (cmdtext[idx] <= ' '))
@@ -28026,19 +28020,19 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/apanel", true) == 0)
 	{
 	    if(PlayerInfo[playerid][pAdmin] < 1) return ESCM
-	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-	    SPD(playerid,3,DSL, "{00BFFF}[ {AFAFAF}Admin panel {00BFFF}]", "1) Check player statistics\n2)Teleport to the player\n3) Teleport a player to you\n4) To know IP player\n5) Take items from a player\n6)Issue all licenses\n7) Call advertisement\n8) Teleport menu\n9) Spawn and refuel all cars\n10) Events\n11) PayDay\n12) Change the weather\n13) Server restart", "Choose", "Exit");
+	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	    ShowPlayerDialog(playerid,3,DSL, "{00BFFF}[ {AFAFAF}Admin panel {00BFFF}]", "1) Check player statistics\n2)Teleport to the player\n3) Teleport a player to you\n4) To know IP player\n5) Take items from a player\n6)Issue all licenses\n7) Call advertisement\n8) Teleport menu\n9) Spawn and refuel all cars\n10) Events\n11) PayDay\n12) Change the weather\n13) Server restart", "Choose", "Exit");
 	}
 	if(strcmp(cmd, "/gmenu", true) == 0)
 	{
 	    if(!IsAGang(playerid)) return ESCM
-	    SPD(playerid,15,DSL, "{00BFFF}[ {AFAFAF}Gang-panel {00BFFF}]", "1) Take up a weapon\n2) Take materials\n3) Put materials\n4) Dress in military uniform\n5) List of weapons\n6) Check the gang's warehouse\n7) Fire a player\n8) Unload materials", "Choose", "Exit");
+	    ShowPlayerDialog(playerid,15,DSL, "{00BFFF}[ {AFAFAF}Gang-panel {00BFFF}]", "1) Take up a weapon\n2) Take materials\n3) Put materials\n4) Dress in military uniform\n5) List of weapons\n6) Check the gang's warehouse\n7) Fire a player\n8) Unload materials", "Choose", "Exit");
 	}
 	if(strcmp(cmd, "/kick", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 	    	tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /kick [id] [cause]");
 			giveplayerid = ReturnUser(tmp);
@@ -28078,7 +28072,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
         if(PlayerInfo[playerid][pAdmin] >= 2)
         {
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
             tmp = strtok(cmdtext, idx);
             if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /unban [name]");
             format(string, sizeof(string), "Users/%s.ini", tmp);
@@ -28107,7 +28101,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 2)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 	    	tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /ban [id] [Cause]");
 			giveplayerid = strval(tmp);
@@ -28146,7 +28140,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 	    	tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /warn [id] [cause]");
 			giveplayerid = ReturnUser(tmp);
@@ -28214,7 +28208,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 	    	tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /areprimand [id] [cause]");
 			giveplayerid = ReturnUser(tmp);
@@ -28272,7 +28266,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /aremovereprimand [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -28302,7 +28296,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /unwarn [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -28336,7 +28330,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
 			if(!PlayerToPoint(2.0,playerid,212.2816,1812.2374,21.8672)) return SendClientMessage(playerid, COLOR_GREY, "You are not at the observation point");
 			new listitems[] = "Sector [1]\nSector [2]\nSector [3]\nSector [4]";
-			SPD(playerid, 7724, DIALOG_STYLE_LIST, "Select camera", listitems, "Choose", "Close");
+			ShowPlayerDialog(playerid, 7724, DIALOG_STYLE_LIST, "Select camera", listitems, "Choose", "Close");
 		}
 		else
 		{
@@ -28363,7 +28357,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new countmute = 0;
 			foreach(new i : Player)
 			{
@@ -28391,7 +28385,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new countmute = 0;
 			foreach(new i : Player)
 			{
@@ -28419,7 +28413,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 2)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /unjail [id]");
 			giveplayerid = ReturnUser(tmp);
@@ -28555,7 +28549,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 2)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new nearveh = GetNearestVehicle(playerid);
 			new Float:cx,Float:cy,Float:cz;
 			GetVehiclePos(nearveh, cx, cy, cz);
@@ -28639,14 +28633,14 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	}
 	if(strcmp(cmd, "/animlist", true, 10) == 0)
 	{
-		SPD(playerid,1994,DIALOG_STYLE_LIST, "List of animations", "[1] Dance 1\n[2] Dance 2\n[3] Dance 3\n[4] Dance 4\n[5] Hands Up\n[6] Smoke\n[7] Disturbance\n[8] Sit down\n[9] Lie down [1]\n[10] Lie down [2]\n[11] Hand gesture\n[12] Zivat \n[13] Dance [5]\n[14] Dance [6]\n[15] Dance [7]\n[16] Dance [8]\n[17] Dance [9]\n[18] Dance [10]\n[19] Sit down [2]\n[20] Dealer\n[21] Dealer [2]\n[22] Dealer [3]\n[23] Dealer [4]\n[24] Drunken gait\n[25] Sit down [2]", "Choose", "Cancel");
+		ShowPlayerDialog(playerid,1994,DIALOG_STYLE_LIST, "List of animations", "[1] Dance 1\n[2] Dance 2\n[3] Dance 3\n[4] Dance 4\n[5] Hands Up\n[6] Smoke\n[7] Disturbance\n[8] Sit down\n[9] Lie down [1]\n[10] Lie down [2]\n[11] Hand gesture\n[12] Zivat \n[13] Dance [5]\n[14] Dance [6]\n[15] Dance [7]\n[16] Dance [8]\n[17] Dance [9]\n[18] Dance [10]\n[19] Sit down [2]\n[20] Dealer\n[21] Dealer [2]\n[22] Dealer [3]\n[23] Dealer [4]\n[24] Drunken gait\n[25] Sit down [2]", "Choose", "Cancel");
 		return true;
 	}
 	if(strcmp(cmd, "/asellsbiz", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 6)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GetPlayerName(playerid, playername, sizeof(playername));
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /asellsbiz [sbizid]");
@@ -28675,7 +28669,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 3)
 	    {
-	        if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	        if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		    if(IsPlayerConnected(playerid))
 			{
 				tmp = strtok(cmdtext, idx);
@@ -28698,7 +28692,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GetPlayerName(playerid, playername, sizeof(playername));
 		    if(IsPlayerConnected(playerid))
 			{
@@ -28735,7 +28729,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 7)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GetPlayerName(playerid, playername, sizeof(playername));
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return	SendClientMessage(playerid, COLOR_WHITE, "Enter: /asellhouse [houseid]");
@@ -28949,7 +28943,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
 			if(PlayerToPoint(10, playerid,HouseInfo[bouse][hExitx], HouseInfo[bouse][hExity], HouseInfo[bouse][hExitz]))
 			{
-				SPD(playerid,5032,DIALOG_STYLE_MSGBOX, "Sale of property", "Do you really want to sell your house to the government?", "Yes", "No");
+				ShowPlayerDialog(playerid,5032,DIALOG_STYLE_MSGBOX, "Sale of property", "Do you really want to sell your house to the government?", "Yes", "No");
 			}
 			else
 			{
@@ -29028,7 +29022,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
         ToDevelopSkills(PlayerInfo[playerid][pGunSkill][3],points[3]),PlayerInfo[playerid][pGunSkill][3],percent,
         ToDevelopSkills(PlayerInfo[playerid][pGunSkill][4],points[4]),PlayerInfo[playerid][pGunSkill][4],percent,
         ToDevelopSkills(PlayerInfo[playerid][pGunSkill][5],points[5]),PlayerInfo[playerid][pGunSkill][5],percent);
-        SPD(playerid,43,DIALOG_STYLE_MSGBOX, "{EED321}Firing accuracy",stringskill, "OK", "");
+        ShowPlayerDialog(playerid,43,DIALOG_STYLE_MSGBOX, "{EED321}Firing accuracy",stringskill, "OK", "");
 		return true;
 	}
 	if(strcmp(cmd, "/setskill", true) == 0)
@@ -29067,7 +29061,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
                     amount = strval(tmp);
                     if(PlayerInfo[playerid][pAdmin] >= 8)
                     {
-                        if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+                        if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
                         switch (stat)
                         {
                             case 1:
@@ -29126,14 +29120,14 @@ public OnPlayerCommandText(playerid, cmdtext[])
         ini_getString(file,"3.",string);
         format(pos3, sizeof(pos3), "3. %s", string);
         format(string, sizeof(string), "<< List of winners >>\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s",pos1,pos2,pos3);
-        SPD(playerid,69,DIALOG_STYLE_MSGBOX," ",string,"Hide","");
+        ShowPlayerDialog(playerid,69,DIALOG_STYLE_MSGBOX," ",string,"Hide","");
         ini_closeFile(file);
     }
 	if(strcmp(cmd, "/paint", true) == 0)
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(PaintballRound == 0) return SendClientMessage(playerid,COLOR_WHITE, "Paint Ball already started!");
 			format(string, sizeof(string), "Attention! Paintball starts in 5 minutes. Location: military plant K.A.C.C.");
 			SCMTA(0xFFAAFFAA,string);
@@ -29150,7 +29144,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 5)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			if(EndingRaceRound == 0) return SendClientMessage(playerid,COLOR_WHITE, "The race has already begun!");
 			format(string, sizeof(string), "Attention! Racing starts in 5 minutes. Route: Los Santos Airport. Registration at the entrance");
 			SCMTA(0xB9B900AA,string);
@@ -29312,7 +29306,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) { return true; }
 			ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch",4.0,0,0,0,0,0);
 			new listitems[] = "Withdraw cash\nBalance\nHome account";
-			SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit");
+			ShowPlayerDialog(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit");
 			return true;
 		}
 	}
@@ -29339,7 +29333,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/banip",true)==0)
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 6) {
-  		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+  		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
     	tmp = strtok(cmdtext,idx);
      	if(!strlen(tmp)) return SendClientMessage(playerid,COLOR_WHITE, "Enter: /banip [IP address]");
       	format(string,sizeof(string), "banip %s",tmp); SendRconCommand(string); SendRconCommand("reloadbans"); GetPlayerName(giveplayerid, giveplayer, sizeof(giveplayer)); GPN format(string, 256, "%s banned IP: %s", playername, tmp); ABroadCast(COLOR_LIGHTRED, string, 1); }
@@ -29347,7 +29341,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/unbanip",true) == 0)
     {
 		if(PlayerInfo[playerid][pAdmin] >= 6) {
- 		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+ 		if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
    		tmp = strtok(cmdtext,idx);
      	if(!strlen(tmp)) return SendClientMessage(playerid,COLOR_WHITE, "Enter: /unbanip [IP address]");
       	format(string,sizeof(string), "unbanip %s",tmp); SendRconCommand(string); SendRconCommand("reloadbans"); GetPlayerName(giveplayerid, giveplayer, sizeof(giveplayer)); GPN format(string, 256, "%s unbanned IP: %s", playername, tmp); ABroadCast(COLOR_GREEN, string, 1); }
@@ -29400,9 +29394,9 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new listitems[] = "1st Level Administration\n1st Level Administration {00BFFF}(Part 2)\n2 Administration Level\n3 Administration Level\n4 Administration Level\n5 Administration Level\n6 Administration Level\n7 Administration Level\n8 Administration Level";
-			SPD(playerid, 20011, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Administrator Commands{00BFFF}Х", listitems, "Choose", "Cancel");
+			ShowPlayerDialog(playerid, 20011, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Administrator Commands{00BFFF}Х", listitems, "Choose", "Cancel");
 		}
 		else
         {
@@ -29414,8 +29408,8 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
         if(PlayerInfo[playerid][pAdmin] >= 6)
         {
-            if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password.\n","Enter","");
-            SPD(playerid,9992,DIALOG_STYLE_LIST, "Appoint a minister", "Minister of Internal Affairs\nMinister of the Ministry of Defense\nMinister of Health\nMinister of Media", "Choose", "Back");
+            if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password.\n","Enter","");
+            ShowPlayerDialog(playerid,9992,DIALOG_STYLE_LIST, "Appoint a minister", "Minister of Internal Affairs\nMinister of the Ministry of Defense\nMinister of Health\nMinister of Media", "Choose", "Back");
         }
         else ESCM
     }
@@ -29424,7 +29418,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	    new dialog[512];
 		strcat(dialog, "[0]	Turn off color\n[1]	Green\n[2]	Light green\n[3]	Bright green\n[4]	Turquoise\n[5]	Yellow-green\n[6]	Dark green\n[7]	Gray-green\n[8]	Red\n[9]	Bright red\n[10]	Orange\n[11]	Brown\n[12]	Dark red\n[13]	Cgrey-red\n[14]	Yellow-orange\n[15]	Crimson\n[16]	Pink\n[17]	Blue\n[18]	Blue\n[19]	Blue steel\n[20]	Blue-green\n[21]	Dark blue\n[22]	Violet\n");
 		strcat(dialog, "[23]	Indigo\n[24]	Gray blue\n[25]	Yellow\n[26]	Corn\n[27]	Gold\n[28]	Old gold\n[29]	Olive\n[30]	Grey\n[31]	Silver\n[32]	Black\n[33]	White");
-        SPD(playerid,2001,DIALOG_STYLE_LIST, "Color",dialog, "Choose", "Cancel");
+        ShowPlayerDialog(playerid,2001,DIALOG_STYLE_LIST, "Color",dialog, "Choose", "Cancel");
   		return true;
 	}
 	if(strcmp(cmd, "/exit", true) == 0)
@@ -29448,7 +29442,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/dir", true) == 0)
 	{
 		if(PlayerInfo[playerid][pDirectory] == 0) return SendClientMessage(playerid, COLOR_GREY, "You don't have a directory");
-		SPD(playerid,5454,DIALOG_STYLE_LIST, "Directory", "Lawyers\nTaxi drivers\nMechanics\nDoctors\nProduct delivery people", "Choose", "Cancel");
+		ShowPlayerDialog(playerid,5454,DIALOG_STYLE_LIST, "Directory", "Lawyers\nTaxi drivers\nMechanics\nDoctors\nProduct delivery people", "Choose", "Cancel");
 		return true;
 	}
 	if(strcmp(cmd, "/c", true) == 0)
@@ -29457,7 +29451,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		format(string, sizeof(string), "%s takes out his cell phone", playername);
 		ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 		SetPlayerSpecialAction(playerid,SPECIAL_ACTION_USECELLPHONE);
-		SPD(playerid, 9956, DIALOG_STYLE_LIST, "Select service", " Call a Taxi Driver\n Call Medical Help\n Call Mechanic\n To call the police", "Choice", "Cancel");
+		ShowPlayerDialog(playerid, 9956, DIALOG_STYLE_LIST, "Select service", " Call a Taxi Driver\n Call Medical Help\n Call Mechanic\n To call the police", "Choice", "Cancel");
 		return true;
 	}
 	if(strcmp(cmd, "/mn", true) == 0)
@@ -29471,7 +29465,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/mm", true) == 0)
 	{
 		new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname";
-		SPD(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel");
+		ShowPlayerDialog(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel");
 		return true;
 	}
 	if(strcmp(cmd, "/switchskin", true) == 0)
@@ -29673,7 +29667,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if (PlayerInfo[playerid][pAdmin] >= 8)
 					{
-					    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+					    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 						if (PlayerInfo[giveplayerid][pVoennik] == 0)
 						{
 							PlayerInfo[giveplayerid][pVoennik] = 1;
@@ -29703,7 +29697,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] > 0)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return    SendClientMessage(playerid, COLOR_WHITE, "::: Enter: /givevip [eid] [VIP level]");
 			new playa;
@@ -29743,7 +29737,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
             if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 433) return SendClientMessage(playerid,COLOR_GREY, "You are not in a matovoz!");
 			new listitems[] = "[1] Loading\n[2] Unloading\n[3] Unload to warehouse SFa\n[4] Unload to warehouse LSa\n[5] Unload to warehouse LSPD\n[6] Unload to warehouse SFPD\n[7] Unload to warehouse LVPD\n[8] Unload to warehouse FBI\n[9] Unload to warehouse Ballas Gang\n[10] Unload to warehouse Vagos Gang\n[11] Unload to warehouse Grove Gang\n[12] Unload to warehouse Aztecs Gang\n[13] Unload to warehouse Rifa Gang";
-			SPD(playerid, 9653, DIALOG_STYLE_LIST, "Delivery of materials", listitems, "Choose", "Cancel");
+			ShowPlayerDialog(playerid, 9653, DIALOG_STYLE_LIST, "Delivery of materials", listitems, "Choose", "Cancel");
 		}
 		else SendClientMessage(playerid, COLOR_GREY, "You are not authorized to use this command!");
 	}
@@ -30108,7 +30102,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		   				new level = PlayerInfo[playerid][pLevel];
 		   				new msg[] = "Name: %s\nTelephone: %d\nAge: %d\nSubdivision: %s\nRank: %d";
                         format(string, sizeof(string), msg, playername,PlayerInfo[playerid][pPnumber],level,ttext,rank);
-						SPD(giveplayerid, 69, DIALOG_STYLE_MSGBOX, "Certificate",string, "Ready", "");
+						ShowPlayerDialog(giveplayerid, 69, DIALOG_STYLE_MSGBOX, "Certificate",string, "Ready", "");
 						format(string, sizeof(string), "%s showed his ID %s'at", playername, giveplayer);
 		   				ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
                         format(string,sizeof(string), "showed his ID %s'at",giveplayer);
@@ -30133,7 +30127,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext,idx);
 			new l = strval(tmp);
 			if(!IsInAllowedF(l)) return SendClientMessage(playerid,-1, "Enter: /gzcolor [gang]");
@@ -31229,7 +31223,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			if(!IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid, COLOR_GREY, "You must be in the car!");
 			if(PlayerToPoint(2.0,playerid,844.3691,-597.4912,18.4219))
 			{
-				SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color (20.000)\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+				ShowPlayerDialog(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Tuning menu{00BFFF}Х", "Color (20.000)\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 	    	}
 	    	else
 			{
@@ -31246,11 +31240,11 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pPHousekey] == 255) return SendClientMessage(playerid, COLOR_GREY, "You don't have a home");
 		if(PlayerInfo[playerid][pCarLic] != 1) return SendClientMessage(playerid, COLOR_GREY, "You don't have a driver's license!");
-		if(PlayerToPoint(4.0,playerid, 562.4449,-1291.9125,17.2482)) { SPD(playerid,4555,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Landstalker\nBravura\nPerenniel\nEsperanto\nPrevion\nHermes\nWalton\nRegina\nBuccaneer\nWillard\nTractor\nClover\nSadler\nHustler\nTampa\nBroadway\nTornado\nPicador", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, -1641.6460,1203.5209,7.2479)) { SPD(playerid,4556,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Part 1\nPart 2", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, -1966.8695,294.0146,35.4440)) { SPD(playerid,4655,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Motorcycle showroom{00BFFF}Х", "PCJ-600\nFreeway\nSanchez\nQuad\nFCR-900\nNRG-500\nBF-400\nWayfarer", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, 2546.4695,1970.4794,10.8203)) { SPD(playerid,4755,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Buffalo\nStretch\nBF Injection\nPatriot\nZR-350\nComet\nBlista\nMesa\nFeltzer\nSlamvan\nSunrise\nYosemite\nUranus\nStratum\nFlash\nHuntley\nEuros\nClub\nAlpha\nPhoenix", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, 2200.6201,1392.4924,10.8203)) { SPD(playerid,4855,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Infernus\nCheetah\nBanshee\nTurismo\nHotring Racer\nSandking\nHotring Racer 2\nHotring Racer 3\nSuper GT\nBullet\nJester\nSultan\nElegy", "Continue", "Cancel"); }
+		if(PlayerToPoint(4.0,playerid, 562.4449,-1291.9125,17.2482)) { ShowPlayerDialog(playerid,4555,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Landstalker\nBravura\nPerenniel\nEsperanto\nPrevion\nHermes\nWalton\nRegina\nBuccaneer\nWillard\nTractor\nClover\nSadler\nHustler\nTampa\nBroadway\nTornado\nPicador", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, -1641.6460,1203.5209,7.2479)) { ShowPlayerDialog(playerid,4556,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Part 1\nPart 2", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, -1966.8695,294.0146,35.4440)) { ShowPlayerDialog(playerid,4655,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Motorcycle showroom{00BFFF}Х", "PCJ-600\nFreeway\nSanchez\nQuad\nFCR-900\nNRG-500\nBF-400\nWayfarer", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, 2546.4695,1970.4794,10.8203)) { ShowPlayerDialog(playerid,4755,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Buffalo\nStretch\nBF Injection\nPatriot\nZR-350\nComet\nBlista\nMesa\nFeltzer\nSlamvan\nSunrise\nYosemite\nUranus\nStratum\nFlash\nHuntley\nEuros\nClub\nAlpha\nPhoenix", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, 2200.6201,1392.4924,10.8203)) { ShowPlayerDialog(playerid,4855,DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}car showroom{00BFFF}Х", "Infernus\nCheetah\nBanshee\nTurismo\nHotring Racer\nSandking\nHotring Racer 2\nHotring Racer 3\nSuper GT\nBullet\nJester\nSultan\nElegy", "Continue", "Cancel"); }
 		else SendClientMessage(playerid, COLOR_GREY, "You must be near a car dealership/motorcycle showroom!");
 	}
 	if(strcmp(cmd, "/sellcar", true) == 0)
@@ -31374,12 +31368,12 @@ public OnPlayerCommandText(playerid, cmdtext[])
  	}
  	if(strcmp(cmd, "/editint", true) == 0)
 	{
-	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-		if(PlayerInfo[playerid][pAdmin] >= 8) SPD(playerid, 29, DSL, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Nope Class\nD Class\nC Class\nB Class\nA Class\nS Class", "Further", "Back");
+	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		if(PlayerInfo[playerid][pAdmin] >= 8) ShowPlayerDialog(playerid, 29, DSL, "{00BFFF}[ {AFAFAF}Change of interior {00BFFF}]","Nope Class\nD Class\nC Class\nB Class\nA Class\nS Class", "Further", "Back");
 	}
 	if(strcmp(cmd, "/saveall",true) == 0)
 	{
-	    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 		if(PlayerInfo[playerid][pAdmin] >= 8) { SaveAccounts(); SaveMaterials(); SaveGZ(); OnPropUpdate(); OnPlayerUpdateAc(playerid); SendClientMessage(playerid, COLOR_WHITE, "Server and Accounts saved!"); }
 		else SendClientMessage(playerid, COLOR_GREY, "You are not authorized to use this command!");
 	}
@@ -31388,7 +31382,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		new lvlexp[100];
 		new listitems[] = "{FFFFFF}[{00BFFF}1{FFFFFF}] - {FFFF00}Buying Virts\n{FFFFFF}[{00BFFF}2{FFFFFF}] - {FFFF00}Purchase V.I.P\n{FFFFFF}[{00BFFF}3{FFFFFF}] - {FFFF00}Purchasing Personal Transport\n{FFFFFF}[{00BFFF}4{FFFFFF}] - {FFFF00}Purchasing Licenses\n{FFFFFF}[{00BFFF}5{FFFFFF}] - {FFFF00}Buying Drugs\n{FFFFFF}[{00BFFF}6{FFFFFF}] - {FFFF00}Purchasing Materials\n{FFFFFF}[{00BFFF}7{FFFFFF}] - {FFFF00}Miscellaneous";
 		format(lvlexp,sizeof(lvlexp),"{00BFFF}Shop {FF0000}| {00BFFF}Balance: {FF0000}%d {FFFF00}coins",PlayerInfo[playerid][pDonateMoney]);
-		SPD(playerid, 10055, DIALOG_STYLE_LIST, lvlexp, listitems, "Choose", "Cancel");
+		ShowPlayerDialog(playerid, 10055, DIALOG_STYLE_LIST, lvlexp, listitems, "Choose", "Cancel");
 	}
 	if(strcmp(cmd, "/box", true) == 0)
 	{
@@ -31409,7 +31403,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 6)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new zmd[150];
 			zmd = strtok(cmdtext, idx);
 			if(!strlen(zmd)) { SendClientMessage(playerid, COLOR_WHITE, "Enter: /int [1-135]"); return true; }
@@ -31555,7 +31549,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if (PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{00BFFF}[ {AFAFAF}Administrator authorization {00BFFF}]", "{FFFFFF}Enter the Admin Password to confirm that you are a Severer Administrator\n{FFFFFF}Password:", "Entrance", "Cancel");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{00BFFF}[ {AFAFAF}Administrator authorization {00BFFF}]", "{FFFFFF}Enter the Admin Password to confirm that you are a Severer Administrator\n{FFFFFF}Password:", "Entrance", "Cancel");
 			SendClientMessage(playerid, COLOR_GREY, " ");
 			SendClientMessage(playerid, COLOR_GREY, " ");
 			SendClientMessage(playerid, COLOR_GREY, " ");
@@ -31658,7 +31652,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
  		if(PlayerInfo[playerid][pAdmin] >= 8)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
 			if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /agiverank [id player] [level (1 - 16)]");
 			new level;
@@ -31709,7 +31703,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			GPN
 			tmp = strtok(cmdtext, idx);
 	        if(!strlen(tmp)) return SendClientMessage(playerid, COLOR_WHITE, "Enter: /akey [Key]");
@@ -31730,7 +31724,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] >= 1)
 		{
-		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
+		    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			return true;
 		}
 	}
@@ -31880,7 +31874,7 @@ publics CustomPickups()
 							{
 								if(BizzInfo[b][bLocked] == 1) return SendClientMessage(i, COLOR_GREY, "Business closed");
 								format(enters,sizeof(enters), "Entry price %d $\nDo you want to log in?",BizzInfo[b][bEntranceCost]);
- 								SPD(i,9898,DIALOG_STYLE_MSGBOX, "Entrance", enters, "Yes", "Cancel");
+ 								ShowPlayerDialog(i,9898,DIALOG_STYLE_MSGBOX, "Entrance", enters, "Yes", "Cancel");
 								return true;
  							}
 							if(PlayerInfo[i][pPBiskey] == 255)
@@ -31935,7 +31929,7 @@ publics CustomPickups()
 								else if(HouseInfo[h][hKlass] == 3)format(string, sizeof(string), "{FFFFFF}Owner: {F2EEF0}%s %s\n{FFFFFF}Class: B\n{FFFFFF}House number: %d",HouseInfo[h][hOwner],ttextt,h);
 								else if(HouseInfo[h][hKlass] == 4)format(string, sizeof(string), "{FFFFFF}Owner: {F2EEF0}%s %s\n{FFFFFF}Class: A\n{FFFFFF}House number: %d",HouseInfo[h][hOwner],ttextt,h);
 								else format(string, sizeof(string), "{FFFFFF}Owner: %s %s\n{FFFFFF}Class: S\n{FFFFFF}House number: %d",HouseInfo[h][hOwner],ttextt,h);
-								SPD(i,10075,DIALOG_STYLE_MSGBOX, "The house is occupied",string, "Enter", "Cancel");
+								ShowPlayerDialog(i,10075,DIALOG_STYLE_MSGBOX, "The house is occupied",string, "Enter", "Cancel");
 								return true;
 							}
 							else
@@ -31964,7 +31958,7 @@ publics CustomPickups()
 		                        {
 		                            format(string, sizeof(string), "{FFFFFF}Price: %d\n{FFFFFF}Class: S\n{FFFFFF}House number: %d\n{FFFFFF}Enter: /buyhouse to buy a house",HouseInfo[h][hValue],h);
 		                        }
-			                    SPD(i,10026,DIALOG_STYLE_MSGBOX, "The house is free",string, "Enter", "Cancel");
+			                    ShowPlayerDialog(i,10026,DIALOG_STYLE_MSGBOX, "The house is free",string, "Enter", "Cancel");
 			                    return true;
 							}
 						}
@@ -32390,7 +32384,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
         	{
          		if (GetPlayerVirtualWorld(playerid) == i+50)
            		{
-             		SPD(playerid,700,DIALOG_STYLE_MSGBOX,"Leaving the house","Do you want to leave the house?", "Yes", "No");
+             		ShowPlayerDialog(playerid,700,DIALOG_STYLE_MSGBOX,"Leaving the house","Do you want to leave the house?", "Yes", "No");
                	}
            	}
         }
@@ -32537,7 +32531,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(!IsPlayerInAnyVehicle(playerid))
 			{
-				SPD(playerid, 0, DSM, "Green Zone","{FFFFFF}Dear player!\n{FFFFFF}This territory is ''{00FF19}Green zone{FFFFFF}''\n{FFFFFF}In this zone {FF0000}forbidden {FFFFFF}fight and shoot!\n","Ready","");
+				ShowPlayerDialog(playerid, 0, DSM, "Green Zone","{FFFFFF}Dear player!\n{FFFFFF}This territory is ''{00FF19}Green zone{FFFFFF}''\n{FFFFFF}In this zone {FF0000}forbidden {FFFFFF}fight and shoot!\n","Ready","");
 				return true;
 			}
 		}
@@ -32548,7 +32542,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(!IsPlayerInAnyVehicle(playerid))
 			{
-				SPD(playerid, 0, DSM, "Green Zone","{FFFFFF}Dear player!\n{FFFFFF}This territory is ''{00FF19}Green zone{FFFFFF}''\n{FFFFFF}In this zone {FF0000}forbidden {FFFFFF}fight and shoot!\n","Ready","");
+				ShowPlayerDialog(playerid, 0, DSM, "Green Zone","{FFFFFF}Dear player!\n{FFFFFF}This territory is ''{00FF19}Green zone{FFFFFF}''\n{FFFFFF}In this zone {FF0000}forbidden {FFFFFF}fight and shoot!\n","Ready","");
 				return true;
 			}
 		}
@@ -32559,7 +32553,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(!IsPlayerInAnyVehicle(playerid))
 			{
-				SPD(playerid, 0, DSM, "Green Zone","{FFFFFF}Dear player!\n{FFFFFF}This territory is ''{00FF19}Green zone{FFFFFF}''\n{FFFFFF}In this zone {FF0000}forbidden {FFFFFF}fight and shoot!\n","Ready","");
+				ShowPlayerDialog(playerid, 0, DSM, "Green Zone","{FFFFFF}Dear player!\n{FFFFFF}This territory is ''{00FF19}Green zone{FFFFFF}''\n{FFFFFF}In this zone {FF0000}forbidden {FFFFFF}fight and shoot!\n","Ready","");
 				return true;
 			}
 		}
@@ -32708,7 +32702,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) { return true; }
 				ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch",4.0,0,0,0,0,0);
 				new listitems[] = "Withdraw cash\nBalance\nHome account";
-				SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit");
+				ShowPlayerDialog(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}ATM{00BFFF}Х", listitems, "Further", "Exit");
 				return true;
 			}
 		}
@@ -34126,7 +34120,7 @@ stock ChangeName(playerid)
 	format(string,sizeof(string), "%s changed his name to %s",plnamep,changenam);
 	SendClientMessage(playerid, COLOR_WHITE, "Send a new nickname in the window Samp");
 	SCMTA(COLOR_LIGHTRED,string);
-	SPD(playerid,327,DIALOG_STYLE_INPUT, "Change Password", "    Enter your new password     ", "Accept", "");
+	ShowPlayerDialog(playerid,327,DIALOG_STYLE_INPUT, "Change Password", "    Enter your new password     ", "Accept", "");
 	PlayerInfo[playerid][pCheckip] = 0;
 	return true;
 }
@@ -34394,8 +34388,8 @@ stock AdvertList(playerid)
 		format(str, sizeof(str), "[%i] Text: %s. Sent: %s\n",i, AdvertInfo[i][full][adText], AdvertInfo[i][full][adName]);
 		strcat(strrr, str);
 	}
-	if(TOTALADVERT[full] == 0) return SPD(playerid, 69, 0, "ads", "    There are no new announcements", "Back", "");
-	SPD(playerid, 11518, 2, "ads", strrr, "Accept", "Cancel");
+	if(TOTALADVERT[full] == 0) return ShowPlayerDialog(playerid, 69, 0, "ads", "    There are no new announcements", "Back", "");
+	ShowPlayerDialog(playerid, 11518, 2, "ads", strrr, "Accept", "Cancel");
 	return true;
 }
 publics UnFreeze(playerid)
@@ -34735,7 +34729,7 @@ stock PrintFarmInfo(playerid, targetid)
             new string[300];
             format(string,sizeof(string), "Owner: %s\nPartners: %s\nBank balance: %d\nPrice for work: %d\n\nGrain price: %d\nGrain purchased: %d / 10000\nGrains sown: %d / 5000\nQuantity in stock: %d / 10000\nProduct price: %d\n\nDeputy: %s\nDeputy: %s\nDeputy: %s\n\nFarmer: %s\nFarmer: %s\nFarmer: %s\nFarmer: %s\nFarmer: %s\n",
             FarmInfo[targetid][fOwner],mafiatext,FarmInfo[targetid][fTill],FarmInfo[targetid][fEntranceCost],FarmInfo[targetid][fCenazerno],FarmInfo[targetid][fzernozakup],FarmInfo[targetid][fSownSeeds],prod,FarmInfo[targetid][fAmountOfGrain],FarmInfo[targetid][fcenaprod],FarmInfo[f][f1zams],FarmInfo[f][f2zams],FarmInfo[f][f3zams],FarmInfo[f][f1fermers],FarmInfo[f][f2fermers],FarmInfo[f][f3fermers],FarmInfo[f][f4fermers],FarmInfo[f][f5fermers]);
-            SPD(playerid, 69, DIALOG_STYLE_MSGBOX, "Farm Information",string, "Hide", "");
+            ShowPlayerDialog(playerid, 69, DIALOG_STYLE_MSGBOX, "Farm Information",string, "Hide", "");
         }
     }
 }

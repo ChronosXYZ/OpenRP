@@ -1,3 +1,6 @@
+#include "core/atm.pwn"
+#include "core/objects.pwn"
+
 static Text:logo;
 
 ShowProjectLogo(playerid)
