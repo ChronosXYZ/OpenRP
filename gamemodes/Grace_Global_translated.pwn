@@ -1,117 +1,117 @@
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Инклуды ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#include <a_engine> // Инклуд заводки двигателя
-#include <dini> // Инклуд DINI (Нужен для создания аккаунта)
-#include <mxINI> // Стандартный инклуд функционала MxINI
-#include <streamer> // Инклуд отвечающий за объекты на сервере
-#include <utils> // Инклуд, который нужен для ид игрока, с которым мы хотим взаимодействовать. В простонароде "giveplayerid"
-#include <md5> // Инклуд шифровки паролей
-#include <foreach> // Инклуд оптимизации циклов игрока
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Дефайны ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma dynamic					5900 // Динамикка мода. Не понижать и не удалять, пока не будет оптимизирован мод
-#define Ammo_SDPISTOL 			6 // Количество патрон необходимые для прокачки 1% оружия SD Pistol
-#define Ammo_DEAGLE 			7 // Количество патрон необходимые для прокачки 1% оружия Deagle
-#define Ammo_SHOTGUN			10 // Количество патрон необходимые для прокачки 1% оружия ShotGun
-#define Ammo_MP5				10 // Количество патрон необходимые для прокачки 1% оружия MP5
-#define Ammo_AK47				10 // Количество патрон необходимые для прокачки 1% оружия AK-47
-#define Ammo_M4A1				10 // Количество патрон необходимые для прокачки 1% оружия M4
-#define publics%0(%1) forward%0(%1); public%0(%1) // Макросс. Нужен, чтобы не создавать форвардов, для созданых пабликов
-#define SCM SendClientMessage // Дефайн функции отправки сообщений
-#define SCMTA SendClientMessageToAll // Дефайн функции отправки сообщений всем игрокам
-#define SPD ShowPlayerDialog // Дефайн функции вывода диалогов
-#define GPN GetPlayerName(playerid, playername, sizeof(playername)); // Дефайн для получение никнейма игрока
-#define GGPN GetPlayerName(giveplayerid, giveplayername, sizeof(giveplayername)); // Дефайн для получение никнейма другого игрока
-#define kick SetTimerEx("Kickk",100,false,"i",playerid); // Дефайн функции кика
-#define gkick SetTimerEx("Kickk",100,false,"i",giveplayerid); // Дефайн функции кика другого игрока
-#define ESCM SCM(playerid, COLOR_GREY, "You are not authorized to use this command!"); // Дефайн вывода текста
-#define ISCM SCM(playerid, COLOR_GREY, "Player not found!"); // Дефайн вывода текста
-#define DSL DIALOG_STYLE_LIST // Список
-#define DSI DIALOG_STYLE_INPUT // Ввод текста
-#define DSM DIALOG_STYLE_MSGBOX // Выбор
-#define DSP DIALOG_STYLE_PASSWORD // Ввод зашифрованного пароля
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ РРЅРєР»СѓРґС‹ ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#include <a_engine> // РРЅРєР»СѓРґ Р·Р°РІРѕРґРєРё РґРІРёРіР°С‚РµР»СЏ
+#include <dini> // РРЅРєР»СѓРґ DINI (РќСѓР¶РµРЅ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р°РєРєР°СѓРЅС‚Р°)
+#include <mxINI> // РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РёРЅРєР»СѓРґ С„СѓРЅРєС†РёРѕРЅР°Р»Р° MxINI
+#include <streamer> // РРЅРєР»СѓРґ РѕС‚РІРµС‡Р°СЋС‰РёР№ Р·Р° РѕР±СЉРµРєС‚С‹ РЅР° СЃРµСЂРІРµСЂРµ
+#include <utils> // РРЅРєР»СѓРґ, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РµРЅ РґР»СЏ РёРґ РёРіСЂРѕРєР°, СЃ РєРѕС‚РѕСЂС‹Рј РјС‹ С…РѕС‚РёРј РІР·Р°РёРјРѕРґРµР№СЃС‚РІРѕРІР°С‚СЊ. Р’ РїСЂРѕСЃС‚РѕРЅР°СЂРѕРґРµ "giveplayerid"
+#include <md5> // РРЅРєР»СѓРґ С€РёС„СЂРѕРІРєРё РїР°СЂРѕР»РµР№
+#include <foreach> // РРЅРєР»СѓРґ РѕРїС‚РёРјРёР·Р°С†РёРё С†РёРєР»РѕРІ РёРіСЂРѕРєР°
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Р”РµС„Р°Р№РЅС‹ ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#pragma dynamic					5900 // Р”РёРЅР°РјРёРєРєР° РјРѕРґР°. РќРµ РїРѕРЅРёР¶Р°С‚СЊ Рё РЅРµ СѓРґР°Р»СЏС‚СЊ, РїРѕРєР° РЅРµ Р±СѓРґРµС‚ РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅ РјРѕРґ
+#define Ammo_SDPISTOL 			6 // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїСЂРѕРєР°С‡РєРё 1% РѕСЂСѓР¶РёСЏ SD Pistol
+#define Ammo_DEAGLE 			7 // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїСЂРѕРєР°С‡РєРё 1% РѕСЂСѓР¶РёСЏ Deagle
+#define Ammo_SHOTGUN			10 // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїСЂРѕРєР°С‡РєРё 1% РѕСЂСѓР¶РёСЏ ShotGun
+#define Ammo_MP5				10 // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїСЂРѕРєР°С‡РєРё 1% РѕСЂСѓР¶РёСЏ MP5
+#define Ammo_AK47				10 // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїСЂРѕРєР°С‡РєРё 1% РѕСЂСѓР¶РёСЏ AK-47
+#define Ammo_M4A1				10 // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїСЂРѕРєР°С‡РєРё 1% РѕСЂСѓР¶РёСЏ M4
+#define publics%0(%1) forward%0(%1); public%0(%1) // РњР°РєСЂРѕСЃСЃ. РќСѓР¶РµРЅ, С‡С‚РѕР±С‹ РЅРµ СЃРѕР·РґР°РІР°С‚СЊ С„РѕСЂРІР°СЂРґРѕРІ, РґР»СЏ СЃРѕР·РґР°РЅС‹С… РїР°Р±Р»РёРєРѕРІ
+#define SCM SendClientMessage // Р”РµС„Р°Р№РЅ С„СѓРЅРєС†РёРё РѕС‚РїСЂР°РІРєРё СЃРѕРѕР±С‰РµРЅРёР№
+#define SCMTA SendClientMessageToAll // Р”РµС„Р°Р№РЅ С„СѓРЅРєС†РёРё РѕС‚РїСЂР°РІРєРё СЃРѕРѕР±С‰РµРЅРёР№ РІСЃРµРј РёРіСЂРѕРєР°Рј
+#define SPD ShowPlayerDialog // Р”РµС„Р°Р№РЅ С„СѓРЅРєС†РёРё РІС‹РІРѕРґР° РґРёР°Р»РѕРіРѕРІ
+#define GPN GetPlayerName(playerid, playername, sizeof(playername)); // Р”РµС„Р°Р№РЅ РґР»СЏ РїРѕР»СѓС‡РµРЅРёРµ РЅРёРєРЅРµР№РјР° РёРіСЂРѕРєР°
+#define GGPN GetPlayerName(giveplayerid, giveplayername, sizeof(giveplayername)); // Р”РµС„Р°Р№РЅ РґР»СЏ РїРѕР»СѓС‡РµРЅРёРµ РЅРёРєРЅРµР№РјР° РґСЂСѓРіРѕРіРѕ РёРіСЂРѕРєР°
+#define kick SetTimerEx("Kickk",100,false,"i",playerid); // Р”РµС„Р°Р№РЅ С„СѓРЅРєС†РёРё РєРёРєР°
+#define gkick SetTimerEx("Kickk",100,false,"i",giveplayerid); // Р”РµС„Р°Р№РЅ С„СѓРЅРєС†РёРё РєРёРєР° РґСЂСѓРіРѕРіРѕ РёРіСЂРѕРєР°
+#define ESCM SCM(playerid, COLOR_GREY, "You are not authorized to use this command!"); // Р”РµС„Р°Р№РЅ РІС‹РІРѕРґР° С‚РµРєСЃС‚Р°
+#define ISCM SCM(playerid, COLOR_GREY, "Player not found!"); // Р”РµС„Р°Р№РЅ РІС‹РІРѕРґР° С‚РµРєСЃС‚Р°
+#define DSL DIALOG_STYLE_LIST // РЎРїРёСЃРѕРє
+#define DSI DIALOG_STYLE_INPUT // Р’РІРѕРґ С‚РµРєСЃС‚Р°
+#define DSM DIALOG_STYLE_MSGBOX // Р’С‹Р±РѕСЂ
+#define DSP DIALOG_STYLE_PASSWORD // Р’РІРѕРґ Р·Р°С€РёС„СЂРѕРІР°РЅРЅРѕРіРѕ РїР°СЂРѕР»СЏ
 #define MOROZ TogglePlayerControllable(playerid, 0);
 #define UNMOROZ TogglePlayerControllable(playerid, 1);
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Цвета ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#define COLOR_GRAD1 0xB4B5B7FF // Серый
-#define COLOR_GRAD2 0xBFC0C2FF // Серый
-#define COLOR_GRAD3 0xCBCCCEFF // Серый
-#define COLOR_GRAD4 0xD8D8D8FF // Серый
-#define COLOR_ORANGE 0xFF9900AA // Оранжевый
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Р¦РІРµС‚Р° ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#define COLOR_GRAD1 0xB4B5B7FF // РЎРµСЂС‹Р№
+#define COLOR_GRAD2 0xBFC0C2FF // РЎРµСЂС‹Р№
+#define COLOR_GRAD3 0xCBCCCEFF // РЎРµСЂС‹Р№
+#define COLOR_GRAD4 0xD8D8D8FF // РЎРµСЂС‹Р№
+#define COLOR_ORANGE 0xFF9900AA // РћСЂР°РЅР¶РµРІС‹Р№
 #define COLOR_USE 0x7FB151FF // ???
-#define COLOR_BLUE 0x33AAFFFF // Голубой
-#define COLOR_SALMON 0xFA8072AA // Розовый
-#define COLOR_INDIGO 0x4B00B0AA // Фиолетовый
-#define COLOR_BLACK 0x000000AA // Черный
-#define COLOR_GREY 0xAFAFAFAA // Серый
-#define COLOR_GREEN 0x33AA33AA // Зеленый
-#define COLOR_RED 0xAA3333AA // Красный
-#define COLOR_LIGHTRED 0xFF6347AA // Насыщенно красный
-#define COLOR_LIGHTBLUE 0x33CCFFAA // Насыщенно голубой
-#define COLOR_LIGHTGREEN 0x9ACD32AA // Насыщенно зеленый
-#define COLOR_YELLOW 0xFFFF00AA // Желтый
-#define COLOR_YELLOW2 0xF5DEB3AA // Желтый
-#define COLOR_WHITE 0xFFFFFFAA // Белый
-#define COLOR_REDD 0x9F0000AA // Бордовый
-#define COLOR_FADE1 0xE6E6E6E6 // Белый
-#define COLOR_FADE2 0xC8C8C8C8 // Белый
-#define COLOR_FADE3 0xAAAAAAAA // Серый
-#define COLOR_FADE4 0x8C8C8C8C // Серый
-#define COLOR_FADE5 0x6E6E6E6E // Серый
-#define COLOR_PURPLE 0xC2A2DAAA // Фиолетовый
-#define COLOR_ALLDEPT 0xFF8282AA // Розовый
-#define COLOR_NEWS 0xFFA500AA // Желтый
-#define COLOR_OOC 0xE0FFFFAA // Белый
-#define TEAM_HIT_COLOR 0xFFFFFF00 // Синий
-#define TEAM_BLUE_COLOR 0x8D8DFF00 // Фиолетовый
-#define TEAM_GROVE_COLOR 0x00D900C8 // Зеленый
-#define TEAM_AZTECAS_COLOR 0x01FCFFC8 // Голубой
-#define TEAM_CYAN_COLOR 0xFF8282AA // Зеленый
-#define COLOR_GOLUB 0x1DE3CBAA // Голубой
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Переменные ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-new Text:site;//лого
-new Collectionit[MAX_PLAYERS]; // Ферма
-new WithBush[MAX_PLAYERS]; // Ферма
-new Text3D: JobText2; // Ферма
+#define COLOR_BLUE 0x33AAFFFF // Р“РѕР»СѓР±РѕР№
+#define COLOR_SALMON 0xFA8072AA // Р РѕР·РѕРІС‹Р№
+#define COLOR_INDIGO 0x4B00B0AA // Р¤РёРѕР»РµС‚РѕРІС‹Р№
+#define COLOR_BLACK 0x000000AA // Р§РµСЂРЅС‹Р№
+#define COLOR_GREY 0xAFAFAFAA // РЎРµСЂС‹Р№
+#define COLOR_GREEN 0x33AA33AA // Р—РµР»РµРЅС‹Р№
+#define COLOR_RED 0xAA3333AA // РљСЂР°СЃРЅС‹Р№
+#define COLOR_LIGHTRED 0xFF6347AA // РќР°СЃС‹С‰РµРЅРЅРѕ РєСЂР°СЃРЅС‹Р№
+#define COLOR_LIGHTBLUE 0x33CCFFAA // РќР°СЃС‹С‰РµРЅРЅРѕ РіРѕР»СѓР±РѕР№
+#define COLOR_LIGHTGREEN 0x9ACD32AA // РќР°СЃС‹С‰РµРЅРЅРѕ Р·РµР»РµРЅС‹Р№
+#define COLOR_YELLOW 0xFFFF00AA // Р–РµР»С‚С‹Р№
+#define COLOR_YELLOW2 0xF5DEB3AA // Р–РµР»С‚С‹Р№
+#define COLOR_WHITE 0xFFFFFFAA // Р‘РµР»С‹Р№
+#define COLOR_REDD 0x9F0000AA // Р‘РѕСЂРґРѕРІС‹Р№
+#define COLOR_FADE1 0xE6E6E6E6 // Р‘РµР»С‹Р№
+#define COLOR_FADE2 0xC8C8C8C8 // Р‘РµР»С‹Р№
+#define COLOR_FADE3 0xAAAAAAAA // РЎРµСЂС‹Р№
+#define COLOR_FADE4 0x8C8C8C8C // РЎРµСЂС‹Р№
+#define COLOR_FADE5 0x6E6E6E6E // РЎРµСЂС‹Р№
+#define COLOR_PURPLE 0xC2A2DAAA // Р¤РёРѕР»РµС‚РѕРІС‹Р№
+#define COLOR_ALLDEPT 0xFF8282AA // Р РѕР·РѕРІС‹Р№
+#define COLOR_NEWS 0xFFA500AA // Р–РµР»С‚С‹Р№
+#define COLOR_OOC 0xE0FFFFAA // Р‘РµР»С‹Р№
+#define TEAM_HIT_COLOR 0xFFFFFF00 // РЎРёРЅРёР№
+#define TEAM_BLUE_COLOR 0x8D8DFF00 // Р¤РёРѕР»РµС‚РѕРІС‹Р№
+#define TEAM_GROVE_COLOR 0x00D900C8 // Р—РµР»РµРЅС‹Р№
+#define TEAM_AZTECAS_COLOR 0x01FCFFC8 // Р“РѕР»СѓР±РѕР№
+#define TEAM_CYAN_COLOR 0xFF8282AA // Р—РµР»РµРЅС‹Р№
+#define COLOR_GOLUB 0x1DE3CBAA // Р“РѕР»СѓР±РѕР№
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ РџРµСЂРµРјРµРЅРЅС‹Рµ ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+new Text:site;//Р»РѕРіРѕ
+new Collectionit[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new WithBush[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new Text3D: JobText2; // Р¤РµСЂРјР°
 new edmats[6]; // LSa
 new objectplayerid;
 new hitpic[2];
-new HelperDuty[MAX_PLAYERS]; // Хелпер
-new FormaFracPic[17]; // Государственная форма
-new pas; // Паспорт
-new FormaFrac[MAX_PLAYERS]; // Государственная форма
-new ammomerls; // Мэрия
-new marvert[2]; // Мерия
-new Inkasator[5]; // Инкасаторы
-new PlayerIsInkasator[MAX_PLAYERS]; // Инкасаторы
-new trashtruck[5]; // Водитель мусоровоза
+new HelperDuty[MAX_PLAYERS]; // РҐРµР»РїРµСЂ
+new FormaFracPic[17]; // Р“РѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅР°СЏ С„РѕСЂРјР°
+new pas; // РџР°СЃРїРѕСЂС‚
+new FormaFrac[MAX_PLAYERS]; // Р“РѕСЃСѓРґР°СЂСЃС‚РІРµРЅРЅР°СЏ С„РѕСЂРјР°
+new ammomerls; // РњСЌСЂРёСЏ
+new marvert[2]; // РњРµСЂРёСЏ
+new Inkasator[5]; // РРЅРєР°СЃР°С‚РѕСЂС‹
+new PlayerIsInkasator[MAX_PLAYERS]; // РРЅРєР°СЃР°С‚РѕСЂС‹
+new trashtruck[5]; // Р’РѕРґРёС‚РµР»СЊ РјСѓСЃРѕСЂРѕРІРѕР·Р°
 new hitid = 999;
 new GoChase[MAX_PLAYERS];
 new GetChased[MAX_PLAYERS];
 new GotHit[MAX_PLAYERS];
 new swatcar[15];
-new carpost[9]; // постовое авто
-new Float: gInkasatorPoints[2][3] = // Инкасаторы
+new carpost[9]; // РїРѕСЃС‚РѕРІРѕРµ Р°РІС‚Рѕ
+new Float: gInkasatorPoints[2][3] = // РРЅРєР°СЃР°С‚РѕСЂС‹
 {
 	{-2153.6104,251.0052,35.4414},
 	{-2153.6104,251.0052,35.4414}
 };
-new ammonac[6]; // Оружейный магазин
-new mavlic; // Автошкола
-new AdvertTime; // Объявления
-new TOTALADVERT[3]; // Объявления
-new robber; // Сдача металла
-new CountVezit; // Статистика посещаемости
-new ReportQ[MAX_PLAYERS][128]; // Объявления
-new AdvertiseTimerEx; // Реклама сервера
-new FreshTimer; // Обновление
-new radiols; // Новости
+new ammonac[6]; // РћСЂСѓР¶РµР№РЅС‹Р№ РјР°РіР°Р·РёРЅ
+new mavlic; // РђРІС‚РѕС€РєРѕР»Р°
+new AdvertTime; // РћР±СЉСЏРІР»РµРЅРёСЏ
+new TOTALADVERT[3]; // РћР±СЉСЏРІР»РµРЅРёСЏ
+new robber; // РЎРґР°С‡Р° РјРµС‚Р°Р»Р»Р°
+new CountVezit; // РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕСЃРµС‰Р°РµРјРѕСЃС‚Рё
+new ReportQ[MAX_PLAYERS][128]; // РћР±СЉСЏРІР»РµРЅРёСЏ
+new AdvertiseTimerEx; // Р РµРєР»Р°РјР° СЃРµСЂРІРµСЂР°
+new FreshTimer; // РћР±РЅРѕРІР»РµРЅРёРµ
+new radiols; // РќРѕРІРѕСЃС‚Рё
 enum adInfo
 {
 	adPhone,
 	adText[128],
 	adName[MAX_PLAYER_NAME]
 };
-new AdvertInfo[30][3][adInfo]; // Объявления
-new Float: Venue[4][3] = // Ферма
+new AdvertInfo[30][3][adInfo]; // РћР±СЉСЏРІР»РµРЅРёСЏ
+new Float: Venue[4][3] = // Р¤РµСЂРјР°
 {
 	{-305.3935,-1334.0796,8.2550},
 	{-311.4154,-1359.4165,9.0605},
@@ -119,17 +119,17 @@ new Float: Venue[4][3] = // Ферма
 	{-191.2922,-1380.0945,5.0030}
 };
 new	CountExTimer; // AFK
-new OtherTimerEx; // Обновление
-new PickupTimer; // Таймер пикапов
-new GzCheckTimer; // Таймер гангзон
-new MzCheckTimer; // Таймер бизнесов
-new war = 0; // Мафии
+new OtherTimerEx; // РћР±РЅРѕРІР»РµРЅРёРµ
+new PickupTimer; // РўР°Р№РјРµСЂ РїРёРєР°РїРѕРІ
+new GzCheckTimer; // РўР°Р№РјРµСЂ РіР°РЅРіР·РѕРЅ
+new MzCheckTimer; // РўР°Р№РјРµСЂ Р±РёР·РЅРµСЃРѕРІ
+new war = 0; // РњР°С„РёРё
 new radiosf; // SFN
 new radiolv; // LVN
-new UnJailTimer; // Гангзоны
-new hamcvhod; // Байкеры
-new hamcqvhod; // Байкеры
-new IPMSG[5][] = // Безопасность
+new UnJailTimer; // Р“Р°РЅРіР·РѕРЅС‹
+new hamcvhod; // Р‘Р°Р№РєРµСЂС‹
+new hamcqvhod; // Р‘Р°Р№РєРµСЂС‹
+new IPMSG[5][] = // Р‘РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ
 {
 	{"IP verification will protect your account from hacking!\n"},
 	{"If your IP the address will be changed, the system will require a security key\n\n"},
@@ -137,72 +137,72 @@ new IPMSG[5][] = // Безопасность
 	{"Enter /mm - Security key\n\n"},
 	{"Be sure to install a security key!\n"}
 };
-new giveplayerid; // Ид другого игрока
-new playername[MAX_PLAYER_NAME]; // Имя игрока
-new giveplayername[MAX_PLAYER_NAME]; // Имя другого игрока
-new startwar = 0; // Мафия
-new CarLeasing[MAX_PLAYERS]; // Автосдача водительских прав
-new Bumper[MAX_PLAYERS]; // Тюнинг
-new Bumper2[MAX_PLAYERS]; // Тюнинг
-new Kolesa[MAX_PLAYERS]; // Тюнинг
-new PaintJob[MAX_PLAYERS]; // Тюнинг
-new Color[MAX_PLAYERS]; // Цвет авто
-new Color1[MAX_PLAYERS]; // Цвет авто
-new Gidra[MAX_PLAYERS]; // Тюнинг
-new Spoiler[MAX_PLAYERS]; // Тюнинг
-new Nitro[MAX_PLAYERS]; // Тюнинг
-new sellzone[MAX_PLAYERS]; // Гангзоны
-new Bags[MAX_PLAYERS]; // Грузчики
-new WithBag[MAX_PLAYERS]; // Грузчики
-new zips[MAX_PLAYERS]; // Магазин одежды
-new zons; // Гангзоны
-new seans[MAX_PLAYERS]; // Наркозависимость
-new medicss[6]; // Медики
-new Krisha[MAX_PLAYERS]; // Мафия
-new KrishaOffer[MAX_PLAYERS]; // Мафия
+new giveplayerid; // РРґ РґСЂСѓРіРѕРіРѕ РёРіСЂРѕРєР°
+new playername[MAX_PLAYER_NAME]; // РРјСЏ РёРіСЂРѕРєР°
+new giveplayername[MAX_PLAYER_NAME]; // РРјСЏ РґСЂСѓРіРѕРіРѕ РёРіСЂРѕРєР°
+new startwar = 0; // РњР°С„РёСЏ
+new CarLeasing[MAX_PLAYERS]; // РђРІС‚РѕСЃРґР°С‡Р° РІРѕРґРёС‚РµР»СЊСЃРєРёС… РїСЂР°РІ
+new Bumper[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Bumper2[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Kolesa[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new PaintJob[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Color[MAX_PLAYERS]; // Р¦РІРµС‚ Р°РІС‚Рѕ
+new Color1[MAX_PLAYERS]; // Р¦РІРµС‚ Р°РІС‚Рѕ
+new Gidra[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Spoiler[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Nitro[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new sellzone[MAX_PLAYERS]; // Р“Р°РЅРіР·РѕРЅС‹
+new Bags[MAX_PLAYERS]; // Р“СЂСѓР·С‡РёРєРё
+new WithBag[MAX_PLAYERS]; // Р“СЂСѓР·С‡РёРєРё
+new zips[MAX_PLAYERS]; // РњР°РіР°Р·РёРЅ РѕРґРµР¶РґС‹
+new zons; // Р“Р°РЅРіР·РѕРЅС‹
+new seans[MAX_PLAYERS]; // РќР°СЂРєРѕР·Р°РІРёСЃРёРјРѕСЃС‚СЊ
+new medicss[6]; // РњРµРґРёРєРё
+new Krisha[MAX_PLAYERS]; // РњР°С„РёСЏ
+new KrishaOffer[MAX_PLAYERS]; // РњР°С„РёСЏ
 new chekmaterialslv[10]; // LVa
 new chekmaterialssf[3]; // SFa
 new addd[3]; // News
-new balonchik[MAX_PLAYERS]; // Продукт
-new TicketOffer[MAX_PLAYERS]; // Полиция
-new TicketMoney[MAX_PLAYERS]; // Полиция
-new Timerkk[MAX_PLAYERS]; // Нельзя стоять на машинах
-new enterbiz[MAX_PLAYERS]; // Бизнес
-new changenam[25]; // Смена пароля
-new gSpectateID[MAX_PLAYERS]; // Рекурсия
+new balonchik[MAX_PLAYERS]; // РџСЂРѕРґСѓРєС‚
+new TicketOffer[MAX_PLAYERS]; // РџРѕР»РёС†РёСЏ
+new TicketMoney[MAX_PLAYERS]; // РџРѕР»РёС†РёСЏ
+new Timerkk[MAX_PLAYERS]; // РќРµР»СЊР·СЏ СЃС‚РѕСЏС‚СЊ РЅР° РјР°С€РёРЅР°С…
+new enterbiz[MAX_PLAYERS]; // Р‘РёР·РЅРµСЃ
+new changenam[25]; // РЎРјРµРЅР° РїР°СЂРѕР»СЏ
+new gSpectateID[MAX_PLAYERS]; // Р РµРєСѓСЂСЃРёСЏ
 new zvonok[MAX_PLAYERS]; // News
-new send[MAX_PLAYERS]; // Ломка
-new alhambra; // Бизнес
-new shotbur[2]; // Бизнес
-new pizza[3]; // Бизнес
-new sabrina; // Бизнес
-new grovebar; // Бизнес
-new jizzy; // Бизнес
-new pigpen; // Бизнес
-new startaddiction[MAX_PLAYERS]; // Ломка
-new chet[MAX_PLAYERS]; // Водитель автобуса
-new arace; // Гонки
-new EndingRaceRound = 1; // Гонки
-new RacingPlayers = 0; // Гонки
-new FirstRaceWinner = 999; // Гонки
-new PlayerRacing[MAX_PLAYERS]; // Гонки
-new SecondRaceWinner = 999; // Гонки
-new ThirdRaceWinner = 999; // Гонки
-new PaintballPlayers = 0; // Пейнтбол
-new PaintballRound = 1; // Пейнтбол
-new PaintballWinner = 999; // Пейнбол
-new PaintballWinnerKills = 0; // Пейнбол
-new PlayerPaintballing[MAX_PLAYERS]; // Пейнбол
-new PlayerPaintballKills[MAX_PLAYERS]; // Пейнтбол
-new PicCP[MAX_PLAYERS]; // Мэрия
+new send[MAX_PLAYERS]; // Р›РѕРјРєР°
+new alhambra; // Р‘РёР·РЅРµСЃ
+new shotbur[2]; // Р‘РёР·РЅРµСЃ
+new pizza[3]; // Р‘РёР·РЅРµСЃ
+new sabrina; // Р‘РёР·РЅРµСЃ
+new grovebar; // Р‘РёР·РЅРµСЃ
+new jizzy; // Р‘РёР·РЅРµСЃ
+new pigpen; // Р‘РёР·РЅРµСЃ
+new startaddiction[MAX_PLAYERS]; // Р›РѕРјРєР°
+new chet[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new arace; // Р“РѕРЅРєРё
+new EndingRaceRound = 1; // Р“РѕРЅРєРё
+new RacingPlayers = 0; // Р“РѕРЅРєРё
+new FirstRaceWinner = 999; // Р“РѕРЅРєРё
+new PlayerRacing[MAX_PLAYERS]; // Р“РѕРЅРєРё
+new SecondRaceWinner = 999; // Р“РѕРЅРєРё
+new ThirdRaceWinner = 999; // Р“РѕРЅРєРё
+new PaintballPlayers = 0; // РџРµР№РЅС‚Р±РѕР»
+new PaintballRound = 1; // РџРµР№РЅС‚Р±РѕР»
+new PaintballWinner = 999; // РџРµР№РЅР±РѕР»
+new PaintballWinnerKills = 0; // РџРµР№РЅР±РѕР»
+new PlayerPaintballing[MAX_PLAYERS]; // РџРµР№РЅР±РѕР»
+new PlayerPaintballKills[MAX_PLAYERS]; // РџРµР№РЅС‚Р±РѕР»
+new PicCP[MAX_PLAYERS]; // РњСЌСЂРёСЏ
 new createdvehicles[MAX_VEHICLES]; // /veh
 new swatgun;
 new createdvehs; // /veh
-new caridhouse[MAX_PLAYERS]; // Дом
-new createdcar; // Дом
-new JobCarTime[MAX_PLAYERS]; // Автосдача
-new BusStopTime[MAX_PLAYERS]; // Водитель автобуса
-new VehicleNames[212][] = // Названия авто
+new caridhouse[MAX_PLAYERS]; // Р”РѕРј
+new createdcar; // Р”РѕРј
+new JobCarTime[MAX_PLAYERS]; // РђРІС‚РѕСЃРґР°С‡Р°
+new BusStopTime[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new VehicleNames[212][] = // РќР°Р·РІР°РЅРёСЏ Р°РІС‚Рѕ
 {
 	"Landstalker","Bravura","Buffalo","Linerunner","Perrenial","Sentinel","Dumper","Firetruck","Trashmaster","Stretch","Manana","Infernus",
 	"Voodoo","Pony","Mule","Cheetah","Ambulance","Leviathan","Moonbeam","Esperanto","Taxi","Washington","Bobcat","Mr.Whoopee","BF Injection",
@@ -222,67 +222,67 @@ new VehicleNames[212][] = // Названия авто
 	"Police Car","Police Ranger","Picador","S.W.A.T.","Alpha","Phoenix","Glendale","Sadler","L Trailer A","L Trailer B",
 	"Stair Trailer","Boxville","Farm Plow","U Trailer"
 };
-new BusStop[MAX_PLAYERS]; // Водитель автобуса
-new AutoBusJob[MAX_PLAYERS]; // Водитель автобуса
-new AutoBusCheck[MAX_PLAYERS]; // Водитель автобуса
-new AutoBusMoney[MAX_PLAYERS]; // Водитель автобуса
-new sellgun; // Продажа оружия
-new sellgun1; // Продажа оружия
-new sellgun2; // Продажа оружия
-new sellgun3; // Продажа оружия
-new sellgun4; // Продажа оружия
+new BusStop[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new AutoBusJob[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new AutoBusCheck[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new AutoBusMoney[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new sellgun; // РџСЂРѕРґР°Р¶Р° РѕСЂСѓР¶РёСЏ
+new sellgun1; // РџСЂРѕРґР°Р¶Р° РѕСЂСѓР¶РёСЏ
+new sellgun2; // РџСЂРѕРґР°Р¶Р° РѕСЂСѓР¶РёСЏ
+new sellgun3; // РџСЂРѕРґР°Р¶Р° РѕСЂСѓР¶РёСЏ
+new sellgun4; // РџСЂРѕРґР°Р¶Р° РѕСЂСѓР¶РёСЏ
 new PEfir[MAX_PLAYERS]; // News
 new Pefir[MAX_PLAYERS]; // News
-new bool: robh[MAX_PLAYERS]; // Ограбление
-new TransportDuty[MAX_PLAYERS]; // Работы
-new TransportValue[MAX_PLAYERS]; // Работы
-new TransportMoney[MAX_PLAYERS]; // Работы
-new TransportTime[MAX_PLAYERS]; // Работы
-new TransportCost[MAX_PLAYERS]; // Работы
-new TransportDriver[MAX_PLAYERS]; // Работы
-new WantNickChange[MAX_PLAYERS][MAX_PLAYER_NAME]; // Смена пароля
-new InviteOffer[MAX_PLAYERS]; // Инвайт
-new HealOffer[MAX_PLAYERS]; // Медики
-new HealPrice[MAX_PLAYERS]; // Медики
-new healpricls = 10; // Медики
-new healpricsf = 10; // Медики
-new healpriclv = 10; // Медики
-new smspricesf = 50; // СМС
-new smspricels = 50; // СМС
-new smspricelv = 50; // СМС
+new bool: robh[MAX_PLAYERS]; // РћРіСЂР°Р±Р»РµРЅРёРµ
+new TransportDuty[MAX_PLAYERS]; // Р Р°Р±РѕС‚С‹
+new TransportValue[MAX_PLAYERS]; // Р Р°Р±РѕС‚С‹
+new TransportMoney[MAX_PLAYERS]; // Р Р°Р±РѕС‚С‹
+new TransportTime[MAX_PLAYERS]; // Р Р°Р±РѕС‚С‹
+new TransportCost[MAX_PLAYERS]; // Р Р°Р±РѕС‚С‹
+new TransportDriver[MAX_PLAYERS]; // Р Р°Р±РѕС‚С‹
+new WantNickChange[MAX_PLAYERS][MAX_PLAYER_NAME]; // РЎРјРµРЅР° РїР°СЂРѕР»СЏ
+new InviteOffer[MAX_PLAYERS]; // РРЅРІР°Р№С‚
+new HealOffer[MAX_PLAYERS]; // РњРµРґРёРєРё
+new HealPrice[MAX_PLAYERS]; // РњРµРґРёРєРё
+new healpricls = 10; // РњРµРґРёРєРё
+new healpricsf = 10; // РњРµРґРёРєРё
+new healpriclv = 10; // РњРµРґРёРєРё
+new smspricesf = 50; // РЎРњРЎ
+new smspricels = 50; // РЎРњРЎ
+new smspricelv = 50; // РЎРњРЎ
 new smssf = 0; // News
 new smsls = 0; // News
 new smslv = 0; // News
-new gcontract[MAX_PLAYERS]; // Механик
-new cenabenza[MAX_PLAYERS]; // Запрвка
-new Text3D: taxi3d[MAX_VEHICLES]; // Такси
-new Text3D: mashinist3d[MAX_VEHICLES]; // Машинист
-new Text3D: Meh3d[MAX_VEHICLES]; // Механик
-new Text3D: fare3dtext[MAX_VEHICLES]; // Водитель автобуса
-new keys[MAX_PLAYERS]; // Ключи
-new DrugOffer[MAX_PLAYERS]; // Наркотики
-new DrugPrice[MAX_PLAYERS]; // Наркотики
-new DrugGramm[MAX_PLAYERS]; // Наркотики
-new ZoneOffer[MAX_PLAYERS]; // Гангзоны
-new ZonePrice[MAX_PLAYERS]; // Гангзоны
-new FreeOffer[MAX_PLAYERS]; // Адвокат
-new FreePrice[MAX_PLAYERS]; // Адвокат
-new cbjstore[150]; // Розыск
-new TakingLesson[MAX_PLAYERS]; // Автосдача
-new Menu: ChoseSkin; // Выбор скина
-new Menu: bomj[2]; // Выбор скина
-new Menu: skinshopmagaz[2]; // Выбор скина
-new clearanim[MAX_PLAYERS]; // Анимация
-new ChosenPlayer[MAX_PLAYERS]; // Тюрма
-new IsLocked[MAX_VEHICLES]; // Спидометр
-new bool: Works[MAX_PLAYERS]; // Грузчики
-new JobCP[MAX_PLAYERS]; // Грузчики
-new GruzCP[MAX_PLAYERS]; // Грузчики
-new usemats[MAX_PLAYERS]; // Материалы
-new JobAmmount[MAX_PLAYERS]; // Грузчики
-new OldSkin[MAX_PLAYERS]; // Скины
-new bool: EngineState[MAX_PLAYERS]; // Заводка двигателя
-new forma[MAX_PLAYERS]; // Форма
+new gcontract[MAX_PLAYERS]; // РњРµС…Р°РЅРёРє
+new cenabenza[MAX_PLAYERS]; // Р—Р°РїСЂРІРєР°
+new Text3D: taxi3d[MAX_VEHICLES]; // РўР°РєСЃРё
+new Text3D: mashinist3d[MAX_VEHICLES]; // РњР°С€РёРЅРёСЃС‚
+new Text3D: Meh3d[MAX_VEHICLES]; // РњРµС…Р°РЅРёРє
+new Text3D: fare3dtext[MAX_VEHICLES]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
+new keys[MAX_PLAYERS]; // РљР»СЋС‡Рё
+new DrugOffer[MAX_PLAYERS]; // РќР°СЂРєРѕС‚РёРєРё
+new DrugPrice[MAX_PLAYERS]; // РќР°СЂРєРѕС‚РёРєРё
+new DrugGramm[MAX_PLAYERS]; // РќР°СЂРєРѕС‚РёРєРё
+new ZoneOffer[MAX_PLAYERS]; // Р“Р°РЅРіР·РѕРЅС‹
+new ZonePrice[MAX_PLAYERS]; // Р“Р°РЅРіР·РѕРЅС‹
+new FreeOffer[MAX_PLAYERS]; // РђРґРІРѕРєР°С‚
+new FreePrice[MAX_PLAYERS]; // РђРґРІРѕРєР°С‚
+new cbjstore[150]; // Р РѕР·С‹СЃРє
+new TakingLesson[MAX_PLAYERS]; // РђРІС‚РѕСЃРґР°С‡Р°
+new Menu: ChoseSkin; // Р’С‹Р±РѕСЂ СЃРєРёРЅР°
+new Menu: bomj[2]; // Р’С‹Р±РѕСЂ СЃРєРёРЅР°
+new Menu: skinshopmagaz[2]; // Р’С‹Р±РѕСЂ СЃРєРёРЅР°
+new clearanim[MAX_PLAYERS]; // РђРЅРёРјР°С†РёСЏ
+new ChosenPlayer[MAX_PLAYERS]; // РўСЋСЂРјР°
+new IsLocked[MAX_VEHICLES]; // РЎРїРёРґРѕРјРµС‚СЂ
+new bool: Works[MAX_PLAYERS]; // Р“СЂСѓР·С‡РёРєРё
+new JobCP[MAX_PLAYERS]; // Р“СЂСѓР·С‡РёРєРё
+new GruzCP[MAX_PLAYERS]; // Р“СЂСѓР·С‡РёРєРё
+new usemats[MAX_PLAYERS]; // РњР°С‚РµСЂРёР°Р»С‹
+new JobAmmount[MAX_PLAYERS]; // Р“СЂСѓР·С‡РёРєРё
+new OldSkin[MAX_PLAYERS]; // РЎРєРёРЅС‹
+new bool: EngineState[MAX_PLAYERS]; // Р—Р°РІРѕРґРєР° РґРІРёРіР°С‚РµР»СЏ
+new forma[MAX_PLAYERS]; // Р¤РѕСЂРјР°
 enum afker
 {
 	TickEx,
@@ -292,21 +292,21 @@ enum afker
 	bool:AFKEx
 }
 new PlayerEx[MAX_PLAYERS][afker]; // AFK
-new MaterialsInTheWagon[MAX_VEHICLES]; // Материалы
-new SeitCar[MAX_PLAYERS]; // Ферма
-new Seitfers[MAX_PLAYERS]; // Ферма
-new Seitferma0[MAX_PLAYERS]; // Ферма
-new proverkaforma[MAX_PLAYERS]; // Форма
-new FarmWorks[MAX_PLAYERS]; // Ферма
-new Download[MAX_PLAYERS]; // Ферма
-new CollectionStarted[MAX_PLAYERS]; // Чекпоинты
-new Combine[1], FarmCar0[1]; // Ферма
-new FarmInfoPic; // Ферма
-new PText[MAX_PLAYERS][256]; // Чат
-new CloakroomFarm; // Ферма
-new collection; // Ферма
-new WithPickup[MAX_PLAYERS]; // Ферма
-new Army[3]; // Гангзоны
+new MaterialsInTheWagon[MAX_VEHICLES]; // РњР°С‚РµСЂРёР°Р»С‹
+new SeitCar[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new Seitfers[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new Seitferma0[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new proverkaforma[MAX_PLAYERS]; // Р¤РѕСЂРјР°
+new FarmWorks[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new Download[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new CollectionStarted[MAX_PLAYERS]; // Р§РµРєРїРѕРёРЅС‚С‹
+new Combine[1], FarmCar0[1]; // Р¤РµСЂРјР°
+new FarmInfoPic; // Р¤РµСЂРјР°
+new PText[MAX_PLAYERS][256]; // Р§Р°С‚
+new CloakroomFarm; // Р¤РµСЂРјР°
+new collection; // Р¤РµСЂРјР°
+new WithPickup[MAX_PLAYERS]; // Р¤РµСЂРјР°
+new Army[3]; // Р“Р°РЅРіР·РѕРЅС‹
 enum
 {
 	FCHECKPOINT_0,
@@ -357,21 +357,21 @@ enum farmInfo
 	fInCar,
 	flock
 };
-new FarmInfo[1][farmInfo]; // Ферма
-new keyip[MAX_PLAYERS]; // Ключ безопасности
-new Tazer[MAX_PLAYERS]; // Тазер
+new FarmInfo[1][farmInfo]; // Р¤РµСЂРјР°
+new keyip[MAX_PLAYERS]; // РљР»СЋС‡ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
+new Tazer[MAX_PLAYERS]; // РўР°Р·РµСЂ
 new CreatedCars[100]; // /veh
 new CreatedCar = 0; // /veh
-new Medics = 0; // Медики
-new PCash[MAX_PLAYERS]; // Деньги
-new MedicCall = 999; // Медики
-new Police = 0; // Полиция
-new PoliceCall = 999; // Полиция
-new Mechanics = 0; // Механики
-new MechanicCall = 999; // Механики
-new TaxiDrivers = 0; // Такси
-new TaxiCall = 999; // Такси
-new SpawnChange[MAX_PLAYERS]; // Смена спавна
+new Medics = 0; // РњРµРґРёРєРё
+new PCash[MAX_PLAYERS]; // Р”РµРЅСЊРіРё
+new MedicCall = 999; // РњРµРґРёРєРё
+new Police = 0; // РџРѕР»РёС†РёСЏ
+new PoliceCall = 999; // РџРѕР»РёС†РёСЏ
+new Mechanics = 0; // РњРµС…Р°РЅРёРєРё
+new MechanicCall = 999; // РњРµС…Р°РЅРёРєРё
+new TaxiDrivers = 0; // РўР°РєСЃРё
+new TaxiCall = 999; // РўР°РєСЃРё
+new SpawnChange[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРїР°РІРЅР°
 new PlayerTied[MAX_PLAYERS]; // /tie
 new PlayerCuffed[MAX_PLAYERS]; // /cuff
 new PlayerCuffedTime[MAX_PLAYERS]; // /cuff
@@ -381,80 +381,80 @@ new LiveOfferlv[MAX_PLAYERS]; // News
 new TalkingLive[MAX_PLAYERS]; // News
 new TalkingLivels[MAX_PLAYERS]; // News
 new TalkingLivelv[MAX_PLAYERS]; // News
-new SelectChar[MAX_PLAYERS]; // Смена скина
-new SelectCharID[MAX_PLAYERS]; // Смена скина
-new SelectCharPlace[MAX_PLAYERS]; // Смена скина
-new CharPrice[MAX_PLAYERS]; // Смена скина
-new ChosenSkin[MAX_PLAYERS]; // Смена скина
-new InviteSkin[MAX_PLAYERS]; // Смена скина
-new CP[MAX_PLAYERS]; // Чекпоинты
-new RaceCP[MAX_PLAYERS]; // Чекпоинты
-new RepairOffer[MAX_PLAYERS]; // Механики
-new RepairPrice[MAX_PLAYERS]; // Механики
-new RefillOffer[MAX_PLAYERS]; // Механики
-new RefillPrice[MAX_PLAYERS]; // Механики
-new Float: X12, Float: Y12, Float: Z12; // Чекпоинты
-new HouseOffer[MAX_PLAYERS]; // Дом
-new CarOffer[MAX_PLAYERS]; // Авто
-new CarPrice[MAX_PLAYERS]; // Авто
-new HousePrice[MAX_PLAYERS]; // Дом
-new WantedPoints[MAX_PLAYERS]; // Розыск
-new WantedLevel[MAX_PLAYERS]; // Розыск
-new gPlayerCheckpointStatus[MAX_PLAYERS]; // Дом
-new gPlayerLogged[MAX_PLAYERS]; // Логин
+new SelectChar[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРєРёРЅР°
+new SelectCharID[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРєРёРЅР°
+new SelectCharPlace[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРєРёРЅР°
+new CharPrice[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРєРёРЅР°
+new ChosenSkin[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРєРёРЅР°
+new InviteSkin[MAX_PLAYERS]; // РЎРјРµРЅР° СЃРєРёРЅР°
+new CP[MAX_PLAYERS]; // Р§РµРєРїРѕРёРЅС‚С‹
+new RaceCP[MAX_PLAYERS]; // Р§РµРєРїРѕРёРЅС‚С‹
+new RepairOffer[MAX_PLAYERS]; // РњРµС…Р°РЅРёРєРё
+new RepairPrice[MAX_PLAYERS]; // РњРµС…Р°РЅРёРєРё
+new RefillOffer[MAX_PLAYERS]; // РњРµС…Р°РЅРёРєРё
+new RefillPrice[MAX_PLAYERS]; // РњРµС…Р°РЅРёРєРё
+new Float: X12, Float: Y12, Float: Z12; // Р§РµРєРїРѕРёРЅС‚С‹
+new HouseOffer[MAX_PLAYERS]; // Р”РѕРј
+new CarOffer[MAX_PLAYERS]; // РђРІС‚Рѕ
+new CarPrice[MAX_PLAYERS]; // РђРІС‚Рѕ
+new HousePrice[MAX_PLAYERS]; // Р”РѕРј
+new WantedPoints[MAX_PLAYERS]; // Р РѕР·С‹СЃРє
+new WantedLevel[MAX_PLAYERS]; // Р РѕР·С‹СЃРє
+new gPlayerCheckpointStatus[MAX_PLAYERS]; // Р”РѕРј
+new gPlayerLogged[MAX_PLAYERS]; // Р›РѕРіРёРЅ
 new gNews[MAX_PLAYERS]; // News
 new lNews[MAX_PLAYERS]; // News
 new LvNews[MAX_PLAYERS]; // News
-new CellTime[MAX_PLAYERS]; // Телефон
-new PhoneOnline[MAX_PLAYERS]; // Телефон
-new Mobile[MAX_PLAYERS]; // Телефон
-new Tel[MAX_PLAYERS]; // Телефон
-new CallCost[MAX_PLAYERS]; // Телефон
-new bool: gPlayerAccount[MAX_PLAYERS]; // Авторизация
-new gCarLock[MAX_VEHICLES]; // Авто
+new CellTime[MAX_PLAYERS]; // РўРµР»РµС„РѕРЅ
+new PhoneOnline[MAX_PLAYERS]; // РўРµР»РµС„РѕРЅ
+new Mobile[MAX_PLAYERS]; // РўРµР»РµС„РѕРЅ
+new Tel[MAX_PLAYERS]; // РўРµР»РµС„РѕРЅ
+new CallCost[MAX_PLAYERS]; // РўРµР»РµС„РѕРЅ
+new bool: gPlayerAccount[MAX_PLAYERS]; // РђРІС‚РѕСЂРёР·Р°С†РёСЏ
+new gCarLock[MAX_VEHICLES]; // РђРІС‚Рѕ
 new noooc = 1; // noooc
 new dchat = 1; // /d
 new dtimer = 3000; // /d
-new ghour = 0; // Время
-new gminute = 0; // Время
-new gsecond = 0; // Время
-new wtime = 15; // Время
-new timeshift = 0; // Время
-new shifthour; // Время
+new ghour = 0; // Р’СЂРµРјСЏ
+new gminute = 0; // Р’СЂРµРјСЏ
+new gsecond = 0; // Р’СЂРµРјСЏ
+new wtime = 15; // Р’СЂРµРјСЏ
+new timeshift = 0; // Р’СЂРµРјСЏ
+new shifthour; // Р’СЂРµРјСЏ
 new levelexp = 4; // Exp
-new MatsArmyCar[MAX_PLAYERS]; // Материалы
-new VertMats[MAX_PLAYERS]; // Материалы
-new vertmatbi = 0; // Материалы
-new armmatbi = 300000; // LVa материалы
-new armmatsf = 200000; // SFa материалы
-new lspdmatbi = 100000; // LSPD материалы
-new armmatls = 100000; // LSa материалы
-new sfpdmats = 100000; // SFPD материалы
-new lvpdmats = 100000; // LVDP материалы
-new fbimats = 100000; // FBI материалы
-new yakuzamats = 100000; // Yacuza материалы
-new rmmats = 100000; // Русская Мафия материалы
-new lcnmats = 100000; // LCN материалы
-new hamcmatbi = 100000; // Байкеры материалы
-new rifamatbi = 100000; // Rifa материалы
-new ballasmatbi = 100000; // Ballas материалы
-new groovmatbi = 100000; // Grove материалы
-new vagosmatbi = 100000; // Vagos материалы
-new aztekmatbi = 100000; // Aztecs материалы
+new MatsArmyCar[MAX_PLAYERS]; // РњР°С‚РµСЂРёР°Р»С‹
+new VertMats[MAX_PLAYERS]; // РњР°С‚РµСЂРёР°Р»С‹
+new vertmatbi = 0; // РњР°С‚РµСЂРёР°Р»С‹
+new armmatbi = 300000; // LVa РјР°С‚РµСЂРёР°Р»С‹
+new armmatsf = 200000; // SFa РјР°С‚РµСЂРёР°Р»С‹
+new lspdmatbi = 100000; // LSPD РјР°С‚РµСЂРёР°Р»С‹
+new armmatls = 100000; // LSa РјР°С‚РµСЂРёР°Р»С‹
+new sfpdmats = 100000; // SFPD РјР°С‚РµСЂРёР°Р»С‹
+new lvpdmats = 100000; // LVDP РјР°С‚РµСЂРёР°Р»С‹
+new fbimats = 100000; // FBI РјР°С‚РµСЂРёР°Р»С‹
+new yakuzamats = 100000; // Yacuza РјР°С‚РµСЂРёР°Р»С‹
+new rmmats = 100000; // Р СѓСЃСЃРєР°СЏ РњР°С„РёСЏ РјР°С‚РµСЂРёР°Р»С‹
+new lcnmats = 100000; // LCN РјР°С‚РµСЂРёР°Р»С‹
+new hamcmatbi = 100000; // Р‘Р°Р№РєРµСЂС‹ РјР°С‚РµСЂРёР°Р»С‹
+new rifamatbi = 100000; // Rifa РјР°С‚РµСЂРёР°Р»С‹
+new ballasmatbi = 100000; // Ballas РјР°С‚РµСЂРёР°Р»С‹
+new groovmatbi = 100000; // Grove РјР°С‚РµСЂРёР°Р»С‹
+new vagosmatbi = 100000; // Vagos РјР°С‚РµСЂРёР°Р»С‹
+new aztekmatbi = 100000; // Aztecs РјР°С‚РµСЂРёР°Р»С‹
 new lsaammo; // LSa
 new lsamaterials; // LSa
 new bonus;
 new bankk = 1;
-new matsfuravagos[1]; // Фура Vagos
-new matsfuragrove[1]; // Фура Grove
-new matsfuraactek[1]; // Фура Aztecs
-new matsfurarifa[1]; // Фура Rifa
-new matsfura[1]; // Фура Ballas
-new benzovoz[8]; // Развозчик продуктов
-new comptruck[8]; // Фура фермы
+new matsfuravagos[1]; // Р¤СѓСЂР° Vagos
+new matsfuragrove[1]; // Р¤СѓСЂР° Grove
+new matsfuraactek[1]; // Р¤СѓСЂР° Aztecs
+new matsfurarifa[1]; // Р¤СѓСЂР° Rifa
+new matsfura[1]; // Р¤СѓСЂР° Ballas
+new benzovoz[8]; // Р Р°Р·РІРѕР·С‡РёРє РїСЂРѕРґСѓРєС‚РѕРІ
+new comptruck[8]; // Р¤СѓСЂР° С„РµСЂРјС‹
 new hitfound = 0;
-new matsfurahell[1]; // Фура байкеров
-new legalmods[48][22] = // Что-то типо Анти ДДоС так и не разобрался...
+new matsfurahell[1]; // Р¤СѓСЂР° Р±Р°Р№РєРµСЂРѕРІ
+new legalmods[48][22] = // Р§С‚Рѕ-С‚Рѕ С‚РёРїРѕ РђРЅС‚Рё Р”Р”РѕРЎ С‚Р°Рє Рё РЅРµ СЂР°Р·РѕР±СЂР°Р»СЃСЏ...
 {
 	{400, 1024,1021,1020,1019,1018,1013,0000,0000,0000,0000,0000,0000,0000,0000,0000,0000,0000,0000},
 	{401, 1145,1144,1143,1142,1020,1019,1017,1013,1007,1006,1005,1004,1003,1001,0000,0000,0000,0000},
@@ -505,60 +505,60 @@ new legalmods[48][22] = // Что-то типо Анти ДДоС так и не разобрался...
 	{600, 1022,1020,1018,1017,1013,1007,1006,1005,1004,0000,0000,0000,0000,0000,0000,0000,0000,0000},
 	{603, 1145,1144,1143,1142,1024,1023,1020,1019,1018,1017,1007,1006,1001,0000,0000,0000,0000,0000}
 };
-new lsnewscar[6]; // Авто LSN
-new lvnewscar[6]; // Авто LVN
-new lvpdcar[23]; // Авто LVPD
-new liccarsf[5]; // Автошкола
-new licmotsf[4]; // Автошкола
-new taxicar[26]; // Авто Taxi
-new mashinist; // Авто Машинистов
-new bus[14]; // Авто водителей автобусов
-new mehanik[19]; // Авто механиков
-new rentcarsf[7]; // Авто аренда в SF
-new rentcarls[11]; // Авто аренда LS
-new rentcarlv[16]; // Авто аренда LV
-new medicsls[10]; // Авто медики LS
-new medicslv[8]; // Авто медики LV
+new lsnewscar[6]; // РђРІС‚Рѕ LSN
+new lvnewscar[6]; // РђРІС‚Рѕ LVN
+new lvpdcar[23]; // РђРІС‚Рѕ LVPD
+new liccarsf[5]; // РђРІС‚РѕС€РєРѕР»Р°
+new licmotsf[4]; // РђРІС‚РѕС€РєРѕР»Р°
+new taxicar[26]; // РђРІС‚Рѕ Taxi
+new mashinist; // РђРІС‚Рѕ РњР°С€РёРЅРёСЃС‚РѕРІ
+new bus[14]; // РђРІС‚Рѕ РІРѕРґРёС‚РµР»РµР№ Р°РІС‚РѕР±СѓСЃРѕРІ
+new mehanik[19]; // РђРІС‚Рѕ РјРµС…Р°РЅРёРєРѕРІ
+new rentcarsf[7]; // РђРІС‚Рѕ Р°СЂРµРЅРґР° РІ SF
+new rentcarls[11]; // РђРІС‚Рѕ Р°СЂРµРЅРґР° LS
+new rentcarlv[16]; // РђРІС‚Рѕ Р°СЂРµРЅРґР° LV
+new medicsls[10]; // РђРІС‚Рѕ РјРµРґРёРєРё LS
+new medicslv[8]; // РђРІС‚Рѕ РјРµРґРёРєРё LV
 new passs[2];
-new sapdcar[27]; // Авто LSPD
-new mincar[14]; //Авто министров.
-new fbicar[25]; // Авто FBI
-new cnncar[5]; // Авто SFN
-new sfpdcar[36]; // Авто SFPD
-new medmav; // Авто медики
-new cnnmav; // авто News
-new armycarsf[21]; // Авто SFa
-new yakcar[7]; // Авто Yacuza
-new ruscar[12]; // Авто Русская Мафия
-new govcar[5]; // Авто Мерии
-new lcncar[9]; // Авто LCN
-new medicssf[9]; // Авто медики SF
-new armcar[43]; // Авто LVa
-new gunscar[3]; // Матовозки
-new grovecar[13]; // Авто Grove
-new ballascar[12]; // Авто Ballas
-new coronoscar[14]; // Авто Aztecs
-new vagoscar[12]; // Авто Vagos
-new rifacar[13]; // Авто Rifa
-new arenda[MAX_VEHICLES]; // Аренда авто
-new lsacar[16]; // Авто LSa
-new hamccar[10]; // Авто байкеров
-new mysti; // Бизнес
-new paint[3]; // Пейнтболл
-new paintguns[4]; // Пейнтбол
-new shop[6]; // Магазин одежды
-new victim[2]; // Магазин одежды
-new racepic[2]; // Гонки
+new sapdcar[27]; // РђРІС‚Рѕ LSPD
+new mincar[14]; //РђРІС‚Рѕ РјРёРЅРёСЃС‚СЂРѕРІ.
+new fbicar[25]; // РђРІС‚Рѕ FBI
+new cnncar[5]; // РђРІС‚Рѕ SFN
+new sfpdcar[36]; // РђРІС‚Рѕ SFPD
+new medmav; // РђРІС‚Рѕ РјРµРґРёРєРё
+new cnnmav; // Р°РІС‚Рѕ News
+new armycarsf[21]; // РђРІС‚Рѕ SFa
+new yakcar[7]; // РђРІС‚Рѕ Yacuza
+new ruscar[12]; // РђРІС‚Рѕ Р СѓСЃСЃРєР°СЏ РњР°С„РёСЏ
+new govcar[5]; // РђРІС‚Рѕ РњРµСЂРёРё
+new lcncar[9]; // РђРІС‚Рѕ LCN
+new medicssf[9]; // РђРІС‚Рѕ РјРµРґРёРєРё SF
+new armcar[43]; // РђРІС‚Рѕ LVa
+new gunscar[3]; // РњР°С‚РѕРІРѕР·РєРё
+new grovecar[13]; // РђРІС‚Рѕ Grove
+new ballascar[12]; // РђРІС‚Рѕ Ballas
+new coronoscar[14]; // РђРІС‚Рѕ Aztecs
+new vagoscar[12]; // РђРІС‚Рѕ Vagos
+new rifacar[13]; // РђРІС‚Рѕ Rifa
+new arenda[MAX_VEHICLES]; // РђСЂРµРЅРґР° Р°РІС‚Рѕ
+new lsacar[16]; // РђРІС‚Рѕ LSa
+new hamccar[10]; // РђРІС‚Рѕ Р±Р°Р№РєРµСЂРѕРІ
+new mysti; // Р‘РёР·РЅРµСЃ
+new paint[3]; // РџРµР№РЅС‚Р±РѕР»Р»
+new paintguns[4]; // РџРµР№РЅС‚Р±РѕР»
+new shop[6]; // РњР°РіР°Р·РёРЅ РѕРґРµР¶РґС‹
+new victim[2]; // РњР°РіР°Р·РёРЅ РѕРґРµР¶РґС‹
+new racepic[2]; // Р“РѕРЅРєРё
 new lspic[3]; // LSN
 new lvpic[2]; // LVN
-new mayorpic; // Мэрия
-new rmpic[2]; // Русская мафия
+new mayorpic; // РњСЌСЂРёСЏ
+new rmpic[2]; // Р СѓСЃСЃРєР°СЏ РјР°С„РёСЏ
 new addictionenter;
 new addictionexit;
 new lcnpic[2]; // LCN
 new yakuzapic[2]; // Yacuza
 new sfnewspic[4]; // SFN
-new fracgunpic[5]; // Пикапы с оружием
+new fracgunpic[5]; // РџРёРєР°РїС‹ СЃ РѕСЂСѓР¶РёРµРј
 new fbi[4]; // FBI
 new lspd[6]; // LSPD
 new sfpd[6]; // SFPD
@@ -566,10 +566,10 @@ new gangpic[5]; // Gangs
 new lvpd[7]; // LVPD
 new armijavhod;
 new armijavihod;
-new avtosh[4]; // Автошкола
-new hallexit; // Мэрия
-new hallenter[2]; // Мэрия
-new bankpic[2]; // Банк
+new avtosh[4]; // РђРІС‚РѕС€РєРѕР»Р°
+new hallexit; // РњСЌСЂРёСЏ
+new hallenter[2]; // РњСЌСЂРёСЏ
+new bankpic[2]; // Р‘Р°РЅРє
 new ballasenter[2]; // Ballas
 new rifaenter[2]; // Rifa
 new lilprobeinn;
@@ -586,26 +586,26 @@ new BigEar[MAX_PLAYERS];
 new scar[3];
 new autostealing;
 new streetcar[15]; // Street Racers
-new cashs; // Грузчики
+new cashs; // Р“СЂСѓР·С‡РёРєРё
 new hitcar[7];
 new dollar;
-new clothes; // Грузчики
-new skinshop[4]; // Магазин одежды
-new gunarm[2]; // Пикапы с оружием
-new zip[2]; // Магазин одежды
+new clothes; // Р“СЂСѓР·С‡РёРєРё
+new skinshop[4]; // РњР°РіР°Р·РёРЅ РѕРґРµР¶РґС‹
+new gunarm[2]; // РџРёРєР°РїС‹ СЃ РѕСЂСѓР¶РёРµРј
+new zip[2]; // РњР°РіР°Р·РёРЅ РѕРґРµР¶РґС‹
 new zone[2]; // LVa
 new warehousearmy[4];
-new freeze[MAX_PLAYERS]; // Заморозка
-new Ubka[MAX_PLAYERS]; // Тюнинг
-new Ubka2[MAX_PLAYERS]; // Тюнинг
-new Vozduh[MAX_PLAYERS]; // Тюнинг
-new Gluh[MAX_PLAYERS]; // Тюнинг
-new Float: Fuell[MAX_VEHICLES]; // Бензин
+new freeze[MAX_PLAYERS]; // Р—Р°РјРѕСЂРѕР·РєР°
+new Ubka[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Ubka2[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Vozduh[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Gluh[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Float: Fuell[MAX_VEHICLES]; // Р‘РµРЅР·РёРЅ
 enum nInfo
 {
 	nLcn, // LCN
 	nYakuza, // Yacuza
-	nRm // Русская Мафия
+	nRm // Р СѓСЃСЃРєР°СЏ РњР°С„РёСЏ
 };
 enum fInfo
 {
@@ -617,11 +617,11 @@ enum fInfo
 	fGrove, // Grove
 	fAztek, // Aztecs
 	fRifa, // Rifa
-	fKazna, // Мэрия
-	fHamc, // Байкеры
+	fKazna, // РњСЌСЂРёСЏ
+	fHamc, // Р‘Р°Р№РєРµСЂС‹
 };
-new MafiaBank[1][nInfo]; // Банк мафия
-new FracBank[1][fInfo]; // Банк фракций
+new MafiaBank[1][nInfo]; // Р‘Р°РЅРє РјР°С„РёСЏ
+new FracBank[1][fInfo]; // Р‘Р°РЅРє С„СЂР°РєС†РёР№
 enum bInfo
 {
 	bOwned,
@@ -652,7 +652,7 @@ enum bInfo
 	bMafia,
 	bCapture
 };
-new BizzInfo[19][bInfo]; // Бизнесы
+new BizzInfo[19][bInfo]; // Р‘РёР·РЅРµСЃС‹
 enum sbInfo
 {
 	sbOwned,
@@ -674,27 +674,27 @@ enum sbInfo
 	sbPriceProd,
 	Text3D: sbLabel
 };
-new SBizzInfo[11][sbInfo]; // Бизнесы
-new Text: ModelShow[MAX_PLAYERS]; // Спидометр
-new Text: SpeedShow[MAX_PLAYERS]; // Спидометр
-new Text: HealthShow[MAX_PLAYERS]; // Спидометр
-new Text: FuelShow[MAX_PLAYERS]; // Спидометр
-new dostup[MAX_PLAYERS]; // Админ-пароль
-new Dostup[MAX_PLAYERS]; // Админ-пароль
-new Kapot[MAX_PLAYERS]; // Тюнинг
-new Far[MAX_PLAYERS]; // Тюнинг
-new Text: StatusShow[MAX_PLAYERS]; // Спидометр
-new Text: EngineShow[MAX_PLAYERS]; // Спидометр
-new PlayerText: privcar[MAX_PLAYERS]; // Спидометр
-new SpeedoTimer; // Спидометр
-new str1[64]; // Спидометр
-new str2[64]; // Спидометр
-new str3[64]; // Спидометр
-new str4[64]; // Спидометр
-new str5[64]; // Спидометр
-new str6[64]; // Спидометр
-new Text: Box[1]; // Спидометр
-new Float: RandomTrashRoot[][3] = // Водитель мусоровоза
+new SBizzInfo[11][sbInfo]; // Р‘РёР·РЅРµСЃС‹
+new Text: ModelShow[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new Text: SpeedShow[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new Text: HealthShow[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new Text: FuelShow[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new dostup[MAX_PLAYERS]; // РђРґРјРёРЅ-РїР°СЂРѕР»СЊ
+new Dostup[MAX_PLAYERS]; // РђРґРјРёРЅ-РїР°СЂРѕР»СЊ
+new Kapot[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Far[MAX_PLAYERS]; // РўСЋРЅРёРЅРі
+new Text: StatusShow[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new Text: EngineShow[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new PlayerText: privcar[MAX_PLAYERS]; // РЎРїРёРґРѕРјРµС‚СЂ
+new SpeedoTimer; // РЎРїРёРґРѕРјРµС‚СЂ
+new str1[64]; // РЎРїРёРґРѕРјРµС‚СЂ
+new str2[64]; // РЎРїРёРґРѕРјРµС‚СЂ
+new str3[64]; // РЎРїРёРґРѕРјРµС‚СЂ
+new str4[64]; // РЎРїРёРґРѕРјРµС‚СЂ
+new str5[64]; // РЎРїРёРґРѕРјРµС‚СЂ
+new str6[64]; // РЎРїРёРґРѕРјРµС‚СЂ
+new Text: Box[1]; // РЎРїРёРґРѕРјРµС‚СЂ
+new Float: RandomTrashRoot[][3] = // Р’РѕРґРёС‚РµР»СЊ РјСѓСЃРѕСЂРѕРІРѕР·Р°
 {
 	{2105.2805,-1806.5771,13.5547},
 	{-1721.1195,1359.7371,7.1853},
@@ -706,13 +706,13 @@ new Float: RandomTrashRoot[][3] = // Водитель мусоровоза
 	{203.3442,-202.2144,1.5781},
 	{2332.0339,75.0940,26.6210}
 };
-new Float: gInviteSpawns[0][4] = // Спавн
+new Float: gInviteSpawns[0][4] = // РЎРїР°РІРЅ
 {
 	{222.3489,-8.5845,1002.2109,266.7302}
 };
-new LessonCar[MAX_PLAYERS]; // Автосдача
-new LessonStat[MAX_PLAYERS]; // Автосдача
-new pLessonCar[MAX_PLAYERS]; // Автосдача
+new LessonCar[MAX_PLAYERS]; // РђРІС‚РѕСЃРґР°С‡Р°
+new LessonStat[MAX_PLAYERS]; // РђРІС‚РѕСЃРґР°С‡Р°
+new pLessonCar[MAX_PLAYERS]; // РђРІС‚РѕСЃРґР°С‡Р°
 enum
 {
 	CHECKPOINT_1,
@@ -780,7 +780,7 @@ enum
   	CHECKPOINT_65,
   	CHECKPOINT_66
 }
-new pAutoBusLS[MAX_PLAYERS]; // Водитель автобуса
+new pAutoBusLS[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃР°
 enum
 {
 	CHECKPOINT_1,
@@ -913,7 +913,7 @@ enum
 	CHECKPOINT_131,
 	CHECKPOINT_132
 }
-new pAutoBusSF[MAX_PLAYERS]; // Водитель автобусов
+new pAutoBusSF[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃРѕРІ
 enum
 {
 	CHECKPOINT_1,
@@ -988,7 +988,7 @@ enum
 	CHECKPOINT_72,
 	CHECKPOINT_73
 }
-new pAutoBusLV[MAX_PLAYERS]; // Водитель автобусов
+new pAutoBusLV[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃРѕРІ
 enum
 {
 	CHECKPOINT_1,
@@ -1060,7 +1060,7 @@ enum
 	CHECKPOINT_69,
 	CHECKPOINT_70
 }
-new pAutoBusReis1[MAX_PLAYERS]; // Водитель автобусов
+new pAutoBusReis1[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃРѕРІ
 enum
 {
 	CHECKPOINT_1,
@@ -1115,7 +1115,7 @@ enum
 	CHECKPOINT_52,
 	CHECKPOINT_53
 }
-new pAutoBusReis2[MAX_PLAYERS]; // Водитель автобусов
+new pAutoBusReis2[MAX_PLAYERS]; // Р’РѕРґРёС‚РµР»СЊ Р°РІС‚РѕР±СѓСЃРѕРІ
 enum
 {
 	CHECKPOINT_1,
@@ -1163,7 +1163,7 @@ enum
  	CHECKPOINT_45,
  	CHECKPOINT_46
 }
-new Float: PaintballSpawns[6][3] = // Пейнтбол
+new Float: PaintballSpawns[6][3] = // РџРµР№РЅС‚Р±РѕР»
 {
 	{2563.6877,2807.0288,10.8203},
 	{2554.0505,2837.7419,10.8203},
@@ -1172,7 +1172,7 @@ new Float: PaintballSpawns[6][3] = // Пейнтбол
 	{2546.7622,2830.9004,14.2559},
 	{2575.9900,2839.3103,19.9922}
 };
-new Float: RaceSpawns[14][3] = // Гонки
+new Float: RaceSpawns[14][3] = // Р“РѕРЅРєРё
 {
 	{1473.0309,-2505.8330,13.2597},
 	{1473.1139,-2501.6311,13.2597},
@@ -1189,7 +1189,7 @@ new Float: RaceSpawns[14][3] = // Гонки
 	{1506.5397,-2495.6602,13.2180},
 	{1506.5789,-2492.1836,13.2180}
 };
-new Float: race[23][3] = // Гонки
+new Float: race[23][3] = // Р“РѕРЅРєРё
 {
 	{1706.8019,-2493.8806,13.2008},
 	{1865.0568,-2493.7917,13.2430},
@@ -1215,7 +1215,7 @@ new Float: race[23][3] = // Гонки
 	{1427.6746,-2461.2737,13.2599},
 	{ }
 };
-new tachki[] = // Гонки
+new tachki[] = // Р“РѕРЅРєРё
 {
 	402,
 	411,
@@ -1249,7 +1249,7 @@ new tachki[] = // Гонки
 	602,
 	603
 };
-new paintgun[] = // Пейнбол
+new paintgun[] = // РџРµР№РЅР±РѕР»
 {
 	24,
 	31,
@@ -1258,7 +1258,7 @@ new paintgun[] = // Пейнбол
 	29,
 	23
 };
-new RulesMSG[17][] = // Правила
+new RulesMSG[17][] = // РџСЂР°РІРёР»Р°
 {
 	{"{FFFFFF}1. {FFFF00}Game process\n"},
 	{"{FF0000}Forbidden:\n"},
@@ -1301,119 +1301,119 @@ new RulesMSG[17][] = // Правила
 };
 enum pInfo
 {
-	pDrugtime, // Наркотики
-	pVoennik, // Военный билет
-	pNarkoZavisimost, // Наркозависимость
-	pLevel, // Уровень
-	pFermajob, // Ферма
-	pAdmin, // Админка
-	pHelper, // Хелперка
-	pPasport, // Паспорт
-	pPlaceJail, // Тюрьма
+	pDrugtime, // РќР°СЂРєРѕС‚РёРєРё
+	pVoennik, // Р’РѕРµРЅРЅС‹Р№ Р±РёР»РµС‚
+	pNarkoZavisimost, // РќР°СЂРєРѕР·Р°РІРёСЃРёРјРѕСЃС‚СЊ
+	pLevel, // РЈСЂРѕРІРµРЅСЊ
+	pFermajob, // Р¤РµСЂРјР°
+	pAdmin, // РђРґРјРёРЅРєР°
+	pHelper, // РҐРµР»РїРµСЂРєР°
+	pPasport, // РџР°СЃРїРѕСЂС‚
+	pPlaceJail, // РўСЋСЂСЊРјР°
 	Float: pIp, // IP
-	pFerma, // Ферма
-	pFermazarobotok, // Ферма
-	pColor, // Цвет авто №1
-	pColor1, // Цвета авто №2
-	Float: pIpReg, // IP при регистрации
-	pHousecash, // Дом
-	pPhousekey, // Дом
-	pKolesa, // Тюнинг
-	pGidra, // Тюнинг
+	pFerma, // Р¤РµСЂРјР°
+	pFermazarobotok, // Р¤РµСЂРјР°
+	pColor, // Р¦РІРµС‚ Р°РІС‚Рѕ в„–1
+	pColor1, // Р¦РІРµС‚Р° Р°РІС‚Рѕ в„–2
+	Float: pIpReg, // IP РїСЂРё СЂРµРіРёСЃС‚СЂР°С†РёРё
+	pHousecash, // Р”РѕРј
+	pPhousekey, // Р”РѕРј
+	pKolesa, // РўСЋРЅРёРЅРі
+	pGidra, // РўСЋРЅРёРЅРі
 	pCheckip, // IP
-	pDonateMoney, // Донат
-	pKeyip, // Ключ безопасности
-	pHP, // Жизни
-	pDataReg, // Дата регистрации
-	pCar, // Машина
-	Float: pFuelCar, // Бензин
-	pProcents, // Проценты авто
-	pDonateRank, // Донат ранг
-	pReg, // Проверка на регистрации
-	pMaterials, // Материалы
-	pSex, // Пол
+	pDonateMoney, // Р”РѕРЅР°С‚
+	pKeyip, // РљР»СЋС‡ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё
+	pHP, // Р–РёР·РЅРё
+	pDataReg, // Р”Р°С‚Р° СЂРµРіРёСЃС‚СЂР°С†РёРё
+	pCar, // РњР°С€РёРЅР°
+	Float: pFuelCar, // Р‘РµРЅР·РёРЅ
+	pProcents, // РџСЂРѕС†РµРЅС‚С‹ Р°РІС‚Рѕ
+	pDonateRank, // Р”РѕРЅР°С‚ СЂР°РЅРі
+	pReg, // РџСЂРѕРІРµСЂРєР° РЅР° СЂРµРіРёСЃС‚СЂР°С†РёРё
+	pMaterials, // РњР°С‚РµСЂРёР°Р»С‹
+	pSex, // РџРѕР»
 	pVhodMes,
 	pVhodchas,
 	pVhodminute,
-	pCarLic, // Водительские права
-	pBisLic, // Лицензия на бизнес
-	pGunLic, // Лицензия на оружие
-	pArrested, // Тюрьма
-	pMuted, // Бан чата
+	pCarLic, // Р’РѕРґРёС‚РµР»СЊСЃРєРёРµ РїСЂР°РІР°
+	pBisLic, // Р›РёС†РµРЅР·РёСЏ РЅР° Р±РёР·РЅРµСЃ
+	pGunLic, // Р›РёС†РµРЅР·РёСЏ РЅР° РѕСЂСѓР¶РёРµ
+	pArrested, // РўСЋСЂСЊРјР°
+	pMuted, // Р‘Р°РЅ С‡Р°С‚Р°
 	pExp, // EXP
-	pKills, // Убийства
-	pCash, // Деньги
-	pBan, // Бан
-	pDostup, // Админ-пароль
-	pDeaths, // Смерти
-	pWantedDeaths, // Смерти
-	pPayCheck, // Чек денег
-	pJailed, // Тюрьма
-	pJailTime, // Тюрьма
-	pDrugs, // Наркотики
-	pLeader, // Лидерка
-	pMember, // Фракция
-	pRank, // Ранг
-	pChar, // Скин
-	pJob, // Работа
-	pInt, // Интерьер
+	pKills, // РЈР±РёР№СЃС‚РІР°
+	pCash, // Р”РµРЅСЊРіРё
+	pBan, // Р‘Р°РЅ
+	pDostup, // РђРґРјРёРЅ-РїР°СЂРѕР»СЊ
+	pDeaths, // РЎРјРµСЂС‚Рё
+	pWantedDeaths, // РЎРјРµСЂС‚Рё
+	pPayCheck, // Р§РµРє РґРµРЅРµРі
+	pJailed, // РўСЋСЂСЊРјР°
+	pJailTime, // РўСЋСЂСЊРјР°
+	pDrugs, // РќР°СЂРєРѕС‚РёРєРё
+	pLeader, // Р›РёРґРµСЂРєР°
+	pMember, // Р¤СЂР°РєС†РёСЏ
+	pRank, // Р Р°РЅРі
+	pChar, // РЎРєРёРЅ
+	pJob, // Р Р°Р±РѕС‚Р°
+	pInt, // РРЅС‚РµСЂСЊРµСЂ
 	pLocal,
-	pModel, // Скин фракции
-	pPnumber, // Номер телефона
-	pDirectory, // Телефонный справочник
+	pModel, // РЎРєРёРЅ С„СЂР°РєС†РёРё
+	pPnumber, // РќРѕРјРµСЂ С‚РµР»РµС„РѕРЅР°
+	pDirectory, // РўРµР»РµС„РѕРЅРЅС‹Р№ СЃРїСЂР°РІРѕС‡РЅРёРє
 	pVhoddata,
-	pFlyLic, // Лицензия на полеты
-	pBoatLic, // Лицензия на лодки
-	pNkeys, // Пропуск
-	pPHousekey, // Дом
-	pPBiskey, // Бизнес
+	pFlyLic, // Р›РёС†РµРЅР·РёСЏ РЅР° РїРѕР»РµС‚С‹
+	pBoatLic, // Р›РёС†РµРЅР·РёСЏ РЅР° Р»РѕРґРєРё
+	pNkeys, // РџСЂРѕРїСѓСЃРє
+	pPHousekey, // Р”РѕРј
+	pPBiskey, // Р‘РёР·РЅРµСЃ
 	pLabiding,
-	pTut, // Проверка
-	pWarns, // Варны
+	pTut, // РџСЂРѕРІРµСЂРєР°
+	pWarns, // Р’Р°СЂРЅС‹
 	pAdmwarn,
-	pFuel, // Канистра
-	pRadio, // Радиостанция
-	pMuteTime, // Время бан чата
-	pBank, // Деньги в банке
-	pMotLic, // Лицензия на мотоциклы
-	pKapot, // Тюнинг
-	pMobile, // Счет за телефон
-	pDebt, // Долг
-	pMafiaRoof, // Информация о себе в мафии
-	pUseMafiaRoof, // Крыша мафии
-	pWantedLevel, // Уровень розыска
-	pSlot[13], // Слот оружия
-	pSlotammo[13], // Слот патрон
-	pGunSkill[6], // Скилл оружия
+	pFuel, // РљР°РЅРёСЃС‚СЂР°
+	pRadio, // Р Р°РґРёРѕСЃС‚Р°РЅС†РёСЏ
+	pMuteTime, // Р’СЂРµРјСЏ Р±Р°РЅ С‡Р°С‚Р°
+	pBank, // Р”РµРЅСЊРіРё РІ Р±Р°РЅРєРµ
+	pMotLic, // Р›РёС†РµРЅР·РёСЏ РЅР° РјРѕС‚РѕС†РёРєР»С‹
+	pKapot, // РўСЋРЅРёРЅРі
+	pMobile, // РЎС‡РµС‚ Р·Р° С‚РµР»РµС„РѕРЅ
+	pDebt, // Р”РѕР»Рі
+	pMafiaRoof, // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµР±Рµ РІ РјР°С„РёРё
+	pUseMafiaRoof, // РљСЂС‹С€Р° РјР°С„РёРё
+	pWantedLevel, // РЈСЂРѕРІРµРЅСЊ СЂРѕР·С‹СЃРєР°
+	pSlot[13], // РЎР»РѕС‚ РѕСЂСѓР¶РёСЏ
+	pSlotammo[13], // РЎР»РѕС‚ РїР°С‚СЂРѕРЅ
+	pGunSkill[6], // РЎРєРёР»Р» РѕСЂСѓР¶РёСЏ
 	pDesertEagle, // Deagle
 	pMP5, // MP5
 	pAK47, // AK-47
 	pM4, // M4
 	pShotGun, // ShotGun
-	pGunFbiTime, // Таймер FBI оружия
-	pGunLspdTime, // Таймер LSPD оружия
-	pGunSfpdTime, // Таймер SFPD оружия
-	pGunLvpdTime, // Таймер LVPD оружия
-	pAdvertTime, // Таймер объявлений
-	pGunaSfaTime, // Таймер SFa оружия
-	pGunaLvaTime, // Таймер LVa оружия
-	pGunaLsaTime, // Таймер LSa оружия
-	pGunMayorTime, // Таймер Мэрии оружия
+	pGunFbiTime, // РўР°Р№РјРµСЂ FBI РѕСЂСѓР¶РёСЏ
+	pGunLspdTime, // РўР°Р№РјРµСЂ LSPD РѕСЂСѓР¶РёСЏ
+	pGunSfpdTime, // РўР°Р№РјРµСЂ SFPD РѕСЂСѓР¶РёСЏ
+	pGunLvpdTime, // РўР°Р№РјРµСЂ LVPD РѕСЂСѓР¶РёСЏ
+	pAdvertTime, // РўР°Р№РјРµСЂ РѕР±СЉСЏРІР»РµРЅРёР№
+	pGunaSfaTime, // РўР°Р№РјРµСЂ SFa РѕСЂСѓР¶РёСЏ
+	pGunaLvaTime, // РўР°Р№РјРµСЂ LVa РѕСЂСѓР¶РёСЏ
+	pGunaLsaTime, // РўР°Р№РјРµСЂ LSa РѕСЂСѓР¶РёСЏ
+	pGunMayorTime, // РўР°Р№РјРµСЂ РњСЌСЂРёРё РѕСЂСѓР¶РёСЏ
 	pGunSwatTime,
-	pPaintJob, // Наклейки на авто
-	pSpoiler, // Тюнинг
-	pFar, // Тюнинг
-	pUbka, // Тюнинг
-	pUbka2, // Тюнинг
-	pVozduh, // Тюнинг
-	pGluh, // Тюнинг
-	pBumper1, // Тюнинг
-	pBumper2, // Тюнинг
-	pNitro, // Тюнинг
+	pPaintJob, // РќР°РєР»РµР№РєРё РЅР° Р°РІС‚Рѕ
+	pSpoiler, // РўСЋРЅРёРЅРі
+	pFar, // РўСЋРЅРёРЅРі
+	pUbka, // РўСЋРЅРёРЅРі
+	pUbka2, // РўСЋРЅРёРЅРі
+	pVozduh, // РўСЋРЅРёРЅРі
+	pGluh, // РўСЋРЅРёРЅРі
+	pBumper1, // РўСЋРЅРёРЅРі
+	pBumper2, // РўСЋРЅРёРЅРі
+	pNitro, // РўСЋРЅРёРЅРі
 	pAdminKey,
 	pHeadValue
 };
-new PlayerInfo[MAX_PLAYERS][pInfo]; // Информация о игроке
+new PlayerInfo[MAX_PLAYERS][pInfo]; // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РёРіСЂРѕРєРµ
 enum hInfo
 {
 	Float:hEntrancex,
@@ -1447,12 +1447,12 @@ enum pHaul
 {
 	pLoad
 };
-new PlayerHaul[18][pHaul]; // Бензин
+new PlayerHaul[18][pHaul]; // Р‘РµРЅР·РёРЅ
 enum sHaul
 {
 	sLoad
 };
-new PlayersHaul[10][sHaul]; // Продукты
+new PlayersHaul[10][sHaul]; // РџСЂРѕРґСѓРєС‚С‹
 enum pMatss
 {
 	gBallas, // Ballas
@@ -1460,15 +1460,15 @@ enum pMatss
 	gGrove, // Grove
 	gAztek, // Aztecs
 	gRifa, // Rifa
-	gHell // Байкеры
+	gHell // Р‘Р°Р№РєРµСЂС‹
 };
-new Furi[1][pMatss]; // Материалы
+new Furi[1][pMatss]; // РњР°С‚РµСЂРёР°Р»С‹
 enum pMat
 {
 	mCapasity,
 	mLoad
 };
-new MatHaul[3][pMat]; // Материалы
+new MatHaul[3][pMat]; // РњР°С‚РµСЂРёР°Р»С‹
 enum pCrime
 {
 	pBplayer[32],
@@ -1476,32 +1476,32 @@ enum pCrime
 	pAccusedof[32],
 	pVictim[32]
 };
-new PlayerCrime[MAX_PLAYERS][pCrime]; // Розыск
+new PlayerCrime[MAX_PLAYERS][pCrime]; // Р РѕР·С‹СЃРє
 new JoinPed[100][1] =
 {
-	{78}, {79}, {134}, {135}, {137}, {160}, {168}, {200}, {212}, {230}, // Мужские Бомж Скины
-	{75}, {77}, {75}, {90}, {193}, // Женские Бомж Скины
-	{280}, {281}, {282}, {283}, {284}, {285}, {288}, {76}, // Скины Полицейских
-	{286}, {163}, {164}, {165}, {166}, {76}, // Скины ФБР
-	{287}, {191}, // Скины Армии
-	{70}, {71}, {148}, {274}, {275}, {276}, // Скины Медиков
-	{223}, {124}, {113}, {214}, // Скины ЛКН
-	{120}, {123}, {186}, {169}, {117}, {118}, // Скины Якудзы
-	{57}, {98}, {187}, {147}, {150}, // Скины Мэрии
-	{250}, {261}, {217}, {211}, {188}, // Скины Новостей
-	{59}, {172}, {240}, // Скины Инструкторов
-	{102}, {103}, {104}, {13}, // Скины Ballas
-	{108}, {109}, {110}, {56}, // Скины Vagos
-	{112}, {111}, {125}, {272}, {214}, // Скины Русской Мафии
-	{105}, {106}, {107}, {269}, {270}, {271}, {55}, // Скины Grove Street
-	{114}, {115}, {116}, {226}, // Скины Aztecs
-	{173}, {174}, {175}, {41}, // Скины Rifa
+	{78}, {79}, {134}, {135}, {137}, {160}, {168}, {200}, {212}, {230}, // РњСѓР¶СЃРєРёРµ Р‘РѕРјР¶ РЎРєРёРЅС‹
+	{75}, {77}, {75}, {90}, {193}, // Р–РµРЅСЃРєРёРµ Р‘РѕРјР¶ РЎРєРёРЅС‹
+	{280}, {281}, {282}, {283}, {284}, {285}, {288}, {76}, // РЎРєРёРЅС‹ РџРѕР»РёС†РµР№СЃРєРёС…
+	{286}, {163}, {164}, {165}, {166}, {76}, // РЎРєРёРЅС‹ Р¤Р‘Р 
+	{287}, {191}, // РЎРєРёРЅС‹ РђСЂРјРёРё
+	{70}, {71}, {148}, {274}, {275}, {276}, // РЎРєРёРЅС‹ РњРµРґРёРєРѕРІ
+	{223}, {124}, {113}, {214}, // РЎРєРёРЅС‹ Р›РљРќ
+	{120}, {123}, {186}, {169}, {117}, {118}, // РЎРєРёРЅС‹ РЇРєСѓРґР·С‹
+	{57}, {98}, {187}, {147}, {150}, // РЎРєРёРЅС‹ РњСЌСЂРёРё
+	{250}, {261}, {217}, {211}, {188}, // РЎРєРёРЅС‹ РќРѕРІРѕСЃС‚РµР№
+	{59}, {172}, {240}, // РЎРєРёРЅС‹ РРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРІ
+	{102}, {103}, {104}, {13}, // РЎРєРёРЅС‹ Ballas
+	{108}, {109}, {110}, {56}, // РЎРєРёРЅС‹ Vagos
+	{112}, {111}, {125}, {272}, {214}, // РЎРєРёРЅС‹ Р СѓСЃСЃРєРѕР№ РњР°С„РёРё
+	{105}, {106}, {107}, {269}, {270}, {271}, {55}, // РЎРєРёРЅС‹ Grove Street
+	{114}, {115}, {116}, {226}, // РЎРєРёРЅС‹ Aztecs
+	{173}, {174}, {175}, {41}, // РЎРєРёРЅС‹ Rifa
 	{247}, {248}, {254}, {201},
-	{180}, {292}, {293}, {21}, {299}, {23}, {29}, {298} // Скины Стрит Рейсеров
+	{180}, {292}, {293}, {21}, {299}, {23}, {29}, {298} // РЎРєРёРЅС‹ РЎС‚СЂРёС‚ Р РµР№СЃРµСЂРѕРІ
 };
 new Peds[74][1] =
 {
-	// Мужские Скины
+	// РњСѓР¶СЃРєРёРµ РЎРєРёРЅС‹
 	{66},{15},{36},{50},{95},{96},{136},{143},{155}, // 1000
 	{2},{14},{24}, // 50000
 	{58}, // 100000
@@ -1518,7 +1518,7 @@ new Peds[74][1] =
 	{127},{126},{296}, // 4000000
 	{295}, // 4500000
 	{46},{294}, // 5000000
-	// Женские Скины
+	// Р–РµРЅСЃРєРёРµ РЎРєРёРЅС‹
 	{56}, // 1000
 	{192},{216}, // 100000
 	{11}, // 500000
@@ -1528,29 +1528,29 @@ new Peds[74][1] =
 	{169}, // 4000000
 	{141},{76},{150} // 5000000
 };
-new OnmZONE[3][20]; // Гангзоны
-new ZoneOnBattlem[1]; // Гангзоны
-new ZoneTimerm[600]; // Гангзоны
-new realchat = 1; // Чат
-new allowedmfactions[] = // Банды
+new OnmZONE[3][20]; // Р“Р°РЅРіР·РѕРЅС‹
+new ZoneOnBattlem[1]; // Р“Р°РЅРіР·РѕРЅС‹
+new ZoneTimerm[600]; // Р“Р°РЅРіР·РѕРЅС‹
+new realchat = 1; // Р§Р°С‚
+new allowedmfactions[] = // Р‘Р°РЅРґС‹
 {
 	5,
 	6,
 	14
 };
-new MZSafeTime[1200]; // Гангзоны
-new FrakCDm[20]; // Гангзоны
+new MZSafeTime[1200]; // Р“Р°РЅРіР·РѕРЅС‹
+new FrakCDm[20]; // Р“Р°РЅРіР·РѕРЅС‹
 enum MzoneInfo
 {
 	mFrakVlad,
  	mNapad
  }
-new MZInfo[1][MzoneInfo];  // Гангзоны
-new TotalGz[5]; // Гангзоны
-new OnZONE[130][20]; // Гангзоны
-new ZoneOnBattle[130]; // Гангзоны
-new ZoneTimer[130]; // Гангзоны
-new allowedfactions[] = // Гангзоны
+new MZInfo[1][MzoneInfo];  // Р“Р°РЅРіР·РѕРЅС‹
+new TotalGz[5]; // Р“Р°РЅРіР·РѕРЅС‹
+new OnZONE[130][20]; // Р“Р°РЅРіР·РѕРЅС‹
+new ZoneOnBattle[130]; // Р“Р°РЅРіР·РѕРЅС‹
+new ZoneTimer[130]; // Р“Р°РЅРіР·РѕРЅС‹
+new allowedfactions[] = // Р“Р°РЅРіР·РѕРЅС‹
 {
 	12,
 	13,
@@ -1558,7 +1558,7 @@ new allowedfactions[] = // Гангзоны
 	17,
 	18
 };
-new GZSafeTime[130]; // Гангзоны
+new GZSafeTime[130]; // Р“Р°РЅРіР·РѕРЅС‹
 enum GzoneInfo
 {
 	gID,
@@ -1566,11 +1566,11 @@ enum GzoneInfo
 	gFrakVlad,
 	gNapad
 }
-new GZInfo[130][GzoneInfo]; // Гангзоны
-new FrakCD[20]; // Гангзоны
-new PlayerText: avto[MAX_PLAYERS]; // Автосалон
-new streetpic[2]; // Стритрейсеры
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Паблики и стоки ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+new GZInfo[130][GzoneInfo]; // Р“Р°РЅРіР·РѕРЅС‹
+new FrakCD[20]; // Р“Р°РЅРіР·РѕРЅС‹
+new PlayerText: avto[MAX_PLAYERS]; // РђРІС‚РѕСЃР°Р»РѕРЅ
+new streetpic[2]; // РЎС‚СЂРёС‚СЂРµР№СЃРµСЂС‹
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ РџР°Р±Р»РёРєРё Рё СЃС‚РѕРєРё ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stock PrintSBizInfo(playerid,targetid)
 {
 	if(IsPlayerConnected(playerid))
@@ -1590,7 +1590,7 @@ stock PrintSBizInfo(playerid,targetid)
 		else text2 = "Missing";
 		format(bizinfo,sizeof(bizinfo), "======================[ %s ]======================\nUnder control: %s\nTotal earned: %d $\tEarned at this hour: %d $\nProducts: %d/20000\nPrice per item: %d $\nEntry price: %d $\nState: %s\nBank balance for energy payment: %d $\nElectricity tax: %d $\nLicense: %s",
 		SBizzInfo[targetid][sbMessage],mafiatext,SBizzInfo[targetid][sbTill],SBizzInfo[targetid][s2bTill],SBizzInfo[targetid][sbProducts],SBizzInfo[targetid][sbPrice],SBizzInfo[targetid][sbPriceProd],text1,SBizzInfo[targetid][sbTill],elektrich,text2);
-		SPD(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}•{AFAFAF}State of the Business{00BFFF}•",bizinfo, "$", "$");
+		SPD(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{AFAFAF}State of the Business{00BFFF}вЂў",bizinfo, "$", "$");
 	}
 }
 stock PrintBizInfo(playerid,targetid)
@@ -1614,7 +1614,7 @@ stock PrintBizInfo(playerid,targetid)
 			else text2 = "Missing";
 			format(bizinfo,sizeof(bizinfo), "======================[ %s ]======================\nUnder control: %s\nTotal earned: %d $\tEarned at this hour: %d $\nProducts: %d/2000\nPrice per item: %d $\nEntry price: %d $\nState: %s\nBank balance for energy payment: %d $\nElectricity tax: %d $\nLicense: %s",
 			BizzInfo[targetid][bMessage],mafiatext,BizzInfo[targetid][bTill],BizzInfo[targetid][b2Till],BizzInfo[targetid][bProducts],BizzInfo[targetid][bPrice],BizzInfo[targetid][bEntranceCost],text1,BizzInfo[targetid][bTill],elektrich,text2);
-			SPD(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}State of the Business{00BFFF}•",bizinfo, "$", "$");
+			SPD(playerid,10349,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}State of the Business{00BFFF}вЂў",bizinfo, "$", "$");
 		}
 	}
 }
@@ -2168,7 +2168,7 @@ public OnPlayerConnect(playerid)
 	else { gPlayerAccount[playerid] = false; }
 	//==========================================================================
 	CountVezit ++;
-	// ~~~~~~~~~~~~~~~~~~~~ [ Спидометр ] ~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~~~~~~~~ [ РЎРїРёРґРѕРјРµС‚СЂ ] ~~~~~~~~~~~~~~~~~~~~
 	ModelShow[playerid] = TextDrawCreate(520.000000, 360.000000, "_");
     TextDrawBackgroundColor(ModelShow[playerid], COLOR_BLACK);
     TextDrawLetterSize(ModelShow[playerid],0.259999,1.010000);
@@ -2293,7 +2293,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'А'..'Я', 'а'..'я', ' ': return SPD(playerid,1,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Error{00BFFF}•", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
+					case 'Рђ'..'РЇ', 'Р°'..'СЏ', ' ': return SPD(playerid,1,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Error{00BFFF}вЂў", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
 				}
 				if(!strcmp(MD5_Hash(inputtext),pass,true)) OnPlayerLogin(playerid,MD5_Hash(inputtext));
 				else
@@ -2326,9 +2326,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'А'..'Я', 'а'..'я', ' ': return SPD(playerid,2,DIALOG_STYLE_MSGBOX, "Error!", "{00FF21}The password you entered contains Russian letters.\n Change your keyboard layout!", "Repeat", "");
+					case 'Рђ'..'РЇ', 'Р°'..'СЏ', ' ': return SPD(playerid,2,DIALOG_STYLE_MSGBOX, "Error!", "{00FF21}The password you entered contains Russian letters.\n Change your keyboard layout!", "Repeat", "");
 				}
-		 		new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); SPD(playerid,12,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Server Rules{00BFFF}•", rulesdialog, "Agree", "Cancel"); return true;
+		 		new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); SPD(playerid,12,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Server Rules{00BFFF}вЂў", rulesdialog, "Agree", "Cancel"); return true;
 			 }
 			 else
 			 {
@@ -3145,8 +3145,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						GetPlayerName(playerid, playername, sizeof(playername));
 						if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
 						SetPlayerAttachedObject(objectplayerid,0, 18915, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
-						format(string,sizeof(string),"Administrator %s gave you an object [Bandana №1]",playername);
-						format(string,sizeof(string),"You gave an object to a player %s [Bandana №1]",giveplayer);
+						format(string,sizeof(string),"Administrator %s gave you an object [Bandana в„–1]",playername);
+						format(string,sizeof(string),"You gave an object to a player %s [Bandana в„–1]",giveplayer);
 						SendClientMessage(objectplayerid, COLOR_BLUE,string);
 						SendClientMessage(playerid, COLOR_BLUE, string);
 						return true;
@@ -3158,8 +3158,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						GetPlayerName(playerid, playername, sizeof(playername));
 						if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
 						SetPlayerAttachedObject(objectplayerid,0, 18912, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
-						format(string,sizeof(string),"Administrator %s gave you an object [Bandana №2]",playername);
-						format(string,sizeof(string),"You gave an object to a player %s [Bandana №2]",giveplayer);
+						format(string,sizeof(string),"Administrator %s gave you an object [Bandana в„–2]",playername);
+						format(string,sizeof(string),"You gave an object to a player %s [Bandana в„–2]",giveplayer);
 						SendClientMessage(objectplayerid, COLOR_BLUE,string);
 						SendClientMessage(playerid, COLOR_BLUE, string);
 						return true;
@@ -3171,8 +3171,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						GetPlayerName(playerid, playername, sizeof(playername));
 						if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
 						SetPlayerAttachedObject(objectplayerid,0, 18916, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
-						format(string,sizeof(string),"Administrator %s gave you an object [Bandana №3]",playername);
-						format(string,sizeof(string),"You gave an object to a player %s [Bandana №3]",giveplayer);
+						format(string,sizeof(string),"Administrator %s gave you an object [Bandana в„–3]",playername);
+						format(string,sizeof(string),"You gave an object to a player %s [Bandana в„–3]",giveplayer);
 						SendClientMessage(objectplayerid, COLOR_BLUE,string);
 						SendClientMessage(playerid, COLOR_BLUE, string);
 						return true;
@@ -3184,8 +3184,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						GetPlayerName(playerid, playername, sizeof(playername));
 						if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
 						SetPlayerAttachedObject(objectplayerid,0, 18917, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
-						format(string,sizeof(string),"Administrator %s gave you an object [Bandana №4]",playername);
-						format(string,sizeof(string),"You gave an object to a player %s [Bandana №4]",giveplayer);
+						format(string,sizeof(string),"Administrator %s gave you an object [Bandana в„–4]",playername);
+						format(string,sizeof(string),"You gave an object to a player %s [Bandana в„–4]",giveplayer);
 						SendClientMessage(objectplayerid, COLOR_BLUE,string);
 						SendClientMessage(playerid, COLOR_BLUE, string);
 						return true;
@@ -3197,8 +3197,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						GetPlayerName(playerid, playername, sizeof(playername));
 						if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
 						SetPlayerAttachedObject(objectplayerid,0, 18918, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
-						format(string,sizeof(string),"Administrator %s gave you an object [Bandana №5]",playername);
-						format(string,sizeof(string),"You gave an object to a player %s [Bandana №5]",giveplayer);
+						format(string,sizeof(string),"Administrator %s gave you an object [Bandana в„–5]",playername);
+						format(string,sizeof(string),"You gave an object to a player %s [Bandana в„–5]",giveplayer);
 						SendClientMessage(objectplayerid, COLOR_BLUE,string);
 						SendClientMessage(playerid, COLOR_BLUE, string);
 						return true;
@@ -3652,7 +3652,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'А'..'Я', 'а'..'я', ' ': return SPD(playerid,10008,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Error{00BFFF}•", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
+					case 'Рђ'..'РЇ', 'Р°'..'СЏ', ' ': return SPD(playerid,10008,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Error{00BFFF}вЂў", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
 				}
 				if(!strcmp(MD5_Hash(inputtext),pass,true)) OnPlayerLogin(playerid,MD5_Hash(inputtext));
 				else
@@ -3685,7 +3685,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				for(new i = strlen(inputtext); i != 0; --i)
 				switch(inputtext[i])
 				{
-					case 'А'..'Я', 'а'..'я', ' ': return SPD(playerid,10009,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Error{00BFFF}•", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
+					case 'Рђ'..'РЇ', 'Р°'..'СЏ', ' ': return SPD(playerid,10009,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Error{00BFFF}вЂў", "{00FF21}The password you entered contains Russian letters.\nChange your keyboard layout!", "Repeat", "");
 				}
 				if(!strcmp(MD5_Hash(inputtext),pass,true)) OnPlayerLogin(playerid,MD5_Hash(inputtext));
 				else
@@ -3724,9 +3724,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response) {
             switch(listitem) {
-			case 0: SPD(playerid,11112,2,"{00BFFF}•{FFFFFF}Disguise{00BFFF}•","Police officer\nSoldier\nLicenser\nCity Hall employee\nMedic\nNews Worker","Choose","Cancel");
-			case 1: SPD(playerid,11113,2,"{00BFFF}•{FFFFFF}Disguise{00BFFF}•","LCN\nYakuza\nRussian Mafia","Choose","Cancel");
-			case 2: SPD(playerid,11114,2,"{00BFFF}•{FFFFFF}Disguise{00BFFF}•","The Ballas\nLos Santos Vagos\nGrove Street\nVarios Los Aztecas\nThe RIfa","Choose","Cancel");
+			case 0: SPD(playerid,11112,2,"{00BFFF}вЂў{FFFFFF}Disguise{00BFFF}вЂў","Police officer\nSoldier\nLicenser\nCity Hall employee\nMedic\nNews Worker","Choose","Cancel");
+			case 1: SPD(playerid,11113,2,"{00BFFF}вЂў{FFFFFF}Disguise{00BFFF}вЂў","LCN\nYakuza\nRussian Mafia","Choose","Cancel");
+			case 2: SPD(playerid,11114,2,"{00BFFF}вЂў{FFFFFF}Disguise{00BFFF}вЂў","The Ballas\nLos Santos Vagos\nGrove Street\nVarios Los Aztecas\nThe RIfa","Choose","Cancel");
 			case 3: SetPlayerSkin(playerid, 100), SCM(playerid, COLOR_GREEN, "You dressed up as a Biker");
 			case 4: SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]), SCM(playerid, COLOR_GREEN, "You changed into your clothes"); } }
 		}
@@ -3748,58 +3748,58 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Landstalker"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}150,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],400); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4501,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Landstalker{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4501,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Landstalker{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Bravura"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}130.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}82 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],401); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4502,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bravura{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4502,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bravura{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Perenniel"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}120,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}74 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],404); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4503,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Perenniel{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4503,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Perenniel{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Esperanto"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}140,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],419); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4504,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Esperanto{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4504,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Esperanto{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Previon"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}135.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],436); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4505,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Previon{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4505,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Previon{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Hermes"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}160,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],474); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4506,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Hermes{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4506,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Hermes{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Walton"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}140,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}65 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],478); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4507,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Walton{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4507,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Walton{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Regina"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}130.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],479); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4508,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Regina{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4508,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Regina{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Buccaneer"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}150,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],518); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4509,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Buccaneer{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4509,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Buccaneer{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Willard"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}165.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],529); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4510,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Willard{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4510,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Willard{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Tractor"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}80,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}39 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],531); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4511,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Tractor{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4511,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Tractor{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Clover"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}170,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],542); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4512,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Clover{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4512,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Clover{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Sadler"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}120,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}84 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],543); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4513,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sadler{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4513,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sadler{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Hustler"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}150,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}82 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],545); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4514,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Hustler{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4514,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Hustler{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Tampa"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}140,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],549); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4515,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Tampa{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4515,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Tampa{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Broadway"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}145.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],575); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4516,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Broadway{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4516,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Broadway{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Tornado"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}170,000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],576); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4517,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Tornado{00BFFF}•",avtosalon, "Buy", "Back"); }
+			SPD(playerid,4517,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Tornado{00BFFF}вЂў",avtosalon, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon, 1000, "{40BF00}Car model: {FF8000}Picador"); format(avtosalon, 1000, "%s\n{40BF00}Price: {FF8000}155.000 $",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Car class: {FF8000}N",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Max. speed: {FF8000}84 km/h",avtosalon); format(avtosalon, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],600); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4518,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Picador{00BFFF}•",avtosalon, "Buy", "Back"); } } }
+			SPD(playerid,4518,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Picador{00BFFF}вЂў",avtosalon, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4501:
@@ -3932,8 +3932,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response) {
 		    switch(listitem) {
-		    case 0: SPD(playerid,4101,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}car showroom{00BFFF}•", "Sentinel\nManana\nVoodoo\nPony\nMule\nMoonbeam\nWashington\nBobcat\nPremier\nHotknife\nStallion\nRumpo\nRomero\nAdmiral\nSolair\nTopfun\nGlendale\nOceanic\nSabre\nBurrito\nRancher\nVirgo\nGreenwood", "Continue", "Cancel");
-		    case 1: SPD(playerid,4102,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}car showroom{00BFFF}•", "Boxville\nBenson\nBanger\nElegant\nJourney\nNebula\nMajestic\nFortune\nCadrona\nRemington\nBlade\nVincent\nIntruder\nPrimo\nMerit\nWindsor\nTahoma\nBandito\nStafford\nEmperor\nCamper\nSavanna", "Continue", "Cancel"); } }
+		    case 0: SPD(playerid,4101,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}car showroom{00BFFF}вЂў", "Sentinel\nManana\nVoodoo\nPony\nMule\nMoonbeam\nWashington\nBobcat\nPremier\nHotknife\nStallion\nRumpo\nRomero\nAdmiral\nSolair\nTopfun\nGlendale\nOceanic\nSabre\nBurrito\nRancher\nVirgo\nGreenwood", "Continue", "Cancel");
+		    case 1: SPD(playerid,4102,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}car showroom{00BFFF}вЂў", "Boxville\nBenson\nBanger\nElegant\nJourney\nNebula\nMajestic\nFortune\nCadrona\nRemington\nBlade\nVincent\nIntruder\nPrimo\nMerit\nWindsor\nTahoma\nBandito\nStafford\nEmperor\nCamper\nSavanna", "Continue", "Cancel"); } }
 		}
 		case 4101:
 		{
@@ -3942,73 +3942,73 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Sentinel"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}270.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],405); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4519,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sentinel{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4519,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sentinel{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Manana"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}250,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}72 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],410); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4520,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Manana{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4520,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Manana{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Voodoo"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],412); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4521,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Voodoo{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4521,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Voodoo{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Pony"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}310.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}61 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],413); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4522,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Pony{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4522,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Pony{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Mule"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}340.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}59 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],414); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4523,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Mule{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4523,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Mule{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Moonbeam"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}320.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}64 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],418); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4524,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Moonbeam{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4524,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Moonbeam{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Washington"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}86 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],421); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4525,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Washington{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4525,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Washington{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Bobcat"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],422); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4526,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bobcat{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4526,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bobcat{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Premier"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],426); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4527,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Premier{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4527,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Premier{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Hotknife"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}340.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}93 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],434); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4528,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Hotknife{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4528,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Hotknife{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Stallion"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}320.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],439); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4529,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Stallion{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4529,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Stallion{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Rumpo"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}76 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],440); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4530,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Rumpo{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4530,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Rumpo{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Romero"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}77 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],442); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4531,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Romero{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4531,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Romero{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Admiral"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}350,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}91 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],445); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4532,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Admiral{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4532,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Admiral{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Solair"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],458); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4533,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Solair{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4533,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Solair{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Topfun"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}76 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],459); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4534,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Topfun{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4534,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Topfun{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Glendalen"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}285.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}82 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],466); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4535,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Glendale{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4535,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Glendale{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Oceanic"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],467); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4536,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Oceanic{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4536,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Oceanic{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 18: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Sabre"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],475); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4537,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sabre{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4537,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sabre{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 19: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Burrito"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}310.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],482); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4538,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Burrito{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4538,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Burrito{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 20: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Rancher"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}400,000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],489); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4539,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Rancher{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4539,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Rancher{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 21: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Virgo"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}270.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],491); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4540,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Virgo{00BFFF}•",avtosalon2, "Buy", "Back"); }
+			SPD(playerid,4540,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Virgo{00BFFF}вЂў",avtosalon2, "Buy", "Back"); }
 			case 22: {
 	 		format(avtosalon2, 1000, "{40BF00}Car model: {FF8000}Greenwood"); format(avtosalon2, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon2); format(avtosalon2, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon2); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],492); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4541,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Greenwood{00BFFF}•",avtosalon2, "Buy", "Back"); } } }
+			SPD(playerid,4541,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Greenwood{00BFFF}вЂў",avtosalon2, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4519:
@@ -4179,70 +4179,70 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Boxville"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}60 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],498); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4542,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Boxville{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4542,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Boxville{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Benson"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}68 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],499); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4543,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Benson{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4543,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Benson{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Banger"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}350,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],504); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4544,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Banger{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4544,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Banger{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Elegant"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}92 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],507); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4545,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Elegant{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4545,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Elegant{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Journey"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}305.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}60 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],508); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4546,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Journey{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4546,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Journey{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Nebula"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}250,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],516); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4547,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Nebula{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4547,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Nebula{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Majestic"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],517); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4548,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Majestic{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4548,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Majestic{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Fortune"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}240,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],526); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4549,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Fortune{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4549,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Fortune{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Cadrona"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}255,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],527); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4550,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Cadrona{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4550,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Cadrona{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Remington"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],534); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4551,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Remington{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4551,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Remington{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Blade"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}320.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],536); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4552,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Blade{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4552,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Blade{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Vincent"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],540); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4553,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Vincent{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4553,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Vincent{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Intruder"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}270.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}83 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],546); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4554,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Intruder{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4554,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Intruder{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Primo"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}250,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}79 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],547); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4561,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Primo{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4561,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Primo{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Merit"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}260,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],551); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4562,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Merit{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4562,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Merit{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Windsor"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],555); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4557,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Windsor{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4557,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Windsor{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Tahoma"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}290.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}89 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],566); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4558,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Tahoma{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4558,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Tahoma{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Bandito"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}380.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}81 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],568); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4559,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bandito{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4559,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bandito{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 18: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Stafford"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}360.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],580); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4560,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Stafford{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4560,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Stafford{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 19: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Emperor"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}280.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],585); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4563,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Emperor{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4563,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Emperor{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 20: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Camper"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}68 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],483); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4564,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Camper{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4564,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Camper{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 21: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Savanna"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}300,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}D",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}96 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],567); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4565,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Savanna{00BFFF}•",avtosalon3, "Buy", "Back"); } } }
+			SPD(playerid,4565,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Savanna{00BFFF}вЂў",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4542:
@@ -4393,7 +4393,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								GetPlayerName(playerid, playername, sizeof(playername));
 								GetPlayerName(giveplayerid, giver, sizeof(giver));
 								GetPlayerName(hitid, giveplayer, sizeof(giveplayer));
-								format(string, sizeof(string), "« %s[%d] concluded contract with %s[%d] for murder %s[%d] »", playername,playerid, giver,giveplayeridd, giveplayer, hitid);
+								format(string, sizeof(string), "В« %s[%d] concluded contract with %s[%d] for murder %s[%d] В»", playername,playerid, giver,giveplayeridd, giveplayer, hitid);
 								SendFamilyMessage(40, COLOR_GREEN, string);
 								GoChase[giveplayeridd] = hitid;
 								GetChased[hitid] = giveplayeridd;
@@ -4570,28 +4570,28 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}PCJ-600"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}650,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}90 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],461); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4566,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}PCJ-600{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4566,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}PCJ-600{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Freeway"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}600,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],463); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4567,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Freeway{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4567,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Freeway{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Sanchez"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}520.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],468); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4568,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sanchez{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4568,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sanchez{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Quad"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}700.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}61 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],471); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4569,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Quad{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4569,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Quad{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}FCR-900"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}630.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],521); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4570,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}FCR-900{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4570,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}FCR-900{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}NRG-500"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}750.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}98 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],522); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4571,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}NRG-500{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4571,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}NRG-500{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}BF-400"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}570.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}85 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],581); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4572,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}BF-400{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4572,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}BF-400{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Moto model: {FF8000}Wayfarer"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}470.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Moto class: {FF8000}C",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],586); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4573,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Wayfarer{00BFFF}•",avtosalon3, "Buy", "Back"); } } }
+			SPD(playerid,4573,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Wayfarer{00BFFF}вЂў",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4566:
@@ -4657,64 +4657,64 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Buffalo"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}104 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],402); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4574,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Buffalo{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4574,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Buffalo{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Stretch"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.500.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],409); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4575,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Stretch{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4575,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Stretch{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}BF Injection"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}75 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],424); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4576,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}BF Injection{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4576,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}BF Injection{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Patriot"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}900.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],470); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4577,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Patriot{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4577,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Patriot{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}ZR-350"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.400.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}104 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],477); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4578,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}ZR-350{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4578,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}ZR-350{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Comet"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}103 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],480); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4579,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Comet{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4579,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Comet{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Blista"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.350.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}90 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],496); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4580,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Blista{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4580,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Blista{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Mesa"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}950.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}78 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],500); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4581,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Mesa{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4581,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Mesa{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Feltzer"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.250.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}93 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],533); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4582,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Feltzer{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4582,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Feltzer{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Slamvan"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.600.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],535); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4583,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Slamvan{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4583,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Slamvan{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Sunrise"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}850.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}81 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],550); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4584,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sunrise{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4584,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sunrise{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Yosemite"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}80 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],554); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4585,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Yosemite{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4585,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Yosemite{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Uranus"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.500.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}87 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],558); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4586,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Uranus{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4586,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Uranus{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 13: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Stratum"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}86 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],561); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4587,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Stratum{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4587,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Stratum{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 14: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Flash"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.300.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}92 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Front",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],565); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4588,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Flash{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4588,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Flash{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 15: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Huntley"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.700.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}88 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],579); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4589,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Huntley{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4589,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Huntley{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 16: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Euros"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.400.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}92 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],587); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4590,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Euros{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4590,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Euros{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 17: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Club"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.250.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}90 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],589); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4591,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Club{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4591,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Club{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 18: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Alpha"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1.300.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],602); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4592,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Alpha{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4592,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Alpha{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 19: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Pheonix"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}1,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}B",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}95 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],603); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4593,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Pheonix{00BFFF}•",avtosalon3, "Buy", "Back"); } } }
+			SPD(playerid,4593,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Pheonix{00BFFF}вЂў",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4574:
@@ -4864,43 +4864,43 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	switch(listitem) {
     		case 0: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Infernus"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4.500.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}123 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],411); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4594,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Infernus{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4594,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Infernus{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 1: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Cheetah"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.600.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}107 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],415); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4595,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Cheetah{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4595,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Cheetah{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 2: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Banshee"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.200.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}112 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],429); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4596,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Banshee{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4596,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Banshee{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 3: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Turismo"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}5,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}108 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],451); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4597,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Turismo{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4597,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Turismo{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 4: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Hotring Racer"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}120 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],494); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4598,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Hotring Racer{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4598,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Hotring Racer{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 5: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Sandking"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4.300.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}98 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],495); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4599,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sandking{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4599,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sandking{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 6: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Hotring Racer 2"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}120 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],502); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4600,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Hotring Racer 2{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4600,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Hotring Racer 2{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 7: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Hotring Racer 3"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,000,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}120 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],503); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4601,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Hotring Racer 3{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4601,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Hotring Racer 3{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 8: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Super GT"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4,100,000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}100 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],506); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4602,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Super GT{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4602,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Super GT{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 9: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Bullet"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}4.450.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}113 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],541); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4603,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bullet{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4603,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bullet{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 10: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Jester"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.800.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}99 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Full",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],559); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4604,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Jester{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4604,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Jester{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 11: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Sultan"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.900.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}94 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],560); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4605,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Sultan{00BFFF}•",avtosalon3, "Buy", "Back"); }
+			SPD(playerid,4605,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Sultan{00BFFF}вЂў",avtosalon3, "Buy", "Back"); }
 			case 12: {
 	 		format(avtosalon3, 1000, "{40BF00}Car model: {FF8000}Elegy"); format(avtosalon3, 1000, "%s\n{40BF00}Price: {FF8000}3.850.000 $",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Car class: {FF8000}A",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Max. speed: {FF8000}99 km/h",avtosalon3); format(avtosalon3, 1000, "%s\n{40BF00}Drive unit: {FF8000}Rear",avtosalon3); PlayerTextDrawSetPreviewModel(playerid,avto[playerid],562); PlayerTextDrawShow(playerid,avto[playerid]);
-			SPD(playerid,4606,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Elegy{00BFFF}•",avtosalon3, "Buy", "Back"); } } }
+			SPD(playerid,4606,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Elegy{00BFFF}вЂў",avtosalon3, "Buy", "Back"); } } }
 			else PlayerTextDrawHide(playerid,avto[playerid]);
 		}
 		case 4594:
@@ -5544,31 +5544,31 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case 3001:
 		{
 	        if(response) {
-         	if(!strlen(inputtext))return  SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel");
+         	if(!strlen(inputtext))return  SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
           	new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 600) { SCM(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+			if(moneys < 1 || moneys > 600) { SCM(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
 			GPN format(string, sizeof(string), "[SFN] Price for Calls and SMS, at the rate of %d $ set by the Editor-in-Chief %s.", moneys, playername); SendFamilyMessage(9,COLOR_YELLOW2, string); smspricesf = moneys; }
 	    }
 		case 3002:
 	    {
 	        if(response) {
-         	if(!strlen(inputtext))return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel");
+         	if(!strlen(inputtext))return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
          	new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 600) { SCM(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+			if(moneys < 1 || moneys > 600) { SCM(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
 			GPN format(string, sizeof(string), "[LSN] Price for Calls and SMS, at the rate of %d $ set by the Editor-in-Chief %s.", moneys, playername); SendFamilyMessage(16,COLOR_YELLOW2, string); smspricels = moneys; }
 	    }
 	    case 3003:
 	    {
 	        if(response) {
-         	if(!strlen(inputtext)) { SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+         	if(!strlen(inputtext)) { SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
          	new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 600) { SCM(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+			if(moneys < 1 || moneys > 600) { SCM(playerid, COLOR_GREY, "The minimum amount is 1, the maximum is 600!"); SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
 			GPN format(string, sizeof(string), "[LVN] Price for Calls and SMS, at the rate of %d $ set by the Editor-in-Chief %s.", moneys, playername); SendFamilyMessage(20,COLOR_YELLOW2, string); smspricelv = moneys; }
 	    }
 		case 11518:
 		{
 			if(!response) return true;
-			SetPVarInt(playerid, "AdvertID", listitem+1); SPD(playerid, 11519, 2, "{00BFFF}•{FFFFFF}ads{00BFFF}•", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+			SetPVarInt(playerid, "AdvertID", listitem+1); SPD(playerid, 11519, 2, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		}
 		case 11519:
 		{
@@ -5585,23 +5585,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 20: { format(string, 128, "        Edited by employee LV News: %s", playername); SCMTA(COLOR_SALMON, string); } }
 			for(new i = GetPVarInt(playerid, "AdvertID"); i <= TOTALADVERT[full] - 1; i++) memcpy(AdvertInfo[i][full], AdvertInfo[i+1][full], 0, 512);
 			TOTALADVERT[full] --; AdvertTime = gettime()+15; DeletePVar(playerid, "AdvertID"); AdvertList(playerid); }
-			case 1: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); SPD(playerid, 11520, 0, "{00BFFF}•{FFFFFF}ads{00BFFF}•", string, "Back", ""); }
- 			case 2: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); SPD(playerid, 11521, 1, "{00BFFF}•{FFFFFF}ads{00BFFF}•", string, "Accept", "Back"); }
+			case 1: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); SPD(playerid, 11520, 0, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", string, "Back", ""); }
+ 			case 2: { format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]); SPD(playerid, 11521, 1, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", string, "Accept", "Back"); }
  			case 3: { for(new i = GetPVarInt(playerid, "AdvertID"); i <= TOTALADVERT[full] - 1; i++) memcpy(AdvertInfo[i][full], AdvertInfo[i+1][full], 0, 512); TOTALADVERT[full]--; SCM(playerid, COLOR_GREEN, "Advertisement removed"); DeletePVar(playerid, "AdvertID"); AdvertList(playerid); }
  			case 4: {
   			GPN format(string, 128, "[AD] Announcement: %s. Sent: %s (Sent: %s)",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText], AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName], playername); ABroadCast(COLOR_LIGHTRED, string, 1); for(new i = GetPVarInt(playerid, "AdvertID"); i <= TOTALADVERT[full] - 1; i++) memcpy(AdvertInfo[i][full], AdvertInfo[i+1][full], 0, 512);
 			TOTALADVERT[full]--; SCM(playerid, COLOR_LIGHTRED, "The announcement has been sent to the administration"); DeletePVar(playerid, "AdvertID"); AdvertList(playerid); } }
 		}
-		case 11520: SPD(playerid, 11519, 2, "{00BFFF}•{FFFFFF}ads{00BFFF}•", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+		case 11520: SPD(playerid, 11519, 2, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		case 11521:
 		{
-		    if(!response) return SPD(playerid, 11519, 2, "{00BFFF}•{FFFFFF}ads{00BFFF}•", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+		    if(!response) return SPD(playerid, 11519, 2, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		    new full = 0;
 	    	switch(PlayerInfo[playerid][pMember]) { case 9: full = 1; case 16: full = 0; case 20: full = 2; }
 		    if(!strlen(inputtext)) {
 			format(string, 128, "Text: %s. Sent: %s",AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText],AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adName]);
-			return SPD(playerid, 11521, 1, "{00BFFF}•{FFFFFF}ads{00BFFF}•", string, "Accept", "Back"); }
-			strmid(AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText], inputtext, 0, 128, 128); SCM(playerid, COLOR_LIGHTGREEN, "Advertisement edited and saved"); SPD(playerid, 11519, 2, "{00BFFF}•{FFFFFF}ads{00BFFF}•", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
+			return SPD(playerid, 11521, 1, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", string, "Accept", "Back"); }
+			strmid(AdvertInfo[GetPVarInt(playerid, "AdvertID")][full][adText], inputtext, 0, 128, 128); SCM(playerid, COLOR_LIGHTGREEN, "Advertisement edited and saved"); SPD(playerid, 11519, 2, "{00BFFF}вЂў{FFFFFF}ads{00BFFF}вЂў", "Submit an ad\nRead the announcement\nEdit ad\nRemove ad\nSend to administration", "Accept", "Back");
 		}
 		case 2223:
 		{
@@ -5618,8 +5618,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else return SCM(playerid, COLOR_GREY, "You're off the air"); }
 			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = true;
 			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(9,COLOR_GREEN, string), smssf = false;
-			case 4: if(PlayerInfo[playerid][pLeader] == 9) SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel");
-			case 5: if(PlayerInfo[playerid][pLeader] == 9) return SPD(playerid,31,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Ad Price{00BFFF}•", "Enter amount", "Ready", "Cancel");
+			case 4: if(PlayerInfo[playerid][pLeader] == 9) SPD(playerid,3001,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+			case 5: if(PlayerInfo[playerid][pLeader] == 9) return SPD(playerid,31,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Ad Price{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
 		}
 		case 2224:
@@ -5636,8 +5636,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else SCM(playerid, COLOR_GREY, "You're off the air"); }
 			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 1;
 			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(16,COLOR_BLUE, string), smsls = 0;
-			case 4: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel");
-			case 5: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,32,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Ad Price{00BFFF}•", "Enter amount", "Ready", "Cancel");
+			case 4: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,3002,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+			case 5: if(PlayerInfo[playerid][pLeader] == 16) return SPD(playerid,32,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Ad Price{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
 		}
 		case 2225:
@@ -5654,15 +5654,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else SCM(playerid, COLOR_GREY, "You're off the air"); }
 			case 2: format(string, sizeof(string), "%s began taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 1;
 			case 3: format(string, sizeof(string), "%s completed taking calls from listeners", playername), SendFamilyMessage(20,COLOR_BLUE, string), smslv = 0;
-			case 4: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per Calls|SMS{00BFFF}•", "Enter amount", "Ready", "Cancel");
-			case 5: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,33,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Ad Price{00BFFF}•", "Enter amount", "Ready", "Cancel");
+			case 4: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,3003,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per Calls|SMS{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+			case 5: if(PlayerInfo[playerid][pLeader] == 20) return SPD(playerid,33,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Ad Price{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
 			case 6: AdvertList(playerid); } }
 		}
 		case 10092:
 		{
 		    if(response)
 			{
-				SPD(playerid, 10098, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Job{00BFFF}•", "{FFFFFF}1 lvl. {FE0808}Bus driver\n{FFFFFF}1 lvl. {FE0808}Garbage Truck Driver\n{FFFFFF}2 lvl. {FE0808}Taxi driver\n{FFFFFF}3 lvl. {FE0808}Mechanic\n{FFFFFF}3 lvl. {FE0808}Collector\n{FFFFFF}4 lvl. {FE0808}Product Delivery Man\n{FFFFFF}5 lvl. {FE0808}Train Driver", "Join", "Exit");
+				SPD(playerid, 10098, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Job{00BFFF}вЂў", "{FFFFFF}1 lvl. {FE0808}Bus driver\n{FFFFFF}1 lvl. {FE0808}Garbage Truck Driver\n{FFFFFF}2 lvl. {FE0808}Taxi driver\n{FFFFFF}3 lvl. {FE0808}Mechanic\n{FFFFFF}3 lvl. {FE0808}Collector\n{FFFFFF}4 lvl. {FE0808}Product Delivery Man\n{FFFFFF}5 lvl. {FE0808}Train Driver", "Join", "Exit");
 			}
 			else return true;
 		}
@@ -5677,7 +5677,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 		    if(response) {
 			if(PlayerInfo[playerid][pCash] < 500) return SCM(playerid, COLOR_GREY, "Not enough money!");
-			format(string,sizeof(string), "Your lesson has begun. Go to the driving school parking lot and get into an empty car.\nNext you will be shown the route you will have to take\nIf the car is involved in an accident during the test, it will be completed"); SPD(playerid,10023,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Driving Test{00BFFF}•",string, "Ready", "Cancel"); }
+			format(string,sizeof(string), "Your lesson has begun. Go to the driving school parking lot and get into an empty car.\nNext you will be shown the route you will have to take\nIf the car is involved in an accident during the test, it will be completed"); SPD(playerid,10023,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Driving Test{00BFFF}вЂў",string, "Ready", "Cancel"); }
 		}
 		case 10023:
 		{
@@ -5687,9 +5687,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case 554:
 		{
 		    if(response) {
-			if(!strlen(inputtext)) return SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Directions{00BFFF}•", "Enter the fare:", "Accept", "Cancel");
+			if(!strlen(inputtext)) return SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Directions{00BFFF}вЂў", "Enter the fare:", "Accept", "Cancel");
 			new moneys; moneys = strval(inputtext);
-			if(moneys < 1 || moneys > 100) return SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Directions{00BFFF}•", "Fare must be at least 1 $,\nand no more than 100 $ \n\nEnter the fare:", "Accept", "Cancel");
+			if(moneys < 1 || moneys > 100) return SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Directions{00BFFF}вЂў", "Fare must be at least 1 $,\nand no more than 100 $ \n\nEnter the fare:", "Accept", "Cancel");
 			AutoBusMoney[playerid] = moneys; AutoBusCheck[playerid] = 0; GPN
 			if(AutoBusJob[playerid] == 1) {
    			format(string, sizeof(string), "%s started working as a bus driver. Route: AB LS - Inside City LS. Directions %d $", playername, AutoBusMoney[playerid]); ProxDetector(30.0, playerid, string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE); format(string, sizeof(string), "<< AB LS - Inside City LS >>\nFare price: %d $",AutoBusMoney[playerid]); fare3dtext[playerid] = Create3DTextLabel(string, COLOR_GREEN,9999.0,9999.0,9999.0,50.0,0,1);
@@ -5713,13 +5713,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    switch(listitem)
 				{
-		   			case 0: SPD(playerid, 556, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Driver license{00BFFF}•", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 1: SPD(playerid, 557, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Flight License{00BFFF}•", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 2: SPD(playerid, 559, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Boat license{00BFFF}•", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 3: SPD(playerid, 558, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Motorcycle License{00BFFF}•", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-		   			case 4: SPD(playerid, 561, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Business License{00BFFF}•", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-				   	case 5: SPD(playerid, 560, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Weapon License{00BFFF}•", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
-				   	case 6: SPD(playerid, 555, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}License set{00BFFF}•", "Enter ID the person you want to give the kit to", "Issue", "Cancel");
+		   			case 0: SPD(playerid, 556, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Driver license{00BFFF}вЂў", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 1: SPD(playerid, 557, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Flight License{00BFFF}вЂў", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 2: SPD(playerid, 559, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Boat license{00BFFF}вЂў", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 3: SPD(playerid, 558, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Motorcycle License{00BFFF}вЂў", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+		   			case 4: SPD(playerid, 561, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Business License{00BFFF}вЂў", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+				   	case 5: SPD(playerid, 560, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Weapon License{00BFFF}вЂў", "Enter ID the person you want to issue the license to", "Issue", "Cancel");
+				   	case 6: SPD(playerid, 555, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}License set{00BFFF}вЂў", "Enter ID the person you want to give the kit to", "Issue", "Cancel");
 			   }
 	   		}
 	   		else OnPlayerCommandText(playerid,"/apanel");
@@ -5821,8 +5821,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 			    switch(listitem)
 				{
-		   			case 0: SPD(playerid, 670, DIALOG_STYLE_INPUT, "{00BFFF}• Minister of Internal Affairs", "Enter ID whoever you want to appoint to the post of Minister of Internal Affairs", "Issue", "Cancel");
-		   			case 1: SPD(playerid, 671, DIALOG_STYLE_INPUT, "{00BFFF}• Minister of the Ministry of Defense", "Enter ID whoever you want to appoint to the post of Minister of Defense", "Issue", "Cancel");
+		   			case 0: SPD(playerid, 670, DIALOG_STYLE_INPUT, "{00BFFF}вЂў Minister of Internal Affairs", "Enter ID whoever you want to appoint to the post of Minister of Internal Affairs", "Issue", "Cancel");
+		   			case 1: SPD(playerid, 671, DIALOG_STYLE_INPUT, "{00BFFF}вЂў Minister of the Ministry of Defense", "Enter ID whoever you want to appoint to the post of Minister of Defense", "Issue", "Cancel");
 			   }
 	   		}
 	   		else return 1;
@@ -5875,22 +5875,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
    			switch(listitem) {
 			case 0: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 437) { SCM(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-		 	AutoBusJob[playerid] = 1; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Travel Price{00BFFF}•", "Enter the fare:", "Ready", "Cancel"); return true; }
+		 	AutoBusJob[playerid] = 1; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Travel Price{00BFFF}вЂў", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 1: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 437) { SCM(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 2; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price Travel{00BFFF}•", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 2; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price Travel{00BFFF}вЂў", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 2: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 437) { SCM(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 3; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price Travel{00BFFF}•", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 3; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price Travel{00BFFF}вЂў", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 3: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 431) { SCM(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 4; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price Travel{00BFFF}•", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 4; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price Travel{00BFFF}вЂў", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 4: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 431) { SCM(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 5; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price Travel{00BFFF}•", "Enter the fare:", "Ready", "Cancel"); return true; }
+			AutoBusJob[playerid] = 5; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price Travel{00BFFF}вЂў", "Enter the fare:", "Ready", "Cancel"); return true; }
 			case 5: {
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 431) { SCM(playerid,COLOR_GREY, "You need an intracity bus!"); RemovePlayerFromVehicle(playerid); return true; }
-			AutoBusJob[playerid] = 6; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price Travel{00BFFF}•", "Enter the fare:", "Ready", "Cancel"); return true; } } }
+			AutoBusJob[playerid] = 6; SPD(playerid, 554, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price Travel{00BFFF}вЂў", "Enter the fare:", "Ready", "Cancel"); return true; } } }
 		}
 	 	case 10098:
 	    {
@@ -5944,14 +5944,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				switch(listitem)
 				{
-					case 0:	SPD(playerid, 100, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Take away your Driver's License{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 1:	SPD(playerid, 102, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Get a Motorcycle License{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 2:	SPD(playerid, 103, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Retrieve a Flight License{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 3:	SPD(playerid, 105, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Get a Boat License{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 4:	SPD(playerid, 106, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Take away a Weapon License{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 5:	SPD(playerid, 108, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Select Drugs{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 6:	SPD(playerid, 109, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Take Weapons{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
-					case 7: SPD(playerid, 110, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Select Materials{00BFFF}•", "Enter [ID] player", "Select", "Cancel");
+					case 0:	SPD(playerid, 100, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Take away your Driver's License{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 1:	SPD(playerid, 102, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Get a Motorcycle License{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 2:	SPD(playerid, 103, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Retrieve a Flight License{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 3:	SPD(playerid, 105, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Get a Boat License{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 4:	SPD(playerid, 106, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Take away a Weapon License{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 5:	SPD(playerid, 108, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Select Drugs{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 6:	SPD(playerid, 109, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Take Weapons{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
+					case 7: SPD(playerid, 110, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Select Materials{00BFFF}вЂў", "Enter [ID] player", "Select", "Cancel");
 				}
 			}
 			else OnPlayerCommandText(playerid,"/apanel");
@@ -6084,96 +6084,96 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if(response) {
         	switch(listitem) {
-         	case 0: SPD(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Top up your farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel");
-         	case 1: SPD(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Farmer №1\nFarmer №2\nFarmer №3\nFarmer №4\nFarmer №5", "Choose", "Cancel");
-         	case 2: SPD(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Farmer №1\nFarmer №2\nFarmer №3\nFarmer №4\nFarmer №5", "Choose", "Cancel"); } }
+         	case 0: SPD(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Top up your farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+         	case 1: SPD(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Farmer в„–1\nFarmer в„–2\nFarmer в„–3\nFarmer в„–4\nFarmer в„–5", "Choose", "Cancel");
+         	case 2: SPD(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Farmer в„–1\nFarmer в„–2\nFarmer в„–3\nFarmer в„–4\nFarmer в„–5", "Choose", "Cancel"); } }
         }
 		case 10122:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid, 11231,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per bush{00BFFF}•", "Enter amount", "Ready", "Cancel");
-            case 1: SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change the purchase price of grain{00BFFF}•", "Enter amount", "Ready", "Cancel");
-            case 2: SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change the selling price of grain{00BFFF}•", "Enter amount", "Ready", "Cancel");
-            case 3: SPD(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Top up your farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel");
-            case 4: SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Withdraw money from farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel");
-            case 5: SPD(playerid, 11233, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Deputy №1\nDeputy №2\nDeputy №3", "Choose", "Cancel");
-            case 6: SPD(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Farmer №1\nFarmer №2\nFarmer №3\nFarmer №4\nFarmer №5", "Choose", "Cancel");
-            case 7: SPD(playerid, 11235, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Fire the deputy{00BFFF}•", "Deputy №1\nDeputy №2\nDeputy №3", "Choose", "Cancel");
-            case 8: SPD(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Farmer №1\nFarmer №2\nFarmer №3\nFarmer №4\nFarmer №5", "Choose", "Cancel"); } }
+            case 0: SPD(playerid, 11231,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per bush{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+            case 1: SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change the purchase price of grain{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+            case 2: SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change the selling price of grain{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+            case 3: SPD(playerid, 11238,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Top up your farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+            case 4: SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Withdraw money from farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
+            case 5: SPD(playerid, 11233, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Deputy в„–1\nDeputy в„–2\nDeputy в„–3", "Choose", "Cancel");
+            case 6: SPD(playerid, 11234, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Farmer в„–1\nFarmer в„–2\nFarmer в„–3\nFarmer в„–4\nFarmer в„–5", "Choose", "Cancel");
+            case 7: SPD(playerid, 11235, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Fire the deputy{00BFFF}вЂў", "Deputy в„–1\nDeputy в„–2\nDeputy в„–3", "Choose", "Cancel");
+            case 8: SPD(playerid, 11236, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Farmer в„–1\nFarmer в„–2\nFarmer в„–3\nFarmer в„–4\nFarmer в„–5", "Choose", "Cancel"); } }
         }
 		case 11231:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per bush{00BFFF}•", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per bush{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
-            if(moneys < 10 || moneys > 199) { SCM(playerid, COLOR_GREY, "The minimum amount is 10, the maximum is 199!"); SPD(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Price per bush{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 10 || moneys > 199) { SCM(playerid, COLOR_GREY, "The minimum amount is 10, the maximum is 199!"); SPD(playerid,11231,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Price per bush{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fEntranceCost] = moneys; format(string, sizeof(string), "The price per bush is %d $",FarmInfo[f][fEntranceCost]); SCM(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11239:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change the purchase price of grain{00BFFF}•", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change the purchase price of grain{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
-            if(moneys < 1 || moneys > 10) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 10"); SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change the purchase price of grain{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 1 || moneys > 10) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 10"); SPD(playerid, 11239,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change the purchase price of grain{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fCenazerno] = moneys; format(string, sizeof(string), "The grain purchase price is %d $",FarmInfo[f][fCenazerno]); SCM(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11240:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change the selling price of grain{00BFFF}•", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change the selling price of grain{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
-            if(moneys < 10 || moneys > 15) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 15"); SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change the selling price of grain{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 10 || moneys > 15) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 15"); SPD(playerid, 11240,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change the selling price of grain{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fcenaprod] = moneys; format(string, sizeof(string), "The grain purchase price is %d $",FarmInfo[f][fcenaprod]); SCM(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11241:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Withdraw money from farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Withdraw money from farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
 			new moneys; moneys = strval(inputtext);
             if(FarmInfo[f][fTill] < moneys) return SCM(playerid, COLOR_GREY, "There's not enough money on the farm!");
-            if(moneys < 1 || moneys > 500000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Withdraw money from farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 1 || moneys > 500000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); SPD(playerid, 11241,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Withdraw money from farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fTill] -= moneys; PlayerInfo[playerid][pBank] += moneys; format(string, sizeof(string), "Farm bank is %d $",FarmInfo[f][fTill]); SCM(playerid, COLOR_WHITE,string); format(string, sizeof(string), "The bank account is %d $",PlayerInfo[playerid][pBank]); SCM(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11238:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Top up your farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Top up your farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel");
             new moneys; moneys = strval(inputtext);
             if(PlayerInfo[playerid][pBank] < moneys) return SCM(playerid, COLOR_GREY, "There's not enough money in the bank!");
-            if(moneys < 1 || moneys > 500000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); SPD(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Top up your farm bank{00BFFF}•", "Enter amount", "Ready", "Cancel"); }
+            if(moneys < 1 || moneys > 500000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 500000"); SPD(playerid,11238,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Top up your farm bank{00BFFF}вЂў", "Enter amount", "Ready", "Cancel"); }
             FarmInfo[f][fTill] += moneys; PlayerInfo[playerid][pBank] -= moneys; format(string, sizeof(string), "Farm bank is %d $",FarmInfo[f][fTill]); SCM(playerid, COLOR_WHITE,string); format(string, sizeof(string), "The bank balance is %d $",PlayerInfo[playerid][pBank]); SCM(playerid, COLOR_WHITE,string); OnPropUpdate(); } }
         }
 		case 11233:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11221,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a Deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel");
-            case 1: SPD(playerid,11222,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a Deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel");
-            case 2: SPD(playerid,11223,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a Deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            case 0: SPD(playerid,11221,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a Deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
+            case 1: SPD(playerid,11222,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a Deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
+            case 2: SPD(playerid,11223,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a Deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11234:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11001,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
-            case 1: SPD(playerid,11002,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
-            case 2: SPD(playerid,11003,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
-            case 3: SPD(playerid,11004,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
-            case 4: SPD(playerid,11005,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            case 0: SPD(playerid,11001,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
+            case 1: SPD(playerid,11002,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
+            case 2: SPD(playerid,11003,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
+            case 3: SPD(playerid,11004,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
+            case 4: SPD(playerid,11005,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11235:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11061,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Dismiss the Deputy{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 1: SPD(playerid,11062,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Dismiss the Deputy{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 2: SPD(playerid,11063,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Dismiss the Deputy{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
+            case 0: SPD(playerid,11061,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Dismiss the Deputy{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 1: SPD(playerid,11062,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Dismiss the Deputy{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 2: SPD(playerid,11063,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Dismiss the Deputy{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
         }
 		case 11061:
         {
@@ -6200,11 +6200,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid,11064,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 1: SPD(playerid,11065,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 2: SPD(playerid,11066,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 3: SPD(playerid,11067,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel");
-            case 4: SPD(playerid,11068,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Fire the farmer{00BFFF}•", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
+            case 0: SPD(playerid,11064,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 1: SPD(playerid,11065,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 2: SPD(playerid,11066,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 3: SPD(playerid,11067,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel");
+            case 4: SPD(playerid,11068,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Fire the farmer{00BFFF}вЂў", "Are you sure you want to fire him?", "Fire", "Cancel"); } }
         }
 		case 11064:
         {
@@ -6245,98 +6245,98 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext)) return SPD(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext)) return SPD(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new id = strval(inputtext);
             if(IsPlayerConnected(id)) {
             if(FarmInfo[f][f1zams] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             GetPlayerName(id, playername, sizeof(playername)); strmid(FarmInfo[f][f1zams], playername, 0, strlen(playername), 24); format(string, sizeof(string), "you have appointed %s for the post of deputy",playername); SCM(playerid, COLOR_WHITE,string); PlayerInfo[id][pFermajob] = 2; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11221, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11222:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext)) return SPD(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext)) return SPD(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f2zams] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f2zams], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of deputy",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 2; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11222, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11223:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f3zams] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f3zams], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of deputy",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 2; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Appoint a deputy{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11223, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Appoint a deputy{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11001:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f1fermers] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f1fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11001, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11002:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f2fermers] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f2fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11002, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11003:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f3fermers] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f3fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11003, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11004:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f4fermers] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f4fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11004, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 11005:
         {
             if(response) {
             for(new f = 0; f < sizeof(FarmInfo); f++) {
-            if(!strlen(inputtext))return SPD(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel");
             new idd = strval(inputtext);
             if(IsPlayerConnected(idd)) {
             if(FarmInfo[f][f5fermers] != 0) return SCM(playerid,COLOR_GREY, "The place is closed");
             new pname[MAX_PLAYER_NAME]; GetPlayerName(idd, pname, sizeof(pname)); strmid(FarmInfo[f][f5fermers], pname, 0, strlen(pname), 24); format(string, sizeof(string), "you have appointed %s for the post of Farmer",pname); SCM(playerid, COLOR_WHITE,string); PlayerInfo[idd][pFermajob] = 3; OnPropUpdate(); }
-            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nominate a farmer{00BFFF}•", "Enter ID player", "Ready", "Cancel"); } }
+            else SCM(playerid, COLOR_GREY, "Player not found"); SPD(playerid, 11005, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nominate a farmer{00BFFF}вЂў", "Enter ID player", "Ready", "Cancel"); } }
         }
 		case 1322:
         {
             if(response) {
             switch(listitem) {
-            case 0: SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Loading grain{00BFFF}•", "Enter the amount of grain per load\nLoading is carried out from the loaders' warehouse", "Ready", "Cancel");
-            case 1: SPD(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Unloading grain to the farm{00BFFF}•", "Enter the amount of grain to unload", "Ready", "Cancel");
-            case 2: SPD(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Loading crops from the farm{00BFFF}•", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
-            case 3: SPD(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Unloading crops for sale{00BFFF}•", "Enter the amount of harvest", "Ready", "Cancel"); } }
+            case 0: SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Loading grain{00BFFF}вЂў", "Enter the amount of grain per load\nLoading is carried out from the loaders' warehouse", "Ready", "Cancel");
+            case 1: SPD(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Unloading grain to the farm{00BFFF}вЂў", "Enter the amount of grain to unload", "Ready", "Cancel");
+            case 2: SPD(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Loading crops from the farm{00BFFF}вЂў", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
+            case 3: SPD(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Unloading crops for sale{00BFFF}вЂў", "Enter the amount of harvest", "Ready", "Cancel"); } }
         }
 		case 1358:
         {
@@ -6347,9 +6347,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(!PlayerToPoint(10, playerid,-381.8794,-1440.2821,25.7266)) return SCM(playerid,COLOR_GREY, "There are no farms nearby!");
             if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SCM(playerid,COLOR_GREY, "Not the right car!");
             if(MaterialsInTheWagon[tmpcar] >= 1000) return SCM(playerid,COLOR_GREY, "The truck is full!");
-            if(!strlen(inputtext))return SPD(playerid,1358, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Loading crops from the farm{00BFFF}•", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid,1358, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Loading crops from the farm{00BFFF}вЂў", "Enter the quantity of crop to be loaded", "Ready", "Cancel");
             new zakup; zakup = strval(inputtext);
-            if(zakup < 30 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); SPD(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Loading crops from the farm{00BFFF}•", "Enter the quantity of crop to be loaded", "Ready", "Cancel"); }
+            if(zakup < 30 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); SPD(playerid, 1358, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Loading crops from the farm{00BFFF}вЂў", "Enter the quantity of crop to be loaded", "Ready", "Cancel"); }
             if(FarmInfo[f][fAmountOfGrain]-zakup <= 0)return SCM(playerid,COLOR_GREY, "There is not enough grain in the warehouse!");
             if(PlayerInfo[playerid][pCash] <= FarmInfo[f][fcenaprod]*zakup) return SCM(playerid, COLOR_WHITE, "You don't have enough money!");
             PlayerInfo[playerid][pCash] -= FarmInfo[f][fcenaprod]*zakup; FarmInfo[f][fAmountOfGrain] -= zakup; MaterialsInTheWagon[tmpcar] += zakup;
@@ -6365,9 +6365,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(!PlayerToPoint(20, playerid,2192.3550,-2250.1377,15.0302)) return SCM(playerid,COLOR_GREY,"You are not near the movers");
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SCM(playerid,COLOR_GREY,"Not the right car");
 			if(PlayerHaul[tmpcar-comptruck[0]][pLoad] >= 1000) return SCM(playerid,COLOR_GREY,"The truck is full");
-			if(!strlen(inputtext)) return SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Buying grain for the farm{00BFFF}•","Enter the amount of grain to purchase", "Buy", "Cancel");
+			if(!strlen(inputtext)) return SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Buying grain for the farm{00BFFF}вЂў","Enter the amount of grain to purchase", "Buy", "Cancel");
 			new zakup; zakup = strval(inputtext);
-			if(zakup < 30 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Buying grain for the farm{00BFFF}•","Enter the amount of grain to purchase", "Buy", "Cancel"); }
+			if(zakup < 30 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 30 and more than 1000"); SPD(playerid, 1356, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Buying grain for the farm{00BFFF}вЂў","Enter the amount of grain to purchase", "Buy", "Cancel"); }
 			if(zakup < PlayerHaul[tmpcar-comptruck[0]][pLoad]) return SCM(playerid,COLOR_GREY,"Incorrect value");
 			if(PlayerInfo[playerid][pCash] <= FarmInfo[f][frandoms]*zakup) return SCM(playerid, COLOR_WHITE,"You don't have enough money");
 			PlayerInfo[playerid][pCash] -= FarmInfo[f][frandoms]*zakup; PlayerHaul[tmpcar-comptruck[0]][pLoad] += zakup;
@@ -6381,10 +6381,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			new tmpcar = GetPlayerVehicleID(playerid);
 			if(!PlayerToPoint(10.0, playerid, -378.2744, -1432.7566, 25.7266)) return SCM(playerid,COLOR_GREY,"There are no farms nearby");
 			if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 440) return SCM(playerid,COLOR_GREY,"Not the right car");
-			if(!strlen(inputtext)) return SPD(playerid,1357, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Unloading grain to the farm{00BFFF}•","Enter the amount of grain to unload", "Unloading", "Cancel");
+			if(!strlen(inputtext)) return SPD(playerid,1357, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Unloading grain to the farm{00BFFF}вЂў","Enter the amount of grain to unload", "Unloading", "Cancel");
 			if(PlayerHaul[tmpcar-comptruck[0]][pLoad] == 0) return SCM(playerid,COLOR_GREY,"The truck is empty");
 			new zakup; zakup = strval(inputtext);
-			if(zakup < 1 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); SPD(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Unloading grain to the farm{00BFFF}•","Enter the amount of grain to unload", "Unloading", "Cancel"); }
+			if(zakup < 1 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); SPD(playerid, 1357, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Unloading grain to the farm{00BFFF}вЂў","Enter the amount of grain to unload", "Unloading", "Cancel"); }
 			if(PlayerHaul[tmpcar-comptruck[0]][pLoad] < zakup) return SCM(playerid,COLOR_GREY,"Incorrect value");
 			if(FarmInfo[f][fTill] <= FarmInfo[f][fCenazerno]*zakup) return SCM(playerid, COLOR_WHITE,"The Farm doesn't have enough money");
 			PlayerInfo[playerid][pCash] += FarmInfo[f][fCenazerno]*zakup; FarmInfo[f][fTill] -= FarmInfo[f][fCenazerno]*zakup; FarmInfo[f][fzernozakup] += zakup; PlayerHaul[tmpcar-comptruck[0]][pLoad] -= zakup; Download[tmpcar] = 0; format(string, sizeof(string), "You have unloaded %d grain worth %d in the truck %d grains", zakup, FarmInfo[f][fCenazerno]*zakup, PlayerHaul[tmpcar-comptruck[0]][pLoad]); SCM(playerid, COLOR_GREEN, string); } }
@@ -6396,10 +6396,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(!PlayerToPoint(15, playerid,1640.7261,2318.2012,10.8203)) return SCM(playerid,COLOR_WHITE, "You should be near the warehouse((/gps->Important places))");
             new tmpcar = GetPlayerVehicleID(playerid);
             if(Download[tmpcar] == 1) return SCM(playerid,COLOR_GREY, "You cannot sell unripe grains, unload them to the farm");
-            if(!strlen(inputtext))return SPD(playerid,1388, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Unloading crops for sale{00BFFF}•", "Enter the amount of harvest", "Ready", "Cancel");
+            if(!strlen(inputtext))return SPD(playerid,1388, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Unloading crops for sale{00BFFF}вЂў", "Enter the amount of harvest", "Ready", "Cancel");
             if(MaterialsInTheWagon[tmpcar] == 0) return SCM(playerid,COLOR_GREY, "The truck is empty!");
             new zakup; zakup = strval(inputtext);
-            if(zakup < 1 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); SPD(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Unloading crops for sale{00BFFF}•", "Enter the amount of harvest", "Ready", "Cancel"); }
+            if(zakup < 1 || zakup > 1000) { SCM(playerid, COLOR_GREY, "Cannot be less than 1 or more than 1000"); SPD(playerid, 1388, DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Unloading crops for sale{00BFFF}вЂў", "Enter the amount of harvest", "Ready", "Cancel"); }
             if(MaterialsInTheWagon[tmpcar] < zakup) return SCM(playerid,COLOR_GREY, "Incorrect value!");
             PlayerInfo[playerid][pCash] += FarmInfo[f][frandoms2]*zakup; MaterialsInTheWagon[tmpcar] -= zakup; format(string, sizeof(string), "you sold %d crop worth %d in the truck %d harvest", zakup, FarmInfo[f][frandoms2]*zakup, MaterialsInTheWagon[tmpcar]); SCM(playerid, COLOR_GREEN,string); } }
         }
@@ -6438,13 +6438,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0:SPD(playerid, 10056, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Buying Virts{00BFFF}•", "{FFFFFF}100 k - {FF0000}10 coins\n{FFFFFF}500 k - {FF0000}30 coins\n{FFFFFF}1 kk - {FF0000}50 coins\n{FFFFFF}3 kk - {FF0000}100 coins\n{FFFFFF}5 kk - {FF0000}150 coins\n{FFFFFF}10 kk - {FF0000}250 coins\n{FFFFFF}20 kk - {FF0000}400 coins\n{FFFFFF}50 kk - {FF0000}800 coins", "Choose", "Back");
- 			case 1:SPD(playerid, 10058, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Purchase V.I.P{00BFFF}•", "{FFFFFF}BRONZE - {FF0000}50 coins\n{FFFFFF}SILVER - {FF0000}150 coins\n{FFFFFF}GOLD - {FF0000}300 coins", "Choose", "Back");
-	 		case 2:SPD(playerid, 10059, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Purchasing personal transport{00BFFF}•", "{FF0000}Cars\n{FF0000}Motorcycles", "Choose", "Back");
-	 		case 3:SPD(playerid, 10060, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Purchasing licenses{00BFFF}•", "{FFFFFF}Car License - {FF0000}30 coins\n{FFFFFF}Motorcycle license - {FF0000}30 coins\n{FFFFFF}Boat license - {FF0000}30 coins\n{FFFFFF}Air Transport License - {FF0000}30 coins\n{FFFFFF}Weapon License - {FF0000}30 coins\n{FFFFFF}All Licenses - {FF0000}100 coins", "Choose", "Back");
-	 		case 4:SPD(playerid, 10061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Buying drugs{00BFFF}•", "{FFFFFF}50 Gram - {FF0000}10 coins\n{FFFFFF}100g - {FF0000}15 coins\n{FFFFFF}300 grams - {FF0000}30 coins\n{FFFFFF}500 Gram - {FF0000}40 coins\n{FFFFFF}1.000 Gram - {FF0000}60 coins", "Choose", "Back");
-	 		case 5:SPD(playerid, 10062, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Purchasing materials{00BFFF}•", "{FFFFFF}500 Materials - {FF0000}10 coins\n{FFFFFF}1.000 Materials - {FF0000}15 coins\n{FFFFFF}2.000 Materials - {FF0000}20 coins\n{FFFFFF}5.000 Materials - {FF0000}50 coins\n{FFFFFF}10.000 Materials - {FF0000}70 coins", "Choose", "Back");
-	 		case 6:SPD(playerid, 10063, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Miscellaneous{00BFFF}•", "{FFFFFF}All skills - {FF0000}50 coins\n{FFFFFF}Remove all Varna - {FF0000}100 coins\n{FFFFFF}Remove all Wanted - {FF0000}30 coins", "Choose", "Back"); } }
+ 			case 0:SPD(playerid, 10056, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Buying Virts{00BFFF}вЂў", "{FFFFFF}100 k - {FF0000}10 coins\n{FFFFFF}500 k - {FF0000}30 coins\n{FFFFFF}1 kk - {FF0000}50 coins\n{FFFFFF}3 kk - {FF0000}100 coins\n{FFFFFF}5 kk - {FF0000}150 coins\n{FFFFFF}10 kk - {FF0000}250 coins\n{FFFFFF}20 kk - {FF0000}400 coins\n{FFFFFF}50 kk - {FF0000}800 coins", "Choose", "Back");
+ 			case 1:SPD(playerid, 10058, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Purchase V.I.P{00BFFF}вЂў", "{FFFFFF}BRONZE - {FF0000}50 coins\n{FFFFFF}SILVER - {FF0000}150 coins\n{FFFFFF}GOLD - {FF0000}300 coins", "Choose", "Back");
+	 		case 2:SPD(playerid, 10059, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Purchasing personal transport{00BFFF}вЂў", "{FF0000}Cars\n{FF0000}Motorcycles", "Choose", "Back");
+	 		case 3:SPD(playerid, 10060, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Purchasing licenses{00BFFF}вЂў", "{FFFFFF}Car License - {FF0000}30 coins\n{FFFFFF}Motorcycle license - {FF0000}30 coins\n{FFFFFF}Boat license - {FF0000}30 coins\n{FFFFFF}Air Transport License - {FF0000}30 coins\n{FFFFFF}Weapon License - {FF0000}30 coins\n{FFFFFF}All Licenses - {FF0000}100 coins", "Choose", "Back");
+	 		case 4:SPD(playerid, 10061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Buying drugs{00BFFF}вЂў", "{FFFFFF}50 Gram - {FF0000}10 coins\n{FFFFFF}100g - {FF0000}15 coins\n{FFFFFF}300 grams - {FF0000}30 coins\n{FFFFFF}500 Gram - {FF0000}40 coins\n{FFFFFF}1.000 Gram - {FF0000}60 coins", "Choose", "Back");
+	 		case 5:SPD(playerid, 10062, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Purchasing materials{00BFFF}вЂў", "{FFFFFF}500 Materials - {FF0000}10 coins\n{FFFFFF}1.000 Materials - {FF0000}15 coins\n{FFFFFF}2.000 Materials - {FF0000}20 coins\n{FFFFFF}5.000 Materials - {FF0000}50 coins\n{FFFFFF}10.000 Materials - {FF0000}70 coins", "Choose", "Back");
+	 		case 6:SPD(playerid, 10063, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Miscellaneous{00BFFF}вЂў", "{FFFFFF}All skills - {FF0000}50 coins\n{FFFFFF}Remove all Varna - {FF0000}100 coins\n{FFFFFF}Remove all Wanted - {FF0000}30 coins", "Choose", "Back"); } }
 		}
 		case 10056:
 		{
@@ -6570,23 +6570,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0: SPD(playerid, 10064, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Cars{00BFFF}•", "{FF0000}Two-Door\n{FF0000}Four-Door\n{FF0000}Jeeps", "Choose", "Back");
- 			case 1: SPD(playerid, 10072, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Motorcycles{00BFFF}•", "{FF0000}PCJ-600\n{FF0000}Freeway\n{FF0000}Sanchez\n{FF0000}Quad\n{FF0000}FCR-900\n{FF0000}NRG-500\n{FF0000}BF-400\n{FF0000}Wayfarer", "Choose", "Back"); } }
+ 			case 0: SPD(playerid, 10064, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Cars{00BFFF}вЂў", "{FF0000}Two-Door\n{FF0000}Four-Door\n{FF0000}Jeeps", "Choose", "Back");
+ 			case 1: SPD(playerid, 10072, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Motorcycles{00BFFF}вЂў", "{FF0000}PCJ-600\n{FF0000}Freeway\n{FF0000}Sanchez\n{FF0000}Quad\n{FF0000}FCR-900\n{FF0000}NRG-500\n{FF0000}BF-400\n{FF0000}Wayfarer", "Choose", "Back"); } }
 		}
 		case 10064:
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0: SPD(playerid, 10065, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Two-virgins{00BFFF}•", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
- 			case 1: SPD(playerid, 10068, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Four-door{00BFFF}•", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
- 			case 2: SPD(playerid, 10071, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Jeeps{00BFFF}•", "{FF0000}Landstalker\n{FF0000}Bobcat\n{FF0000}Patriot\n{FF0000}Rancher\n{FF0000}Sandking\n{FF0000}Mesa\n{FF0000}Sadler\n{FF0000}Yosemite\n{FF0000}Huntley", "Choose", "Back"); } }
+ 			case 0: SPD(playerid, 10065, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Two-virgins{00BFFF}вЂў", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
+ 			case 1: SPD(playerid, 10068, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Four-door{00BFFF}вЂў", "{FFFFFF}Sports - {FF0000}200 coins\n{FFFFFF}Regular - {FF0000}100 coins", "Choose", "Back");
+ 			case 2: SPD(playerid, 10071, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Jeeps{00BFFF}вЂў", "{FF0000}Landstalker\n{FF0000}Bobcat\n{FF0000}Patriot\n{FF0000}Rancher\n{FF0000}Sandking\n{FF0000}Mesa\n{FF0000}Sadler\n{FF0000}Yosemite\n{FF0000}Huntley", "Choose", "Back"); } }
 		}
 		case 10065:
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0: SPD(playerid, 10066, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Sports{00BFFF}•", "{FF0000}Buffalo\n{FF0000}Infernus\n{FF0000}Cheetah\n{FF0000}Banshee\n{FF0000}Turismo\n{FF0000}ZR-350\n{FF0000}Comet\n{FF0000}Blista\n{FF0000}Super-GT\n{FF0000}Bullet\n{FF0000}Uranus\n{FF0000}Jester\n{FF0000}Elegy\n{FF0000}Flash\n{FF0000}Euros\n{FF0000}Club\n{FF0000}Alpha\n{FF0000}Pheonix", "Choose", "Back");
- 			case 1: SPD(playerid, 10067, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Regular{00BFFF}•", "{FF0000}Bravura\n{FF0000}Manana\n{FF0000}Voodoo\n{FF0000}Esperanto\n{FF0000}Previon\n{FF0000}Stallion\n{FF0000}Hermes\n{FF0000}Sabre\n{FF0000}Virgo\n{FF0000}Majestic\n{FF0000}Buccaneer\n{FF0000}Fortune\n{FF0000}Cadrona\n{FF0000}Remington\n{FF0000}Clover\n{FF0000}Hustler\n{FF0000}Tampa\n{FF0000}Windsor\n{FF0000}Broadway\n{FF0000}Tornado\n{FF0000}Picador", "Choose", "Back"); } }
+ 			case 0: SPD(playerid, 10066, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Sports{00BFFF}вЂў", "{FF0000}Buffalo\n{FF0000}Infernus\n{FF0000}Cheetah\n{FF0000}Banshee\n{FF0000}Turismo\n{FF0000}ZR-350\n{FF0000}Comet\n{FF0000}Blista\n{FF0000}Super-GT\n{FF0000}Bullet\n{FF0000}Uranus\n{FF0000}Jester\n{FF0000}Elegy\n{FF0000}Flash\n{FF0000}Euros\n{FF0000}Club\n{FF0000}Alpha\n{FF0000}Pheonix", "Choose", "Back");
+ 			case 1: SPD(playerid, 10067, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Regular{00BFFF}вЂў", "{FF0000}Bravura\n{FF0000}Manana\n{FF0000}Voodoo\n{FF0000}Esperanto\n{FF0000}Previon\n{FF0000}Stallion\n{FF0000}Hermes\n{FF0000}Sabre\n{FF0000}Virgo\n{FF0000}Majestic\n{FF0000}Buccaneer\n{FF0000}Fortune\n{FF0000}Cadrona\n{FF0000}Remington\n{FF0000}Clover\n{FF0000}Hustler\n{FF0000}Tampa\n{FF0000}Windsor\n{FF0000}Broadway\n{FF0000}Tornado\n{FF0000}Picador", "Choose", "Back"); } }
 		}
 		case 10066:
 		{
@@ -6643,10 +6643,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			switch(listitem) {
- 			case 0:SPD(playerid, 10069, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Sports{00BFFF}•", "{FF0000}Sultan", "Choose", "Back");
+ 			case 0:SPD(playerid, 10069, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Sports{00BFFF}вЂў", "{FF0000}Sultan", "Choose", "Back");
  			case 1: {
   			new listitems[] = "{FF0000}Prenniel\n{FF0000}Sentinel\n{FF0000}Washington\n{FF0000}Premier\n{FF0000}Romero\n{FF0000}Admiral\n{FF0000}Solair\n{FF0000}Glendale\n{FF0000}Oceanic\n{FF0000}Regina\n{FF0000}Greenwood\n{FF0000}Elegant\n{FF0000}Nebula\n{FF0000}Willard\n{FF0000}Feltzer\n{FF0000}Blade\n{FF0000}Vincent\n{FF0000}Intruder\n{FF0000}Primo\n{FF0000}Sunrise\n{FF0000}Merit\n{FF0000}Stratum\n{FF0000}Tahoma\n{FF0000}Savanna\n{FF0000}Stafford\n{FF0000}Emperor";
-   			SPD(playerid, 10070, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Regular{00BFFF}•", listitems, "Choose", "Cancel"); } } }
+   			SPD(playerid, 10070, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Regular{00BFFF}вЂў", listitems, "Choose", "Cancel"); } } }
 		}
 		case 10069:
 		{
@@ -6723,19 +6723,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
    			case 0: {
 		    if(PlayerInfo[playerid][pCash] < 20000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid,8001,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Color selection 1{00BFFF}•", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
+		    SPD(playerid,8001,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Color selection 1{00BFFF}вЂў", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
 		    case 1: {
       		if(PlayerInfo[playerid][pCash] < 30000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
       		new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
 			switch(Model) {
-			case 575,576,534,535,536,483,558,559,560,561,562,565,567: SPD(playerid, 8006, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Painting work{00BFFF}•", "Paint job №1\nPaint job №2\nPaint job №3", "Choose", "Back");
+			case 575,576,534,535,536,483,558,559,560,561,562,565,567: SPD(playerid, 8006, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Painting work{00BFFF}вЂў", "Paint job в„–1\nPaint job в„–2\nPaint job в„–3", "Choose", "Back");
 			default: SCM(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
    			case 2: {
    			if(PlayerInfo[playerid][pCash] == 50000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SCM(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8004, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Nitro{00BFFF}•", "Nitro 2's (20.000)\nNitro 5's (50.000)\nNitro 10's(100.000)", "Choose", "Back"); } }
+	        default: SPD(playerid, 8004, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Nitro{00BFFF}вЂў", "Nitro 2's (20.000)\nNitro 5's (50.000)\nNitro 10's(100.000)", "Choose", "Back"); } }
    			case 3: {
    			if(PlayerInfo[playerid][pCash] < 200000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
@@ -6747,39 +6747,39 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SCM(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8007, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Wheels{00BFFF}•", "Shadow\nMega\nRimshine\nWiers\nClassic\nTwist\nCutter\nSwitch\nGrove\nImport\nDollar\nTrance\nAtomic", "Choose", "Back"); } }
+	        default: SPD(playerid, 8007, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Wheels{00BFFF}вЂў", "Shadow\nMega\nRimshine\nWiers\nClassic\nTwist\nCutter\nSwitch\nGrove\nImport\nDollar\nTrance\nAtomic", "Choose", "Back"); } }
    			case 5: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SCM(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back"); } }
+	        default: SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back"); } }
    			case 6: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SCM(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Spoilers{00BFFF}•", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back"); } }
+	        default: SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Spoilers{00BFFF}вЂў", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back"); } }
 			case 7: {
    			if(PlayerInfo[playerid][pCash] < 30000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
-			case 401,478,518,529,549,600,426,489,492,516,551,496,550,587,589: SPD(playerid, 8057, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Hoods{00BFFF}•", "Hood №1\nHood №2\nHood №3\nHood №4", "Choose", "Back");
+			case 401,478,518,529,549,600,426,489,492,516,551,496,550,587,589: SPD(playerid, 8057, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Hoods{00BFFF}вЂў", "Hood в„–1\nHood в„–2\nHood в„–3\nHood в„–4", "Choose", "Back");
 			default: SCM(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 8: {
    			if(PlayerInfo[playerid][pCash] < 20000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
-			case 400,401,404,436,478,518,600,410,422,439,458,489,540,546,585,496,500,550,589,603: SPD(playerid, 8058, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Headlights{00BFFF}•", "Round\nSquare", "Choose", "Back");
+			case 400,401,404,436,478,518,600,410,422,439,458,489,540,546,585,496,500,550,589,603: SPD(playerid, 8058, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Headlights{00BFFF}вЂў", "Round\nSquare", "Choose", "Back");
 			default: SCM(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 9: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
 			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SCM(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Silencers{00BFFF}•", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back"); } }
+	        default: SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Silencers{00BFFF}вЂў", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back"); } }
 			case 10: {
    			new Car = GetPlayerVehicleID(playerid), Model = GetVehicleModel(Car);
    			switch(Model) {
 	        case 461,463,468,471,521,522,581,586: return SCM(playerid, COLOR_GREY, "You have a Motorcycle!");
-	        default: SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Air intakes{00BFFF}•", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back"); } }
+	        default: SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Air intakes{00BFFF}вЂў", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back"); } }
 			case 11: {
 			if(PlayerInfo[playerid][pCash] < 500000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
 			if(PlayerInfo[playerid][pProcents] > 99) return SCM(playerid, COLOR_GREY, "Your Engine does not need repair!");
@@ -6795,7 +6795,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    {
 	        if(response) {
 	        PlayerInfo[playerid][pColor] = strval(inputtext);
-	 		SPD(playerid,8002,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Color selection 2{00BFFF}•", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
+	 		SPD(playerid,8002,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Color selection 2{00BFFF}вЂў", "{FFFFFF}Enter ID colors for your car\n{FFFFFF}ID:", "Further", "Cancel"); }
 		}
 		case 8002:
 	    {
@@ -6818,7 +6818,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 2: {
    			if(PlayerInfo[playerid][pCash] < 100000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
    			PlayerInfo[playerid][pCash] -= 100000, AddVehicleComponent(vehicleid,1010), PlayerInfo[playerid][pNitro] = Nitro[playerid] = 1010, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Nitro installed!"); } } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8006:
 		{
@@ -6828,7 +6828,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			case 0: PlayerInfo[playerid][pCash] -= 30000, ChangeVehiclePaintjob(vehicleid,listitem=0), PlayerInfo[playerid][pPaintJob] = PaintJob[playerid] = 0, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Stickers installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, ChangeVehiclePaintjob(vehicleid,listitem=1), PlayerInfo[playerid][pPaintJob] = PaintJob[playerid] = 1, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Stickers installed!");
 	 		case 2: PlayerInfo[playerid][pCash] -= 30000, ChangeVehiclePaintjob(vehicleid,listitem=2), PlayerInfo[playerid][pPaintJob] = PaintJob[playerid] = 2, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Stickers installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8007:
 		{
@@ -6848,7 +6848,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 10: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1083), PlayerInfo[playerid][pKolesa] = Kolesa[playerid] = 1083, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Wheels Installed!");
 	 		case 11: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1084), PlayerInfo[playerid][pKolesa] = Kolesa[playerid] = 1084, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Wheels Installed!");
 	 		case 12: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1085), PlayerInfo[playerid][pKolesa] = Kolesa[playerid] = 1085, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Wheels Installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8008:
 		{
@@ -6856,38 +6856,38 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
    	 		if(PlayerInfo[playerid][pCar] != 576) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
- 			SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Tornado){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+ 			SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Tornado){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCar] != 567) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Savanna){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Savanna){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCar] != 534) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Remington){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Remington){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 3: {
    			if(PlayerInfo[playerid][pCar] != 536) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Blade){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Blade){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 4: {
    			if(PlayerInfo[playerid][pCar] != 575) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-   			SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Broadway){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
+   			SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Broadway){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back"); }
 			case 5: {
   			if(PlayerInfo[playerid][pCar] != 559) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Jester){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Jester){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 6: {
   			if(PlayerInfo[playerid][pCar] != 562) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Elegy){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Elegy){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 7: {
   			if(PlayerInfo[playerid][pCar] != 560) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Sultan){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Sultan){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 8: {
   			if(PlayerInfo[playerid][pCar] != 558) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Uranus){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Uranus){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 9: {
   			if(PlayerInfo[playerid][pCar] != 561) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Stratum){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
+  			SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Stratum){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); }
 			case 10: {
   			if(PlayerInfo[playerid][pCar] != 565) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-  			SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Flash){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); } } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+  			SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Flash){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back"); } } }
+			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8009:
 		{
@@ -6895,11 +6895,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8010, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Tornado){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); }
+		    SPD(playerid, 8010, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Tornado){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8011, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Tornado){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			SPD(playerid, 8011, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Tornado){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8010:
 		{
@@ -6908,7 +6908,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1190), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1190, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1191), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1191, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Tornado){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Tornado){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8011:
 		{
@@ -6917,7 +6917,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
    			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1193), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1193, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
  			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1192), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1192, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Tornado){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8009, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Tornado){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8012:
 		{
@@ -6925,11 +6925,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8013, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Savanna){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); }
+		    SPD(playerid, 8013, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Savanna){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8014, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Savanna){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			SPD(playerid, 8014, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Savanna){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8015:
 		{
@@ -6937,11 +6937,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8016, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Remington){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); }
+		    SPD(playerid, 8016, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Remington){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8017, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Remington){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			SPD(playerid, 8017, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Remington){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8018:
 		{
@@ -6949,11 +6949,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
  			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8019, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Blade){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); }
+    		SPD(playerid, 8019, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Blade){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8020, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Blade){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    SPD(playerid, 8020, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Blade){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8021:
 		{
@@ -6961,11 +6961,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8022, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Broadway){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); }
+		    SPD(playerid, 8022, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Broadway){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8023, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Broadway){00BFFF}•", "Slamin\nCrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    SPD(playerid, 8023, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Broadway){00BFFF}вЂў", "Slamin\nCrome", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8024:
 		{
@@ -6973,14 +6973,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8025, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Jester){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8025, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Jester){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8026, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Jester){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8026, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Jester){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8046, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Side Skirt (Jester){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    SPD(playerid, 8046, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Side Skirt (Jester){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8027:
 		{
@@ -6988,14 +6988,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8028, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Elegy){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8028, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Elegy){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8029, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Elegy){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8029, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Elegy){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8043, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Side Skirt (Elegy){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			SPD(playerid, 8043, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Side Skirt (Elegy){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8030:
 		{
@@ -7003,14 +7003,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8031, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Sultan){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8031, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Sultan){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8032, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Sultan){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8032, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Sultan){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8042, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Side Skirt (Sultan){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    SPD(playerid, 8042, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Side Skirt (Sultan){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8033:
 		{
@@ -7018,14 +7018,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8034, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Uranus){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+    		SPD(playerid, 8034, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Uranus){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
   			if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8035, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Uranus){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+   			SPD(playerid, 8035, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Uranus){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8047, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Side Skirt (Uranus){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+		    SPD(playerid, 8047, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Side Skirt (Uranus){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8036:
 		{
@@ -7033,14 +7033,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-		    SPD(playerid, 8037, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Stratum){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8037, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Stratum){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
    			if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8038, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Stratum){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+   			SPD(playerid, 8038, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Stratum){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
    			if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-   			SPD(playerid, 8045, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Side Skirt (Stratum){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+   			SPD(playerid, 8045, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Side Skirt (Stratum){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8039:
 		{
@@ -7048,14 +7048,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8040, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Front bumper (Flash){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+    		SPD(playerid, 8040, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Front bumper (Flash){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
     		if(PlayerInfo[playerid][pCash] < 60000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8041, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rear Bumper (Flash){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+    		SPD(playerid, 8041, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rear Bumper (Flash){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
     		if(PlayerInfo[playerid][pCash] < 40000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-    		SPD(playerid, 8044, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Side Skirt (Flash){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper{00BFFF}•", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
+    		SPD(playerid, 8044, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Side Skirt (Flash){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8008, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper{00BFFF}вЂў", "Tornado\nSavanna\nRemington\nBlade\nBroadway\nJester\nElegy\nSultan\nUranus\nStratum\nFlash", "Choose", "Back");
 		}
 		case 8013:
 		{
@@ -7064,7 +7064,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1188), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1188, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1189), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1189, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Savanna){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Savanna){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8014:
 		{
@@ -7073,7 +7073,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1186), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1186, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1187), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1187, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Savanna){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8012, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Savanna){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8016:
 		{
@@ -7082,7 +7082,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1185), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1185, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1179), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1179, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Remington){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Remington){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8017:
 		{
@@ -7091,7 +7091,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1178), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1178, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1180), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1180, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Remington){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8015, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Remington){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8019:
 		{
@@ -7100,7 +7100,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1181), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1181, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1182), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1182, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Blade){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Blade){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8020:
 		{
@@ -7109,7 +7109,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1183), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1183, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1184), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1184, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Blade){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8018, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Blade){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8022:
 		{
@@ -7118,7 +7118,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1174), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1174, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1175), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1175, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Broadway){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Broadway){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8023:
 		{
@@ -7127,7 +7127,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1176), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1176, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1177), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1177, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Broadway){00BFFF}•", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
+			else SPD(playerid, 8021, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Broadway){00BFFF}вЂў", "Front bumper (40.000)\nRear Bumper (40.000)", "Choose", "Back");
 		}
 		case 8025:
 		{
@@ -7136,7 +7136,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1173), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1173, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1160), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1160, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Jester){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Jester){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8026:
 		{
@@ -7145,7 +7145,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1161), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1161, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1159), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1159, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Jester){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Jester){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8028:
 		{
@@ -7154,7 +7154,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1172), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1172, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1171), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1171, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Elegy){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Elegy){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8029:
 		{
@@ -7163,7 +7163,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1148), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1148, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
  			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1149), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1149, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Elegy){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Elegy){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8031:
 		{
@@ -7172,7 +7172,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 		 	case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1170), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1170, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1169), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1169, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Sultan){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Sultan){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8032:
 		{
@@ -7181,7 +7181,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1140), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1140, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1141), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1141, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Sultan){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Sultan){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8034:
 		{
@@ -7190,7 +7190,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1165), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1165, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1166), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1166, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Uranus){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Uranus){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8035:
 		{
@@ -7199,7 +7199,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1167), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1167, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1168), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1168, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Uranus){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Uranus){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8037:
 		{
@@ -7208,7 +7208,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1157), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1157, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1155), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1155, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Stratum){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Stratum){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8038:
 		{
@@ -7217,7 +7217,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1156), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1156, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1154), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1154, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Stratum){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Stratum){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8040:
 		{
@@ -7226,7 +7226,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1152), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1152, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1153), PlayerInfo[playerid][pBumper1] = Bumper[playerid] = 1153, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Front Bumper Installed!"); } }
-			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Flash){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Flash){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8041:
 		{
@@ -7235,7 +7235,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1151), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1151, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 60000, AddVehicleComponent(vehicleid,1150), PlayerInfo[playerid][pBumper2] = Bumper2[playerid] = 1150, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Rear Bumper Installed!"); } }
-			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Flash){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Flash){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8042:
 		{
@@ -7244,7 +7244,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1030), AddVehicleComponent(vehicleid,1031), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1030, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1031, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1026), AddVehicleComponent(vehicleid,1027), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1026, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1027, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Sultan){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8030, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Sultan){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8043:
 		{
@@ -7253,7 +7253,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1039), AddVehicleComponent(vehicleid,1041), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1039, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1041, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 			case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1036), AddVehicleComponent(vehicleid,1040), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1036, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1040, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Elegy){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8027, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Elegy){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8044:
 		{
@@ -7262,7 +7262,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1048), AddVehicleComponent(vehicleid,1052), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1048, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1052, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1047), AddVehicleComponent(vehicleid,1051), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1047, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1051, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Flash){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8039, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Flash){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8045:
 		{
@@ -7271,7 +7271,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1057), AddVehicleComponent(vehicleid,1063), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1057, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1063, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1056), AddVehicleComponent(vehicleid,1062), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1056, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1062, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Stratum){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8036, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Stratum){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8046:
 		{
@@ -7280,7 +7280,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1070), AddVehicleComponent(vehicleid,1072), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1070, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1072, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1069), AddVehicleComponent(vehicleid,1071), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1069, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1071, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Jester){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8024, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Jester){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8047:
 		{
@@ -7289,7 +7289,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1093), AddVehicleComponent(vehicleid,1095), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1093, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1095, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 40000, AddVehicleComponent(vehicleid,1094), AddVehicleComponent(vehicleid,1090), PlayerInfo[playerid][pUbka] = Ubka[playerid] = 1094, PlayerInfo[playerid][pUbka2] = Ubka2[playerid] = 1090, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Side Skirt Installed!"); } }
-			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Bumper (Uranus){00BFFF}•", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
+			else SPD(playerid, 8033, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Bumper (Uranus){00BFFF}вЂў", "Front bumper (60.000)\nRear Bumper (60.000)\nSide Skirt (40.000)", "Choose", "Back");
 		}
 		case 8048:
   		{
@@ -7298,11 +7298,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  		    case 0: {
             if(PlayerInfo[playerid][pCash] < 30000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
 			switch(Model) {
-			case 401,404,436,518,529,542,543,549,405,410,418,421,426,439,458,489,491,492,527,540,546,547,551,580,585,496,550,561,565,579,587,589,603,559,560: SPD(playerid, 8049, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Regular Spoilers{00BFFF}•", "Spoiler №1\nSpoiler №2\nSpoiler №3\nSpoiler №4\nSpoiler №5\nSpoiler №6\nSpoiler №7\nSpoiler №8", "Choose", "Back");
+			case 401,404,436,518,529,542,543,549,405,410,418,421,426,439,458,489,491,492,527,540,546,547,551,580,585,496,550,561,565,579,587,589,603,559,560: SPD(playerid, 8049, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Regular Spoilers{00BFFF}вЂў", "Spoiler в„–1\nSpoiler в„–2\nSpoiler в„–3\nSpoiler в„–4\nSpoiler в„–5\nSpoiler в„–6\nSpoiler в„–7\nSpoiler в„–8", "Choose", "Back");
 			default: SCM(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 1: {
 			if(PlayerInfo[playerid][pCash] < 50000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-			SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back"); } }
+			SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back"); } }
 		}
 		case 8049:
 		{
@@ -7317,7 +7317,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 5: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1014), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1014, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 6: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1015), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1015, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 7: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1023), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1023, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Spoilers{00BFFF}•", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
+			else SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Spoilers{00BFFF}вЂў", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
 		}
 		case 8050:
 		{
@@ -7325,23 +7325,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: {
 		    if(PlayerInfo[playerid][pCar] != 565) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8051, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoiler (Flash){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8051, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoiler (Flash){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
 		    if(PlayerInfo[playerid][pCar] != 561) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8052, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoiler (Stratum){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8052, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoiler (Stratum){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
 		    if(PlayerInfo[playerid][pCar] != 560) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8053, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoiler (Sultan){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8053, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoiler (Sultan){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 3: {
 		    if(PlayerInfo[playerid][pCar] != 562) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8054, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoiler (Elegy){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8054, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoiler (Elegy){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 4: {
 		    if(PlayerInfo[playerid][pCar] != 559) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8055, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoiler (Jester){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8055, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoiler (Jester){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 5: {
 		    if(PlayerInfo[playerid][pCar] != 558) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8056, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoiler (Uranus){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Spoilers{00BFFF}•", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
+		    SPD(playerid, 8056, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoiler (Uranus){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8048, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Spoilers{00BFFF}вЂў", "Regular (30.000)\nSpecialist. Spoilers (50.000)", "Choose", "Back");
 		}
 		case 8051:
 		{
@@ -7350,7 +7350,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 			case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1050), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1050, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1049), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1049, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8052:
 		{
@@ -7359,7 +7359,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1060), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1060, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1058), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1058, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8053:
 		{
@@ -7368,7 +7368,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				switch(listitem) {
 			 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1139), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1139, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 			 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1138), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1138, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8054:
 		{
@@ -7377,7 +7377,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1146), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1146, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1147), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1147, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8055:
 		{
@@ -7386,7 +7386,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1158), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1158, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1162), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1162, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8056:
 		{
@@ -7395,7 +7395,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1163), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1163, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 50000, AddVehicleComponent(vehicleid,1164), PlayerInfo[playerid][pSpoiler] = Spoiler[playerid] = 1164, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Spoiler Installed!"); } }
-			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Spoilers{00BFFF}•", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8050, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Spoilers{00BFFF}вЂў", "Flash\nStratum\nSultan\nElegy\nJester\nUranus", "Choose", "Back");
 		}
 		case 8057:
 		{
@@ -7406,7 +7406,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1005), PlayerInfo[playerid][pKapot] = Kapot[playerid] = 1005, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Hood Installed!");
 	 		case 2: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1011), PlayerInfo[playerid][pKapot] = Kapot[playerid] = 1011, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Hood Installed!");
 	 		case 3: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1012), PlayerInfo[playerid][pKapot] = Kapot[playerid] = 1012, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Hood Installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8058:
 		{
@@ -7415,7 +7415,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1013), PlayerInfo[playerid][pFar] = Far[playerid] = 1013, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Headlights Installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1024), PlayerInfo[playerid][pFar] = Far[playerid] = 1024, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Headlights Installed!"); } }
-			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+			else SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 		}
 		case 8059:
   		{
@@ -7424,11 +7424,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
      	    case 0: {
             if(PlayerInfo[playerid][pCash] < 20000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
 			switch(Model) {
-			case 400,401,404,419,436,474,478,479,518,529,542,545,549,575,576,600,405,410,414,418,421,422,426,439,440,445,491,492,498,499,504,507,508,516,517,526,527,536,540,546,547,551,566,580,585,609,483,567,409,477,480,496,500,533,535,550,554,579,587,589,603,415,506: SPD(playerid, 8060, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Conventional Silencers{00BFFF}•", "Muffler №1\nMuffler №2\nMuffler №3\nMuffler №4\nMuffler №5", "Choose", "Back");
+			case 400,401,404,419,436,474,478,479,518,529,542,545,549,575,576,600,405,410,414,418,421,422,426,439,440,445,491,492,498,499,504,507,508,516,517,526,527,536,540,546,547,551,566,580,585,609,483,567,409,477,480,496,500,533,535,550,554,579,587,589,603,415,506: SPD(playerid, 8060, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Conventional Silencers{00BFFF}вЂў", "Muffler в„–1\nMuffler в„–2\nMuffler в„–3\nMuffler в„–4\nMuffler в„–5", "Choose", "Back");
 			default: SCM(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 1: {
 			if(PlayerInfo[playerid][pCash] < 30000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-			SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back"); } }
+			SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back"); } }
 		}
 		case 8060:
 		{
@@ -7440,7 +7440,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	 		case 2: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1020), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1020, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 3: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1021), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1021, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 4: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1022), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1022, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Silencers{00BFFF}•", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
+			else SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Silencers{00BFFF}вЂў", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
 		}
 		case 8061:
 		{
@@ -7448,35 +7448,35 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: {
 		    if(PlayerInfo[playerid][pCar] != 562) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8062, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Elegy){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8062, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Elegy){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
 		    if(PlayerInfo[playerid][pCar] != 575) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8063, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Broadway){00BFFF}•", "Slamin\nChrome", "Choose", "Back"); }
+		    SPD(playerid, 8063, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Broadway){00BFFF}вЂў", "Slamin\nChrome", "Choose", "Back"); }
 			case 2: {
 		    if(PlayerInfo[playerid][pCar] != 565) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8064, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Flash){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8064, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Flash){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 3: {
 		    if(PlayerInfo[playerid][pCar] != 561) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8065, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Stratum){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8065, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Stratum){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 4: {
 		    if(PlayerInfo[playerid][pCar] != 559) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8066, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Jester){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8066, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Jester){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 5: {
 		    if(PlayerInfo[playerid][pCar] != 558) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8067, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Uranus){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8067, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Uranus){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 6: {
 		    if(PlayerInfo[playerid][pCar] != 536) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8068, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Blade){00BFFF}•", "Slamin\nChrome", "Choose", "Back"); }
+		    SPD(playerid, 8068, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Blade){00BFFF}вЂў", "Slamin\nChrome", "Choose", "Back"); }
 			case 7: {
 		    if(PlayerInfo[playerid][pCar] != 534) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8069, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Remington){00BFFF}•", "Slamin\nChrome", "Choose", "Back"); }
+		    SPD(playerid, 8069, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Remington){00BFFF}вЂў", "Slamin\nChrome", "Choose", "Back"); }
 			case 8: {
 		    if(PlayerInfo[playerid][pCar] != 567) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8070, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Savanna){00BFFF}•", "Slamin\nChrome", "Choose", "Back"); }
+		    SPD(playerid, 8070, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Savanna){00BFFF}вЂў", "Slamin\nChrome", "Choose", "Back"); }
 			case 9: {
 		    if(PlayerInfo[playerid][pCar] != 576) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8071, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers (Tornado){00BFFF}•", "Slamin\nChrome", "Choose", "Back"); } } }
-			else SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Silencers{00BFFF}•", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
+		    SPD(playerid, 8071, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers (Tornado){00BFFF}вЂў", "Slamin\nChrome", "Choose", "Back"); } } }
+			else SPD(playerid, 8059, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Silencers{00BFFF}вЂў", "Regular (20.000)\nSpecialist. Silencers (30.000)", "Choose", "Back");
 		}
 		case 8062:
 		{
@@ -7485,7 +7485,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1037), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1037, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1034), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1034, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8063:
 		{
@@ -7494,7 +7494,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1043), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1043, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1044), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1044, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8064:
 		{
@@ -7503,7 +7503,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1045), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1045, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1046), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1046, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8065:
 		{
@@ -7512,7 +7512,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1059), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1059, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1064), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1064, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8066:
 		{
@@ -7521,7 +7521,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1066), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1066, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1065), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1065, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8067:
 		{
@@ -7530,7 +7530,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1089), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1089, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1092), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1092, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8068:
 		{
@@ -7539,7 +7539,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1105), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1105, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1104), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1104, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8069:
 		{
@@ -7548,7 +7548,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1127), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1127, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1126), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1126, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8070:
 		{
@@ -7557,7 +7557,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1132), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1132, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1129), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1129, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8071:
 		{
@@ -7566,7 +7566,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1135), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1135, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1136), PlayerInfo[playerid][pGluh] = Gluh[playerid] = 1136, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}Muffler installed!"); } }
-			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Silencers{00BFFF}•", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
+			else SPD(playerid, 8061, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Silencers{00BFFF}вЂў", "Elegy\nBroadway\nFlash\nStratum\nJester\nUranus\nBlade\nRemington\nSavanna\nTornado", "Choose", "Back");
 		}
 		case 8072:
   		{
@@ -7575,11 +7575,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
      	    case 0: {
             if(PlayerInfo[playerid][pCash] < 20000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
 			switch(Model) {
-			case 401,436,518,529,543,600,410,418,426,489,492,527,540,580,585,477,496,550,558,561,565,579,589,603,559,560,562: SPD(playerid, 8073, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Conventional Air Intakes{00BFFF}•", "Air intake №1\nAir intake №2", "Choose", "Back");
+			case 401,436,518,529,543,600,410,418,426,489,492,527,540,580,585,477,496,550,558,561,565,579,589,603,559,560,562: SPD(playerid, 8073, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Conventional Air Intakes{00BFFF}вЂў", "Air intake в„–1\nAir intake в„–2", "Choose", "Back");
 			default: SCM(playerid,COLOR_GREY, "Your Car Model does not support this Tuning!"); } }
 			case 1: {
 			if(PlayerInfo[playerid][pCash] < 30000) return SCM(playerid, COLOR_GREY, "You don't have that much money!");
-			SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back"); } }
+			SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back"); } }
 		}
 		case 8073:
 		{
@@ -7588,7 +7588,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
  			case 0: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1006), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1006, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 20000, AddVehicleComponent(vehicleid,1007), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1007, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Air intakes{00BFFF}•", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
+			else SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Air intakes{00BFFF}вЂў", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
 		}
 		case 8074:
 		{
@@ -7596,23 +7596,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: {
 		    if(PlayerInfo[playerid][pCar] != 560) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8075, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes (Sultan){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8075, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes (Sultan){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 1: {
 		    if(PlayerInfo[playerid][pCar] != 562) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8076, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes (Elegy){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8076, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes (Elegy){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 2: {
 		    if(PlayerInfo[playerid][pCar] != 565) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8077, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes (Flash){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8077, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes (Flash){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 3: {
 		    if(PlayerInfo[playerid][pCar] != 561) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8078, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes (Stratum){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8078, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes (Stratum){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 4: {
 		    if(PlayerInfo[playerid][pCar] != 559) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8079, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes (Jester){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); }
+		    SPD(playerid, 8079, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes (Jester){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); }
 			case 5: {
 		    if(PlayerInfo[playerid][pCar] != 558) return SCM(playerid, COLOR_GREY, "You don't have such a car!");
-		    SPD(playerid, 8080, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes (Uranus){00BFFF}•", "X-Flow\nAlien", "Choose", "Back"); } } }
-			else SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Air intakes{00BFFF}•", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
+		    SPD(playerid, 8080, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes (Uranus){00BFFF}вЂў", "X-Flow\nAlien", "Choose", "Back"); } } }
+			else SPD(playerid, 8072, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Air intakes{00BFFF}вЂў", "Regular (20.000)\nSpecialist. Air intakes (30.000)", "Choose", "Back");
 		}
 		case 8075:
 		{
@@ -7621,7 +7621,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1033), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1033, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1032), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1032, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8076:
 		{
@@ -7630,7 +7630,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1035), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1035, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1038), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1038, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8077:
 		{
@@ -7639,7 +7639,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1053), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1053, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1054), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1054, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8078:
 		{
@@ -7648,7 +7648,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1061), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1061, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1055), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1055, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8079:
 		{
@@ -7657,7 +7657,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1068), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1068, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1067), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1067, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 8080:
 		{
@@ -7666,7 +7666,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			switch(listitem) {
 	 		case 0: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1091), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1091, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!");
 	 		case 1: PlayerInfo[playerid][pCash] -= 30000, AddVehicleComponent(vehicleid,1088), PlayerInfo[playerid][pVozduh] = Vozduh[playerid] = 1088, SCM(playerid, COLOR_GREEN, "[Auto Mechanic]: {FFFFFF}The air intake is installed!"); } }
-			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Specialist. Air intakes{00BFFF}•", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
+			else SPD(playerid, 8074, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Specialist. Air intakes{00BFFF}вЂў", "Sultan\nElegy\nFlash\nStratum\nJester\nUranus", "Choose", "Back");
 		}
 		case 7777:
 		{
@@ -7674,7 +7674,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				switch(listitem)
 				{
-			 		case 0: SPD(playerid, 7701, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Faction Bases{00BFFF}•", "Police\nFBI\nArmy\nDoctors\nMafia\nCity Hall\nStreet Racers\nNews\nDriving school\nGangs\nSons of Silcense MC\nS.W.A.T.\nHitmans", "Choose", "Back");
+			 		case 0: SPD(playerid, 7701, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Faction Bases{00BFFF}вЂў", "Police\nFBI\nArmy\nDoctors\nMafia\nCity Hall\nStreet Racers\nNews\nDriving school\nGangs\nSons of Silcense MC\nS.W.A.T.\nHitmans", "Choose", "Back");
 					case 1:
 					{
 		            	if(GetPlayerState(playerid) == 2)
@@ -7690,8 +7690,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						}
 						SCM(playerid, COLOR_BLUE, "You have been teleported");
 					}
-		 			case 2: SPD(playerid, 7703, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Car showrooms{00BFFF}•", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back");
-			 		case 3: SPD(playerid, 7704, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rest{00BFFF}•", "Auto repair shop\nRace\nPaint Ball\nLoaders\nFarm\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
+		 			case 2: SPD(playerid, 7703, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Car showrooms{00BFFF}вЂў", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back");
+			 		case 3: SPD(playerid, 7704, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Rest{00BFFF}вЂў", "Auto repair shop\nRace\nPaint Ball\nLoaders\nFarm\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
 			 	}
 		 	}
 		 	else OnPlayerCommandText(playerid,"/apanel");
@@ -7701,14 +7701,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		    GPN
 			if(response) {
 			switch(listitem) {
-	 		case 0: SPD(playerid, 7705, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Police{00BFFF}•", "LSPD\nSFPD\nLVPD", "Choose", "Back");
+	 		case 0: SPD(playerid, 7705, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Police{00BFFF}вЂў", "LSPD\nSFPD\nLVPD", "Choose", "Back");
 	 		case 1: {
             if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, -2450.0598,503.2686,30.0861); SetPlayerFacingAngle(playerid, 89.3330); }
 			else { SetPlayerPos(playerid, -2450.0598,503.2686,30.0861); SetPlayerFacingAngle(playerid, 89.3330); }
 			SCM(playerid, COLOR_BLUE, "You have been teleported"); }
-	 		case 2: SPD(playerid, 7706, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Army{00BFFF}•", "SFa\nLVa\nLSa", "Choose", "Back");
-	 		case 3: SPD(playerid, 7707, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Doctors{00BFFF}•", "Doctors SF\nDoctors LS\nDoctors LV", "Choose", "Back");
-	 		case 4: SPD(playerid, 7708, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Mafia{00BFFF}•", "LCN\nYakuza\nRM", "Choose", "Back");
+	 		case 2: SPD(playerid, 7706, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Army{00BFFF}вЂў", "SFa\nLVa\nLSa", "Choose", "Back");
+	 		case 3: SPD(playerid, 7707, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Doctors{00BFFF}вЂў", "Doctors SF\nDoctors LS\nDoctors LV", "Choose", "Back");
+	 		case 4: SPD(playerid, 7708, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Mafia{00BFFF}вЂў", "LCN\nYakuza\nRM", "Choose", "Back");
 	 		case 5: {
  		    if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, 1479.3794,-1742.5985,13.5469); SetPlayerFacingAngle(playerid, 185.2652); }
 			else { SetPlayerPos(playerid, 1479.3794,-1742.5985,13.5469); SetPlayerFacingAngle(playerid, 185.2652); }
@@ -7728,12 +7728,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				SCM(playerid, COLOR_BLUE, "You have been teleported");
 	 		}
-	 		case 7: SPD(playerid, 7709, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}News{00BFFF}•", "SF News\nLS News\nLV News", "Choose", "Back");
+	 		case 7: SPD(playerid, 7709, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}News{00BFFF}вЂў", "SF News\nLS News\nLV News", "Choose", "Back");
 	 		case 8: {
  		    if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, -2026.0851,-97.2020,35.1641); SetPlayerFacingAngle(playerid, 176.3287); }
 			else { SetPlayerPos(playerid, -2026.0851,-97.2020,35.1641); SetPlayerFacingAngle(playerid, 176.3287); }
 			SCM(playerid, COLOR_BLUE, "You have been teleported"); }
-	 		case 9:SPD(playerid, 7710, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Gangs{00BFFF}•", "Ballas\nVagos\nGrove\nAztecs\nRifa", "Choose", "Back");
+	 		case 9:SPD(playerid, 7710, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Gangs{00BFFF}вЂў", "Ballas\nVagos\nGrove\nAztecs\nRifa", "Choose", "Back");
 	 		case 10: {
  		    if (GetPlayerState(playerid) == 2) { new tmpcar = GetPlayerVehicleID(playerid); SetVehiclePos(tmpcar, 683.2881,-476.2363,16.3359); SetPlayerFacingAngle(playerid, 28.1572); }
 			else { SetPlayerPos(playerid, 683.2881,-476.2363,16.3359); SetPlayerFacingAngle(playerid, 28.1572); }
@@ -7963,10 +7963,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        if(response) {
 	        switch(listitem) {
 			case 0: DisablePlayerRaceCheckpoint(playerid), RaceCP[playerid] = 0, SCM(playerid, COLOR_BLUE, "{FF0000}[GPS]{FFFFFF}: {00BFFF}You have successfully turned off GPS");
-			case 1: SPD(playerid, 10001, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Important places{00BFFF}•", "Race\nPaint Ball\nCity Hall\nBank\nClothing store\nDriving school\nAuto repair shop\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
-			case 2: SPD(playerid, 10002, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Faction Bases{00BFFF}•", "LSPD\nSFPD\nLVPD\nFBI\nSFa\nLVa\nLSa\nMedics SF\nMedics LS\nMedics LV\nLCN\nYakuza\nRussian Mafia\nStreet Racers\nSF News\nLS News\nLV News\nThe Ballas Gang\nLos Santos Vagos Gang\nGrove Street Gang\nVarios Los Aztecas Gang\nThe Rifa Gang\nHell's Angels MC\nS.W.A.T.\nHitmans", "Choose", "Back");
-			case 3: SPD(playerid, 10003, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Works{00BFFF}•", "State Transport\nLoader\nFarm", "Choose", "Back");
-			case 4: SPD(playerid, 10004, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Car showrooms{00BFFF}•", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back"); } }
+			case 1: SPD(playerid, 10001, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Important places{00BFFF}вЂў", "Race\nPaint Ball\nCity Hall\nBank\nClothing store\nDriving school\nAuto repair shop\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
+			case 2: SPD(playerid, 10002, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Faction Bases{00BFFF}вЂў", "LSPD\nSFPD\nLVPD\nFBI\nSFa\nLVa\nLSa\nMedics SF\nMedics LS\nMedics LV\nLCN\nYakuza\nRussian Mafia\nStreet Racers\nSF News\nLS News\nLV News\nThe Ballas Gang\nLos Santos Vagos Gang\nGrove Street Gang\nVarios Los Aztecas Gang\nThe Rifa Gang\nHell's Angels MC\nS.W.A.T.\nHitmans", "Choose", "Back");
+			case 3: SPD(playerid, 10003, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Works{00BFFF}вЂў", "State Transport\nLoader\nFarm", "Choose", "Back");
+			case 4: SPD(playerid, 10004, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Car showrooms{00BFFF}вЂў", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back"); } }
 	    }
 	    case 10001:
 	    {
@@ -8036,20 +8036,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			GPN
 			if(response) {
 			switch(listitem) {
-			case 0: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), SPD(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Withdrawal from account{00BFFF}•",string, "Ready", "Back");
-			case 1: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), SPD(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Put on the account{00BFFF}•",string, "Ready", "Back");
-			case 2: format(string, sizeof(string), " Name: %s\n Bank account: %d $", playername, PlayerInfo[playerid][pBank]), SPD(playerid, 8817, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Information{00BFFF}•", string, "Ready", "Back");
+			case 0: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), SPD(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Withdrawal from account{00BFFF}вЂў",string, "Ready", "Back");
+			case 1: format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]), SPD(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Put on the account{00BFFF}вЂў",string, "Ready", "Back");
+			case 2: format(string, sizeof(string), " Name: %s\n Bank account: %d $", playername, PlayerInfo[playerid][pBank]), SPD(playerid, 8817, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Information{00BFFF}вЂў", string, "Ready", "Back");
 			case 3: {
 			if(PlayerInfo[playerid][pPBiskey] == 255) return SCM(playerid, COLOR_GREY, "You are not a businessman");
-			SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Transfer to business account{00BFFF}•", "Enter the amount you want to transfer", "Ready", "Cancel"); } } }
+			SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Transfer to business account{00BFFF}вЂў", "Enter the amount you want to transfer", "Ready", "Cancel"); } } }
 		}
 		case 2929:
 		{
 			if(response) {
 			new bouse = PlayerInfo[playerid][pPBiskey];
-			if(!strlen(inputtext)) return SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Transferring money to a business account{00BFFF}•",string, "Ready", "Cancel");
+			if(!strlen(inputtext)) return SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Transferring money to a business account{00BFFF}вЂў",string, "Ready", "Cancel");
 			new moneys; moneys = strval(inputtext);
-			if(moneys < 1000 || moneys > 1000000) return SCM(playerid, COLOR_GREY, "Minimum amount 1000 $, maximum 1000000 $"), format(string,sizeof(string), "Enter the amount you want to deposit into your business account"), SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Transferring money to a business account{00BFFF}•",string, "Ready", "Cancel");
+			if(moneys < 1000 || moneys > 1000000) return SCM(playerid, COLOR_GREY, "Minimum amount 1000 $, maximum 1000000 $"), format(string,sizeof(string), "Enter the amount you want to deposit into your business account"), SPD(playerid,2929,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Transferring money to a business account{00BFFF}вЂў",string, "Ready", "Cancel");
 			if(PlayerInfo[playerid][pBank] < moneys) return	SCM(playerid, COLOR_GREY, "You don't have that much money");
 			if(bouse >=100) { PlayerInfo[playerid][pBank] -= moneys; SBizzInfo[bouse-100][sbTill] += moneys; format(string, sizeof(string), "You deposited into your business account %d $", moneys); SCM(playerid, 0x6495EDFF, string); SetPlayerChatBubble(playerid, "deposits into the business account",COLOR_PURPLE,30.0,10000); }
 			if(bouse < 100) { PlayerInfo[playerid][pBank] -= moneys; BizzInfo[bouse][bTill] += moneys; format(string, sizeof(string), "You deposited into your business account %d $", moneys); SCM(playerid, 0x6495EDFF, string); SetPlayerChatBubble(playerid, "deposits into the business account",COLOR_PURPLE,30.0,10000); } }
@@ -8058,7 +8058,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response) {
 			new summa;
-			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); SPD(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Put on the account{00BFFF}•",string, "Ready", "Cancel"); }
+			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); SPD(playerid,8816,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Put on the account{00BFFF}вЂў",string, "Ready", "Cancel"); }
 			summa = strval(inputtext);
 			if(PlayerInfo[playerid][pCash] < summa) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			if(summa < 1 || summa > 1000000) { SCM(playerid, COLOR_GREY, "You cannot deposit more than 1,000,000 $!"); return true; }
@@ -8066,23 +8066,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SCM(playerid, COLOR_WHITE, string); }
 			else {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Banking services{00BFFF}•", listitems, "Choose", "Close"); }
+			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Banking services{00BFFF}вЂў", listitems, "Choose", "Close"); }
 		}
 		case 8817:
 		{
 			if(response) {
 			if(listitem == 0) {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Banking services{00BFFF}•", listitems, "Choose", "Close"); } }
+			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Banking services{00BFFF}вЂў", listitems, "Choose", "Close"); } }
 			else {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Banking services{00BFFF}•", listitems, "Choose", "Close"); }
+			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Banking services{00BFFF}вЂў", listitems, "Choose", "Close"); }
 		}
 		case 8814:
 		{
 			if(response) {
 			new summa;
-			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); SPD(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Withdrawals from the account{00BFFF}•",string, "Ready", "Back"); }
+			if(!strlen(inputtext)) { format(string,sizeof(string), "Your account balance: %d $\nEnter the amount you need", PlayerInfo[playerid][pBank]); SPD(playerid,8814,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Withdrawals from the account{00BFFF}вЂў",string, "Ready", "Back"); }
 			summa = strval(inputtext);
 			if(PlayerInfo[playerid][pBank] < summa) return SCM(playerid, COLOR_GREY, "You don't have that much money");
 			if(summa < 1 || summa > 1000000) { SCM(playerid, COLOR_GREY, "You cannot withdraw more than 1,000,000!"); return true; }
@@ -8090,17 +8090,17 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SCM(playerid, COLOR_WHITE, string); }
 			else {
 			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Banking services{00BFFF}•", listitems, "Choose", "Close"); }
+			SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Banking services{00BFFF}вЂў", listitems, "Choose", "Close"); }
 		}
 		case 8900:
 	    {
 			if(response) {
 			switch(listitem) {
 	        case 0: format(string,sizeof(string), "Your account balance: %d $", PlayerInfo[playerid][pBank]), SPD(playerid,8904,DIALOG_STYLE_LIST,string, "500 $\n1000 $\n5000 $\n10000 $\n20000 $\n50000 $\n100000 $", "Ready", "Back");
- 	        case 1: { GPN format(string,sizeof(string), "{FFFFFF}Check:\nClient: %s\nBalance: %d $", playername, PlayerInfo[playerid][pBank]); SPD(playerid,8905,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•",string, "Back", ""); }
+ 	        case 1: { GPN format(string,sizeof(string), "{FFFFFF}Check:\nClient: %s\nBalance: %d $", playername, PlayerInfo[playerid][pBank]); SPD(playerid,8905,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў",string, "Back", ""); }
 			case 2: {
 			if(PlayerInfo[playerid][pPHousekey] == 255) return SCM(playerid, COLOR_GREY, "You don't own real estate");
-            SPD(playerid, 9521, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}ATM{00BFFF}•","Other Amount\nFor an hour\nFor a day\nFor 3 days\nFor a week\nFor 2 week\nFor a month(+50% collects the bank for the service)","Translate", "Exit"); } } }
+            SPD(playerid, 9521, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў","Other Amount\nFor an hour\nFor a day\nFor 3 days\nFor a week\nFor 2 week\nFor a month(+50% collects the bank for the service)","Translate", "Exit"); } } }
 	 	}
 		case 8454:
 	    {
@@ -8137,13 +8137,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 4: money = 20000;
 			case 5: money = 50000;
 			case 6: money = 100000; }
-			if(money > PlayerInfo[playerid][pBank]) { SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", ""); return 1; }
+			if(money > PlayerInfo[playerid][pBank]) { SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", ""); return 1; }
 			PlayerInfo[playerid][pCash] += money; PlayerInfo[playerid][pBank] = PlayerInfo[playerid][pBank]-money; format(string, sizeof(string), "You have withdrawn from your account: %d $ Remainder: %d $", money,PlayerInfo[playerid][pBank]); SCM(playerid, 0x6495EDFF, string); format(string, sizeof(string), "~b~+%d", money); GameTextForPlayer(playerid, string, 3000, 1); return 1; }
-			else { new listitems[] = "Withdraw cash\nBalance\nHome account"; SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", listitems, "Further", "Exit"); }
+			else { new listitems[] = "Withdraw cash\nBalance\nHome account"; SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", listitems, "Further", "Exit"); }
 		}
 		case 8905:
 	    {
-	        if(response) { new listitems[] = "Withdraw cash\nBalance\nHome account"; SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", listitems, "Further", "Exit"); }
+	        if(response) { new listitems[] = "Withdraw cash\nBalance\nHome account"; SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", listitems, "Further", "Exit"); }
 		}
 		case 7000:
 		{
@@ -8402,7 +8402,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						case 0:
 						{
 							format(string,sizeof(string), "Home account: %d $\nEnter the amount you want to deposit into your home account",HouseInfo[bouse][hTakings]);
-						 	SPD(playerid,9523,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Home account{00BFFF}•",string, "Ready", "Cancel");
+						 	SPD(playerid,9523,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Home account{00BFFF}вЂў",string, "Ready", "Cancel");
 						}
 						case 1:
 						{
@@ -8411,7 +8411,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(50 > PlayerInfo[playerid][pBank])
 								{
 									SCM(playerid, COLOR_GREY, "To replenish your account you need 50 virtuals in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", "");
+									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 50;
@@ -8429,7 +8429,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(1200 > PlayerInfo[playerid][pBank])
 								{
 									SCM(playerid, COLOR_GREY, "To replenish your account you need 1,200 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", "");
+									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 1200;
@@ -8447,7 +8447,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(3600 > PlayerInfo[playerid][pBank])
 								{
 									SCM(playerid, COLOR_GREY, "To replenish your account you need 3,600 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", "");
+									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 3600;
@@ -8465,7 +8465,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(6000 > PlayerInfo[playerid][pBank])
 								{
 									SCM(playerid, COLOR_GREY, "To replenish your account you need 6,000 virtuals in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", "");
+									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 6000;
@@ -8483,7 +8483,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(8400 > PlayerInfo[playerid][pBank])
 								{
 									SCM(playerid, COLOR_GREY, "To replenish your account you need 8,400 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", "");
+									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 8400;
@@ -8501,7 +8501,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 								if(24000 > PlayerInfo[playerid][pBank])
 								{
 									SCM(playerid, COLOR_GREY, "To replenish your account you need 24,000 $ in your bank account!");
-									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", "There is not enough money in your account!", "Back", "");
+									SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", "There is not enough money in your account!", "Back", "");
 									return true;
 								}
 								else PlayerInfo[playerid][pBank] -= 24000;
@@ -8524,7 +8524,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        	if(!strlen(inputtext))
 				{
 					format(string,sizeof(string), "Enter the amount you want to deposit into your home account");
-					SPD(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}•{FFFFFF}Home account{00BFFF}•",string,"Ready","Cancel");
+					SPD(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}вЂў{FFFFFF}Home account{00BFFF}вЂў",string,"Ready","Cancel");
 					return true;
 				}
 	        	new moneys; moneys = strval(inputtext);
@@ -8532,7 +8532,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				{
 					SCM(playerid, COLOR_GREY, "The minimum transfer amount is 1 $, the maximum is 100,000 $");
 					format(string,sizeof(string), "Enter the amount you want to deposit into your home account");
-					SPD(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}•{FFFFFF}Home account{00BFFF}•",string,"Ready","Cancel");
+					SPD(playerid,9523,DIALOG_STYLE_INPUT,"{00BFFF}вЂў{FFFFFF}Home account{00BFFF}вЂў",string,"Ready","Cancel");
 					return true;
 				}
 	        	if(PlayerInfo[playerid][pBank] < moneys) return	SCM(playerid, COLOR_GREY, "You don't have that much money in your bank account!");
@@ -8698,7 +8698,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm1, 1000, "%s\n{FFFF00}/kick {FFFFFF}- {00BFFF}Kick a Player from the Server",adm1);
    			format(adm1, 1000, "%s\n{FFFF00}/warn {FFFFFF}- {00BFFF}Give to Player Warn",adm1);
 		   	format(adm1, 1000, "%s\n{FFFF00}/apanel {FFFFFF}- {00BFFF}Admin Panel",adm1);
-		   	SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}1st Level Administration{00BFFF}•",adm1, "Back", ""); } }
+		   	SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}1st Level Administration{00BFFF}вЂў",adm1, "Back", ""); } }
 			case 1: {
 			if(PlayerInfo[playerid][pAdmin] >= 1) {
    			new adm1[1200];
@@ -8707,7 +8707,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
    			format(adm1, 1000, "%s\n{FFFF00}/warnmans {FFFFFF}- {00BFFF}View Players on the server with warns",adm1);
    			format(adm1, 1000, "%s\n{FFFF00}/akey {FFFFFF}- {00BFFF}Change Your Admin Password",adm1);
    			format(adm1, 1000, "%s\n{FFFF00}/alogin {FFFFFF}- {00BFFF}Log in as Server Administrator",adm1);
-     		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}1st Level Administration{00BFFF}•",adm1, "Back", ""); } }
+     		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}1st Level Administration{00BFFF}вЂў",adm1, "Back", ""); } }
 			case 2: {
 			if(PlayerInfo[playerid][pAdmin] >= 2) {
    			new adm2[1200];
@@ -8720,7 +8720,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm2, 1000, "%s\n{FFFF00}/ban {FFFFFF}- {00BFFF}Ban a Player",adm2);
 	  		format(adm2, 1000, "%s\n{FFFF00}/unjail {FFFFFF}- {00BFFF}Release the Player from Prison",adm2);
 	  		format(adm2, 1000, "%s\n{FFFF00}/alock {FFFFFF}- {00BFFF}Open Car/Motorcycle",adm2);
-	  		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}2 Administration Level{00BFFF}•",adm2, "Back", ""); } }
+	  		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}2 Administration Level{00BFFF}вЂў",adm2, "Back", ""); } }
 			case 3: {
 			if(PlayerInfo[playerid][pAdmin] >= 3) {
    			new adm3[1200];
@@ -8732,7 +8732,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
      		format(adm3, 1000, "%s\n{FFFF00}/biz {FFFFFF}- {00BFFF}Teleport to the specified business",adm3);
 		 	format(adm3, 1000, "%s\n{FFFF00}/spawncars {FFFFFF}- {00BFFF}Respawn all vehicles",adm3);
 		 	format(adm3, 1000, "%s\n{FFFF00}/fuelcars {FFFFFF}- {00BFFF}Refuel all vehicles",adm3);
-		 	SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}3 Administration Level{00BFFF}•",adm3, "Back", ""); } }
+		 	SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}3 Administration Level{00BFFF}вЂў",adm3, "Back", ""); } }
 			case 4: {
 			if(PlayerInfo[playerid][pAdmin] >= 4) {
 	  		new adm4[1200];
@@ -8740,7 +8740,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm4, 1000, "%s\n{FFFF00}/geton {FFFFFF}- {00BFFF}Find out when the Player last logged in",adm4);
 	  		format(adm4, 1000, "%s\n{FFFF00}/givevip {FFFFFF}- {00BFFF}Give to Player VIP",adm4);
 	  		format(adm4, 1000, "%s\n{FFFF00}/take {FFFFFF}- {00BFFF}Take items from the Player.",adm4);
-	  		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}4 Administration Level{00BFFF}•",adm4, "Back", ""); } }
+	  		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}4 Administration Level{00BFFF}вЂў",adm4, "Back", ""); } }
 			case 5: {
 			if(PlayerInfo[playerid][pAdmin] >= 5) {
 		    new adm5[1200];
@@ -8752,7 +8752,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	       	format(adm5, 1000, "%s\n{FFFF00}/paint {FFFFFF}- {00BFFF}Activate Paint Ball event",adm5);
 		 	format(adm5, 1200, "%s\n{FFFF00}/setleader {FFFFFF}- {00BFFF}Assign a Player to control the selected Faction",adm5);
    			format(adm5, 1000, "%s\n{FFFF00}/arace {FFFFFF}- {00BFFF}Activate Racing event",adm5);
-   			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}5 Administration Level{00BFFF}•",adm5, "Back", ""); } }
+   			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}5 Administration Level{00BFFF}вЂў",adm5, "Back", ""); } }
 			case 6: {
 			if(PlayerInfo[playerid][pAdmin] >= 6) {
    			new adm6[1200];
@@ -8764,7 +8764,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	  		format(adm6, 1000, "%s\n{FFFF00}/asellsbiz {FFFFFF}- {00BFFF}Sell the specified business",adm6);
 	  		format(adm6, 1000, "%s\n{FFFF00}/banip {FFFFFF}- {00BFFF}Ban a player by IP address",adm6);
 	  		format(adm6, 1000, "%s\n{FFFF00}/unbanip {FFFFFF}- {00BFFF}Unban a player by IP address",adm6);
-     		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}6 Administration Level{00BFFF}•",adm6, "Back", ""); } }
+     		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}6 Administration Level{00BFFF}вЂў",adm6, "Back", ""); } }
 			case 7: {
 			if(PlayerInfo[playerid][pAdmin] >= 7) {
 		    new adm7[1200];
@@ -8775,7 +8775,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			format(adm7, 1000, "%s\n{FFFF00}/setmats {FFFFFF}- {00BFFF}Give the specified amount of materials to the Faction",adm7);
 			format(adm7, 1000, "%s\n{FFFF00}/asellbiz {FFFFFF}- {00BFFF}Sell ??the specified Business",adm7);
 			format(adm7, 1000, "%s\n{FFFF00}/asellhouse {FFFFFF}- {00BFFF}Sell ??the specified House",adm7);
-			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}7 Administration Level{00BFFF}•",adm7, "Back", ""); } }
+			SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}7 Administration Level{00BFFF}вЂў",adm7, "Back", ""); } }
 			case 8: {
 			if(PlayerInfo[playerid][pAdmin] >= 8) {
    			new adm8[1500];
@@ -8799,7 +8799,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		  	format(adm8, 1500, "%s\n{FFFF00}/editint {FFFFFF}- {00BFFF}Change the interior of the house",adm8);
 		  	format(adm8, 1500, "%s\n{FFFF00}/payday {FFFFFF}- {00BFFF}Call ahead of schedule PayDay",adm8);
 		   	format(adm8, 1500, "%s\n{FFFF00}/unwarn {FFFFFF}- {00BFFF}Take off Warn from Player",adm8);
-       		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}8 Administration Level{00BFFF}•",adm8, "Back", ""); } } } }
+       		SPD(playerid,20011,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}8 Administration Level{00BFFF}вЂў",adm8, "Back", ""); } } } }
 		}
 		case 2001:
 		{
@@ -8960,7 +8960,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 0: {
 			if(PlayerInfo[playerid][pCheckip] == 1) { PlayerInfo[playerid][pCheckip] = 0; SCM(playerid, COLOR_WHITE, "Check by IP address blackout"); }
 			PlayerInfo[playerid][pCheckip] = 1; SCM(playerid, COLOR_WHITE, "Check by IP address included!"); }
-			case 1: SPD(playerid,14,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change key{00BFFF}•", "Enter your new security key", "Ready", "Back");
+			case 1: SPD(playerid,14,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change key{00BFFF}вЂў", "Enter your new security key", "Ready", "Back");
 			case 2: {
 			new vdata = PlayerInfo[playerid][pVhoddata]; new vmes = PlayerInfo[playerid][pVhodMes]; new vchas = PlayerInfo[playerid][pVhodchas]; new vminute = PlayerInfo[playerid][pVhodminute]; new mtext[20];
 			if(vmes == 1) { mtext = "January"; }
@@ -8979,16 +8979,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(file < 0) print("no file");
 			else {
 		 	ini_closeFile(file); new coordsstring[100]; new msg[] = "This system allows you to see\nTime of your last login to the server.\n\nInformation is updated upon exit\n\n{FEBC41}-------------------------------------------------- -\ndate: %d %s\nTime:  %d:%d\nYour IP address: %s\nLast IP address: %s\n-------------------------------------------------- -"; format(coordsstring, 2000, msg, vdata,mtext,vchas,vminute,playersip,string);
-			SPD(playerid,3025,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Information about the last login to the game{00BFFF}•",coordsstring, "Ready", ""); return true; } }
+			SPD(playerid,3025,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Information about the last login to the game{00BFFF}вЂў",coordsstring, "Ready", ""); return true; } }
 			case 3: { new rulesdialog[1024]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s",IPMSG[0],IPMSG[1],IPMSG[2],IPMSG[3],IPMSG[4]); SPD(playerid,165,DIALOG_STYLE_MSGBOX, "INFO",rulesdialog, "Ready", ""); } } }
 			else { new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname"; SPD(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel"); }
 		}
 		case 9943:
 		{
 			if(response) {
- 			if(!strlen(inputtext)) return SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Application to change nickname{00BFFF}•", "Write a new nickname (according to the form Name_Surname)", "Send", "Back");
+ 			if(!strlen(inputtext)) return SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Application to change nickname{00BFFF}вЂў", "Write a new nickname (according to the form Name_Surname)", "Send", "Back");
    			format(string,sizeof(string), "Users/%s.ini",inputtext);
-			if(fexist(string)) { SCM(playerid,COLOR_GREY, "Nick is busy"); SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Application to change nickname{00BFFF}•", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); return true; }
+			if(fexist(string)) { SCM(playerid,COLOR_GREY, "Nick is busy"); SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Application to change nickname{00BFFF}вЂў", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); return true; }
  			format(WantNickChange[playerid],MAX_PLAYER_NAME, "%s",inputtext); GPN format(string, sizeof(string), "[Application to change nickname] %s[%d] asks to change nickname to: %s", playername,playerid,(inputtext)); ABroadCast(COLOR_USE, string, 1); SCM(playerid, COLOR_LIGHTRED, "Your application has been sent. Wait for approval from the administration"); }
 		 	else { new listitems[] = "{21B4EE} >> Character Statistics\n{21B4EE} >> Server commands\n{21B4EE} >> Support\n{21B4EE} >> Change password\n{21B4EE} >> Server Rules\n{21B4EE} >> Security Key\n{21B4EE} >> Donut shop\n{21B4EE} >> Change nickname"; SPD(playerid, 9623, DIALOG_STYLE_LIST, "{EED321}Personal menu", listitems, "Choose", "Cancel"); }
 		}
@@ -9030,7 +9030,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(obichnie, 1000, "%s\n{FFFF00}/time {FFFFFF}- {00BFFF}View Time",obichnie);
         	format(obichnie, 1000, "%s\n{FFFF00}/ad {FFFFFF}- {00BFFF}Submit an ad to the Editorial Office News",obichnie);
         	format(obichnie, 1000, "%s\n{FFFF00}/showlicenses {FFFFFF}- {00BFFF}Show the Player your Licenses",obichnie);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Regular{00BFFF}•",obichnie, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Regular{00BFFF}вЂў",obichnie, "Back", ""); }
 			case 1: {
   			new obichnie2[1200];
     		format(obichnie2, 1000, "{FFFF00}/licenses {FFFFFF}- {00BFFF}View your Licenses");
@@ -9046,7 +9046,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(obichnie2, 1000, "%s\n{FFFF00}/endlesson {FFFFFF}- {00BFFF}Finish your driving license",obichnie2);
         	format(obichnie2, 1000, "%s\n{FFFF00}/getbizstats {FFFFFF}- {00BFFF}View Business Statistics",obichnie2);
         	format(obichnie2, 1000, "%s\n{FFFF00}/finfo {FFFFFF}- {00BFFF}View Farm Information",obichnie2);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Regular{00BFFF}•",obichnie2, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Regular{00BFFF}вЂў",obichnie2, "Back", ""); }
 			case 2: {
   			new obichnie3[1200];
   			format(obichnie3, 1000, "{FFFF00}/leaders {FFFFFF}- {00BFFF}View Faction Leaders Online");
@@ -9057,7 +9057,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(obichnie3, 1000, "%s\n{FFFF00}/box {FFFFFF}- {00BFFF}Change fighting style to Boxing",obichnie3);
         	format(obichnie3, 1000, "%s\n{FFFF00}/kickbox {FFFFFF}- {00BFFF}Change fighting style to Kick Boxing",obichnie3);
         	format(obichnie3, 1000, "%s\n{FFFF00}/kungfu {FFFFFF}- {00BFFF}Change fighting style to Kung Fu",obichnie3);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Regular{00BFFF}•",obichnie3, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Regular{00BFFF}вЂў",obichnie3, "Back", ""); }
 			case 3: {
   			new chat[1200];
     		format(chat, 1000, "{FFFF00}/w {FFFFFF}- {00BFFF}Whisper");
@@ -9073,7 +9073,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(chat, 1000, "%s\n{FFFF00}/gov {FFFFFF}- {00BFFF}State News",chat);
         	format(chat, 1000, "%s\n{FFFF00}/try {FFFFFF}- {00BFFF}Execute case action",chat);
         	format(chat, 1000, "%s\n{FFFF00}/nacional {FFFFFF}- {00BFFF}Talk to the Acecent of your Nationality",chat);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Chat{00BFFF}•",chat, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Chat{00BFFF}вЂў",chat, "Back", ""); }
 			case 4: {
   			new telefon[1200];
     		format(telefon, 1000, "{FFFF00}/c {FFFFFF}- {00BFFF}Call Special Service");
@@ -9081,7 +9081,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
       		format(telefon, 1000, "%s\n{FFFF00}/p {FFFFFF}- {00BFFF}Answer the call",telefon);
        		format(telefon, 1000, "%s\n{FFFF00}/call {FFFFFF}- {00BFFF}Call Player",telefon);
         	format(telefon, 1000, "%s\n{FFFF00}/number {FFFFFF}- {00BFFF}Find out the Player's Phone Number",telefon);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Telephone{00BFFF}•",telefon, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Telephone{00BFFF}вЂў",telefon, "Back", ""); }
 			case 5: {
   			new dom[1200];
     		format(dom, 1000, "{FFFF00}/changehouse {FFFFFF}- {00BFFF}Sell ??House to Player");
@@ -9093,7 +9093,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(dom, 1000, "%s\n{FFFF00}/housewithdraw {FFFFFF}- {00BFFF}Take Money for the House",dom);
         	format(dom, 1000, "%s\n{FFFF00}/buyhouse {FFFFFF}- {00BFFF}To buy a house",dom);
         	format(dom, 1000, "%s\n{FFFF00}/home {FFFFFF}- {00BFFF}Find your Home",dom);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}House{00BFFF}•",dom, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}House{00BFFF}вЂў",dom, "Back", ""); }
 			case 6: {
   			new avto2[1200];
     		format(avto2, 1000, "{FFFF00}/changecar {FFFFFF}- {00BFFF}Sell ??Car to Player");
@@ -9105,7 +9105,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         	format(avto2, 1000, "%s\n{FFFF00}/lock {FFFFFF}- {00BFFF}Open/Close Vehicle",avto2);
         	format(avto2, 1000, "%s\n{FFFF00}/fill {FFFFFF}- {00BFFF}Refuel your car at a gas station",avto2);
         	format(avto2, 1000, "%s\n{FFFF00}/fillcar {FFFFFF}- {00BFFF}Refuel the Car from a Canister",avto2);
-        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Automobile{00BFFF}•",avto2, "Back", ""); }
+        	SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Automobile{00BFFF}вЂў",avto2, "Back", ""); }
 			case 7: {
    			if(PlayerInfo[playerid][pHelper] >= 1) {
     		new helper[1200];
@@ -9114,7 +9114,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     		format(helper, 1000, "%s\n{FFFF00}/hc {FFFFFF}- {00BFFF}Helper Chat",helper);
     		format(helper, 1000, "%s\n{FFFF00}/otvet {FFFFFF}- {00BFFF}Reply to Player",helper);
     		format(helper, 1000, "%s\n{FFFF00}/helpers {FFFFFF}- {00BFFF}Helpers online",helper);
-    		SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Helpers{00BFFF}•",helper, "Back", ""); }
+    		SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Helpers{00BFFF}вЂў",helper, "Back", ""); }
      		else SCM(playerid, COLOR_GREY, "You are not a Helper!"); }
 			case 8: {
   			new ferma[1200];
@@ -9124,14 +9124,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
   			format(ferma, 1000, "%s\n{FFFF00}/ffpanel {FFFFFF}- {00BFFF}Open Deputy Farm Panel",ferma);
   			format(ferma, 1000, "%s\n{FFFF00}/funload {FFFFFF}- {00BFFF}Unload Harvest to Farm",ferma);
   			format(ferma, 1000, "%s\n{FFFF00}/buyferm {FFFFFF}- {00BFFF}Buy a Farm",ferma);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Farm{00BFFF}•",ferma, "Back", ""); }
+  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Farm{00BFFF}вЂў",ferma, "Back", ""); }
 			case 9: {
   			new bank[1200];
   			format(bank, 1000, "{FFFF00}/withdraw {FFFFFF}- {00BFFF}Withdraw cash from the Bank");
   			format(bank, 1000, "%s\n{FFFF00}/transfer {FFFFFF}- {00BFFF}Send Money from your account to another Player's account",bank);
   			format(bank, 1000, "%s\n{FFFF00}/housebank {FFFFFF}- {00BFFF}Deposit money into your home account",bank);
   			format(bank, 1000, "%s\n{FFFF00}/balance {FFFFFF}- {00BFFF}View your Bank Account Balance",bank);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bank{00BFFF}•",bank, "Back", ""); }
+  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bank{00BFFF}вЂў",bank, "Back", ""); }
 			case 10: {
   			new biznes[1200];
   			format(biznes, 1000, "{FFFF00}/bizmafia {FFFFFF}- {00BFFF}Install the Roof of your Business");
@@ -9141,7 +9141,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
   			format(biznes, 1000, "%s\n{FFFF00}/bizwithdraw {FFFFFF}- {00BFFF}Withdraw Money from your Business account",biznes);
   			format(biznes, 1000, "%s\n{FFFF00}/bizfee {FFFFFF}- {00BFFF}Set the price for Entry/Gasoline",biznes);
   			format(biznes, 1000, "%s\n{FFFF00}/sellbiz {FFFFFF}- {00BFFF}Sell ??business",biznes);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Business{00BFFF}•",biznes, "Back", ""); }
+  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Business{00BFFF}вЂў",biznes, "Back", ""); }
 			case 11: {
   			new frac[1200];
   			format(frac, 1000, "{FFFF00}/members {FFFFFF}- {00BFFF}View Faction Members Online");
@@ -9149,7 +9149,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
   			format(frac, 1000, "%s\n{FFFF00}/uninvite {FFFFFF}- {00BFFF}Fire a Player",frac);
   			format(frac, 1000, "%s\n{FFFF00}/invite {FFFFFF}- {00BFFF}Accept a Player into a Faction",frac);
   			format(frac, 1000, "%s\n{FFFF00}/warehouse {FFFFFF}- {00BFFF}Check Material Warehouse",frac);
-  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}General Faction Commands{00BFFF}•",frac, "Back", ""); }
+  			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}General Faction Commands{00BFFF}вЂў",frac, "Back", ""); }
 			case 12: {
    			if(PlayerInfo[playerid][pDonateRank] >= 1) {
  			new vip[1200];
@@ -9157,24 +9157,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(vip, 1000, "%s\n{FFFF00}/vipuninvite {FFFFFF}- {00BFFF}Leave the Faction",vip);
  			format(vip, 1000, "%s\n{FFFF00}/admins {FFFFFF}- {00BFFF}Administrators Online",vip);
  			format(vip, 1000, "%s\n{FFFF00}/vc {FFFFFF}- {00BFFF}VIP Chat",vip);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}VIP{00BFFF}•",vip, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}VIP{00BFFF}вЂў",vip, "Back", ""); }
   			else SCM(playerid, COLOR_GREY, "You do not VIP!"); }
 			case 13: {
    			if(PlayerInfo[playerid][pJob] == 1) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/route {FFFFFF}- {00BFFF}Start/End Working Day");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bus driver{00BFFF}•",job, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bus driver{00BFFF}вЂў",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 2) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/refill {FFFFFF}- {00BFFF}Refuel the Player");
  			format(job, 1000, "%s\n{FFFF00}/repair {FFFFFF}- {00BFFF}Repair Auto Player",job);
  			format(job, 1000, "%s\n{FFFF00}/mcontract {FFFFFF}- {00BFFF}Conclude a Contract with Auto Gas Station",job);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Mechanic{00BFFF}•",job, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Mechanic{00BFFF}вЂў",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 4) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/fare {FFFFFF}- {00BFFF}Start/End Working Day");
  			format(job, 1000, "%s\n{FFFF00}/fr {FFFFFF}- {00BFFF}Taxi Driver Radio",job);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Taxi driver{00BFFF}•",job, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Taxi driver{00BFFF}вЂў",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 5) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/sellprods {FFFFFF}- {00BFFF}Unload Products to the Store/Snack/Club");
@@ -9182,19 +9182,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(job, 1000, "%s\n{FFFF00}/loadgas {FFFFFF}- {00BFFF}Load Gasoline",job);
  			format(job, 1000, "%s\n{FFFF00}/load {FFFFFF}- {00BFFF}Load with Products",job);
  			format(job, 1000, "%s\n{FFFF00}/pmenu {FFFFFF}- {00BFFF}Product Delivery Menu",job);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Product Delivery Man{00BFFF}•",job, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Product Delivery Man{00BFFF}вЂў",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 6) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/mduty {FFFFFF}- {00BFFF}Start Flight.");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Garbage Truck Driver{00BFFF}•",job, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Garbage Truck Driver{00BFFF}вЂў",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 7) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/mfare {FFFFFF}- {00BFFF}Start/End Working Day");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Driver{00BFFF}•",job, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Driver{00BFFF}вЂў",job, "Back", ""); }
   			else if(PlayerInfo[playerid][pJob] == 8) {
  			new job[1200];
  			format(job, 1000, "{FFFF00}/startbank {FFFFFF}- {00BFFF}Start/End Working Day");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Collector{00BFFF}•",job, "Back", ""); } }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Collector{00BFFF}вЂў",job, "Back", ""); } }
 			case 14: {
   			if(PlayerInfo[playerid][pMember] == 1 || PlayerInfo[playerid][pMember] == 10 || PlayerInfo[playerid][pMember] == 21 || PlayerInfo[playerid][pMember] == 27 || PlayerInfo[playerid][pMember] == 28) {
  			new member[1200];
@@ -9215,24 +9215,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/ram {FFFFFF}- {00BFFF}Break into the House",member);
  			format(member, 1000, "%s\n{FFFFFF}/mvduval - Fire an employee [For the minister]",member);
  			format(member, 1000, "%s\n{FFFFFF}/mvdgiverank - Fire an employee [For the minister]",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Police{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Police{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 2) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/tazer {FFFFFF}- {00BFFF}Hit a Player with a Taser");
  			format(member, 1000, "%s\n{FFFF00}/bizlock {FFFFFF}- {00BFFF}Close Business",member);
  			format(member, 1000, "%s\n{FFFF00}/spy {FFFFFF}- {00BFFF}Disguise yourself",member);
  			format(member, 1000, "%s\n{FFFF00}/untie {FFFFFF}- {00BFFF}Unleash the Hostage",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}FBI{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}FBI{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 3) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/givebilsf {FFFFFF}- {00BFFF}Give the Player a Military Card");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Army SF{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Army SF{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 4 || PlayerInfo[playerid][pMember] == 22 || PlayerInfo[playerid][pMember] == 24) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/sethealcost {FFFFFF}- {00BFFF}Set a Price for Treatment");
  			format(member, 1000, "%s\n{FFFF00}/heal {FFFFFF}- {00BFFF}Cure Player",member);
  			format(member, 1000, "%s\n{FFFF00}/lomka {FFFFFF}- {00BFFF}Conduct a session for drug addiction",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Doctors{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Doctors{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 5 || PlayerInfo[playerid][pMember] == 6 || PlayerInfo[playerid][pMember] == 14) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/untie {FFFFFF}- {00BFFF}Unleash the Hostage");
@@ -9247,14 +9247,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/getgun {FFFFFF}- {00BFFF}Take up a weapon",member);
  			format(member, 1000, "%s\n{FFFF00}/bizlist {FFFFFF}- {00BFFF}View Captured Businesses",member);
  			format(member, 1000, "%s\n{FFFF00}/mafiawar {FFFFFF}- {00BFFF}Start a war for Business",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Mafia{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Mafia{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 7) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/free {FFFFFF}- {00BFFF}Offer the Player to get out of prison");
- 			format(member, 1000, "%s\n{FFFF00}/kazna {FFFFFF}- {00BFFF}View the amount of money in the City Hall account",member);
- 			format(member, 1000, "%s\n{FFFF00}/kaznaput {FFFFFF}- {00BFFF}Deposit money into City Hall account",member);
- 			format(member, 1000, "%s\n{FFFF00}/kaznawithdraw {FFFFFF}- {00BFFF}Withdraw money from City Hall account",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}City Hall{00BFFF}•",member, "Back", ""); }
+ 			format(member, 1000, "%s\n{FFFF00}/treasury {FFFFFF}- {00BFFF}View the amount of money in the City Hall account",member);
+ 			format(member, 1000, "%s\n{FFFF00}/treasuryput {FFFFFF}- {00BFFF}Deposit money into City Hall account",member);
+ 			format(member, 1000, "%s\n{FFFF00}/treasurywithdraw {FFFFFF}- {00BFFF}Withdraw money from City Hall account",member);
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}City Hall{00BFFF}вЂў",member, "Back", ""); }
  			else if(PlayerInfo[playerid][pMember] == 8)
 		 	{
 	 			new member[1200];
@@ -9285,11 +9285,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/newsbank {FFFFFF}- {00BFFF}View the amount of money in the account News",member);
  			format(member, 1000, "%s\n{FFFF00}/n {FFFFFF}- {00BFFF}Go to menu News",member);
  			format(member, 1000, "%s\n{FFFF00}/givenewskeys {FFFFFF}- {00BFFF}Give the Player a pass to the studio News",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}News{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}News{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 11) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/givelicenses {FFFFFF}- {00BFFF}Open the menu for issuing Licenses to the Player");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Instructors{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Instructors{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 12 || PlayerInfo[playerid][pMember] == 13 || PlayerInfo[playerid][pMember] == 15 || PlayerInfo[playerid][pMember] == 17 || PlayerInfo[playerid][pMember] == 18) {
  			new member[1200];
 			format(member, 1000, "{FFFF00}/switchskin {FFFFFF}- {00BFFF}Dress in military uniform");
@@ -9309,14 +9309,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/gc {FFFFFF}- {00BFFF}General chat Gangs",member);
  			format(member, 1000, "%s\n{FFFF00}/carm {FFFFFF}- {00BFFF}Open the menu for transporting materials on a truck",member);
  			format(member, 1000, "%s\n{FFFF00}/gmenu {FFFFFF}- {00BFFF}Bandit menu",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Gangs{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Gangs{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 19) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/carm {FFFFFF}- {00BFFF}Open the Materials Delivery menu on Matovozka");
  			format(member, 1000, "%s\n{FFFF00}/givebillv {FFFFFF}- {00BFFF}Give the Player a Military Card",member);
  			format(member, 1000, "%s\n{FFFF00}/camera {FFFFFF}- {00BFFF}Start surveillance",member);
  			format(member, 1000, "%s\n{FFFF00}/cameraoff {FFFFFF}- {00BFFF}Turn off surveillance",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Army LV{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Army LV{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 29) {
  			new member[1200];
  			format(member, 1000, "%s\n{FFFF00}/mouval {FFFFFF}- {00BFFF}Fire a player[LSa,SFa,LVa]",member);
@@ -9328,7 +9328,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/givebilsf {FFFFFF}- {00BFFF}Issue a Military Card[SFa]",member);
  			format(member, 1000, "%s\n{FFFF00}/camera {FFFFFF}- {00BFFF}Start surveillance",member);
  			format(member, 1000, "%s\n{FFFF00}/cameraoff {FFFFFF}- {00BFFF}Turn off surveillance",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Army LV{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Army LV{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 23) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/bbalance {FFFFFF}- {00BFFF}Check the amount of Money in the Bikers' account");
@@ -9338,24 +9338,24 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
  			format(member, 1000, "%s\n{FFFF00}/bsellgun {FFFFFF}- {00BFFF}Make a Weapon",member);
  			format(member, 1000, "%s\n{FFFF00}/gunlist {FFFFFF}- {00BFFF}List of weapons",member);
  			format(member, 1000, "%s\n{FFFF00}/unloading {FFFFFF}- {00BFFF}Unload Materials from the Truck",member);
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Bikers{00BFFF}•",member, "Back", ""); }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Bikers{00BFFF}вЂў",member, "Back", ""); }
   			else if(PlayerInfo[playerid][pMember] == 25) {
  			new member[1200];
  			format(member, 1000, "{FFFF00}/givebills {FFFFFF}- {00BFFF}Issue a Military Card to the Player");
- 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Army LV{00BFFF}•",member, "Back", ""); } } } }
+ 			SPD(playerid,10025,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Army LV{00BFFF}вЂў",member, "Back", ""); } } } }
 		}
 		case 9623:
 	    {
 			if(response) {
 			switch(listitem) {
 			case 0: ShowStats(playerid,playerid);
-			case 1: SPD(playerid, 10025, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Server commands{00BFFF}•", "Regular\nRegular {00BFFF}(Part 2)\nRegular {00BFFF}(Part 3)\nChat\nTelephone\nHouse\nAutomobile\nHelpers\nFarm\nBank\nBusiness\nGeneral Faction Commands\nVIP\nMy Teams (Job)\nMy Teams (Fraction)", "Choose", "Back");
-			case 2: SPD(playerid, 1005,DIALOG_STYLE_MSGBOX,"{00BFFF}•{FFFFFF}Support{00BFFF}•","{FFFFFF}Choose to submit a support message\nFor offtopic/flood/spam you will be punished","Question","Report");
-			case 3: SPD(playerid,11,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Change Password{00BFFF}•", "    Enter your new password     ", "Accept", "Back");
-			case 4: { new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); SPD(playerid,9980,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Server Rules{00BFFF}•", rulesdialog, "Agree", "Cancel"); }
-	        case 5: { if(PlayerInfo[playerid][pCheckip]== 0) return SPD(playerid,14,DIALOG_STYLE_INPUT, "Security Key", "You do not have a security key installed!\nEnter a security key consisting of 5 - 16 characters", "Ready", "Back"); SPD(playerid, 2323, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Safety{00BFFF}•", "[0] On/Off check by IP\n[1] Change key\n[2] Last entrance\n[3] Help", "Choose", "Back"); }
+			case 1: SPD(playerid, 10025, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Server commands{00BFFF}вЂў", "Regular\nRegular {00BFFF}(Part 2)\nRegular {00BFFF}(Part 3)\nChat\nTelephone\nHouse\nAutomobile\nHelpers\nFarm\nBank\nBusiness\nGeneral Faction Commands\nVIP\nMy Teams (Job)\nMy Teams (Fraction)", "Choose", "Back");
+			case 2: SPD(playerid, 1005,DIALOG_STYLE_MSGBOX,"{00BFFF}вЂў{FFFFFF}Support{00BFFF}вЂў","{FFFFFF}Choose to submit a support message\nFor offtopic/flood/spam you will be punished","Question","Report");
+			case 3: SPD(playerid,11,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Change Password{00BFFF}вЂў", "    Enter your new password     ", "Accept", "Back");
+			case 4: { new rulesdialog[1300]; format(rulesdialog,sizeof(rulesdialog), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSG[0],RulesMSG[1],RulesMSG[2],RulesMSG[3],RulesMSG[4],RulesMSG[5],RulesMSG[6],RulesMSG[7],RulesMSG[8],RulesMSG[9],RulesMSG[10],RulesMSG[11],RulesMSG[12],RulesMSG[13],RulesMSG[14],RulesMSG[15],RulesMSG[16]); SPD(playerid,9980,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Server Rules{00BFFF}вЂў", rulesdialog, "Agree", "Cancel"); }
+	        case 5: { if(PlayerInfo[playerid][pCheckip]== 0) return SPD(playerid,14,DIALOG_STYLE_INPUT, "Security Key", "You do not have a security key installed!\nEnter a security key consisting of 5 - 16 characters", "Ready", "Back"); SPD(playerid, 2323, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Safety{00BFFF}вЂў", "[0] On/Off check by IP\n[1] Change key\n[2] Last entrance\n[3] Help", "Choose", "Back"); }
 		    case 6: OnPlayerCommandText(playerid,"/donate");
-		    case 7: SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}•{FFFFFF}Nick's replacement has been requested{00BFFF}•", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); } }
+		    case 7: SPD(playerid,9943,DIALOG_STYLE_INPUT, "{00BFFF}вЂў{FFFFFF}Nick's replacement has been requested{00BFFF}вЂў", "Write a new nickname (according to the form Name_Surname)", "Send", "Back"); } }
 		}
 		case 560:
 	    {
@@ -9927,7 +9927,7 @@ public OnPlayerEnterCheckpoint(playerid)
 	if(CP[playerid] == 500) { SCM(playerid, COLOR_GREEN, "You received a bonus in the amount: 600 $"); PlayerInfo[playerid][pCash] += 600; DisablePlayerCheckpoint(playerid); CP[playerid] = 0; }
 	if(PicCP[playerid] == 2)
 	{
-		SPD(playerid, 10092, DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Apparatus employed{00BFFF}•","View a list of available jobs?", "Yes", "No");
+		SPD(playerid, 10092, DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Apparatus employed{00BFFF}вЂў","View a list of available jobs?", "Yes", "No");
 		return true;
 	}
 	else if(CP[playerid] == 50) {
@@ -11539,14 +11539,14 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		RacingPlayers += 1;
 		PlayerRacing[playerid] = 1;
 	}
-	else if(pickupid == hitpic[0]) // Хитманы Выход
+	else if(pickupid == hitpic[0]) // РҐРёС‚РјР°РЅС‹ Р’С‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,1047.1368,1010.5169,11.0000);
 		SetPlayerFacingAngle(playerid, 336.9922);
 	}
-	else if(pickupid == hitpic[1]) // Хитманы Вход
+	else if(pickupid == hitpic[1]) // РҐРёС‚РјР°РЅС‹ Р’С…РѕРґ
 	{
 		SetPlayerInterior(playerid,6);
 		SetPlayerVirtualWorld(playerid, 0);
@@ -11568,7 +11568,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	    if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) { return true; }
 		ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch",4.0,0,0,0,0,0);
 		new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
-		SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Banking services{00BFFF}•", listitems, "Choose", "Close");
+		SPD(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Banking services{00BFFF}вЂў", listitems, "Choose", "Close");
 	}
 	if(pickupid == passs[0])
 	{
@@ -12176,7 +12176,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 12)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Gang Menu{00BFFF}•", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Gang Menu{00BFFF}вЂў", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12187,7 +12187,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 13)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Gang Menu{00BFFF}•", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Gang Menu{00BFFF}вЂў", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12198,7 +12198,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 15)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Gang Menu{00BFFF}•", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Gang Menu{00BFFF}вЂў", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12209,7 +12209,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 17)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Gang Menu{00BFFF}•", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Gang Menu{00BFFF}вЂў", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12220,7 +12220,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	{
         if(PlayerInfo[playerid][pMember] == 18)
         {
-            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Gang Menu{00BFFF}•", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
+            SPD(playerid, 991, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Gang Menu{00BFFF}вЂў", "{FFFFFF}First aid kit\n{FFFFFF}Bat", "Choose", "Cancel");
         }
         else
         {
@@ -12463,8 +12463,8 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	    {
 			SPD(playerid,228,DIALOG_STYLE_MSGBOX,"Obtaining a Passport","\
 			{FFFFFF}Hello. Do you want to become a citizen of this state?\n\
-			•{00BFFF}The passport will indicate that you will be a new citizen of this state.\n\
-			{FFFFFF}•{00BFFF}As a citizen of the state, you can get a job, buy a house, a car, or join one of the organizations.\n\
+			вЂў{00BFFF}The passport will indicate that you will be a new citizen of this state.\n\
+			{FFFFFF}вЂў{00BFFF}As a citizen of the state, you can get a job, buy a house, a car, or join one of the organizations.\n\
 			{FFFF00}If you have decided everything, then confirm receipt of your passport!\
 			","Get","Close");
 		}
@@ -12636,7 +12636,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 			return 1;
 		}
 	}
-	else if(pickupid == hallenter[0])// Мэрия Вход
+	else if(pickupid == hallenter[0])// РњСЌСЂРёСЏ Р’С…РѕРґ
 	{
 		SetPlayerInterior(playerid,3);
 		SetPlayerPos(playerid,385.9440,173.6978,1008.3828);
@@ -12644,7 +12644,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerCheckpoint(playerid,359.8466,184.7337,1008.3828,1.5);
 		PicCP[playerid] = 2;
 	}
-	else if(pickupid == hallenter[1])// Мэрия Вход 2
+	else if(pickupid == hallenter[1])// РњСЌСЂРёСЏ Р’С…РѕРґ 2
 	{
 		SetPlayerInterior(playerid,3);
 		SetPlayerPos(playerid,366.4958,193.5977,1008.3828);
@@ -12652,7 +12652,7 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerCheckpoint(playerid,359.8466,184.7337,1008.3828,1.5);
 		PicCP[playerid] = 2;
 	}
-	else if(pickupid == hallexit) // Мэрия выход
+	else if(pickupid == hallexit) // РњСЌСЂРёСЏ РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,1480.8832,-1769.0471,18.7958);
@@ -12668,21 +12668,21 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerPos(playerid, -87.1981,1378.5879,10.2734);
 		SetPlayerFacingAngle(playerid, 277.5062);
 	}
-	else if(pickupid == mayorpic) // Мэрия выход на крышу
+	else if(pickupid == mayorpic) // РњСЌСЂРёСЏ РІС‹С…РѕРґ РЅР° РєСЂС‹С€Сѓ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,1410.2156,-1791.4513,13.5849);
 		SetPlayerFacingAngle(playerid, 89.6259);
 	}
- 	else if(pickupid == rifaenter[0]) // Рифа выход
+ 	else if(pickupid == rifaenter[0]) // Р РёС„Р° РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,2185.96,-1811.94,13.55);
 		SetPlayerFacingAngle(playerid, 15.2996);
 	}
-	else if(pickupid == rifaenter[1]) // Рифа вход
+	else if(pickupid == rifaenter[1]) // Р РёС„Р° РІС…РѕРґ
 	{
 		SetPlayerInterior(playerid,8);
 		SetPlayerVirtualWorld(playerid, 63);
@@ -12702,68 +12702,68 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerPos(playerid,366.0637,162.0343,1008.3828);
 		SetPlayerFacingAngle(playerid, 277.6785);
 	}
-	else if(pickupid == vagospic[0]) // Вагос вход
+	else if(pickupid == vagospic[0]) // Р’Р°РіРѕСЃ РІС…РѕРґ
 	{
 		SetPlayerInterior(playerid,4);
 		SetPlayerVirtualWorld(playerid, 75);
 		SetPlayerPos(playerid,303.2970,307.1475,1003.5391);
 		SetPlayerFacingAngle(playerid, 500);
 	}
-	else if(pickupid == vagospic[1]) // Вагос выход
+	else if(pickupid == vagospic[1]) // Р’Р°РіРѕСЃ РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,2774.2017,-1628.0233,12.1775);
 		SetPlayerFacingAngle(playerid, 330.4577);
 	}
-	else if(pickupid == grove[1]) // Грув вход
+	else if(pickupid == grove[1]) // Р“СЂСѓРІ РІС…РѕРґ
 	{
 		SetPlayerInterior(playerid,3);
 		SetPlayerPos(playerid,2496.1580,-1694.5743,1014.7422);
 		SetPlayerFacingAngle(playerid,177.8856);
 		SetPlayerVirtualWorld(playerid, 1);
 	}
-	else if(pickupid == grove[0]) // Грув выход
+	else if(pickupid == grove[0]) // Р“СЂСѓРІ РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,2495.1199,-1688.3727,13.7653);
 		SetPlayerFacingAngle(playerid, 4.2929);
 		SetPlayerVirtualWorld(playerid, 0);
 	}
-	else if(pickupid == aztecpic[0]) // Ацтек вход
+	else if(pickupid == aztecpic[0]) // РђС†С‚РµРє РІС…РѕРґ
 	{
 		SetPlayerInterior(playerid,8);
 		SetPlayerVirtualWorld(playerid, 36);
 		SetPlayerPos(playerid,-42.31,1408.18,1084.43);
 		SetPlayerFacingAngle(playerid, 1000);
 	}
-	else if(pickupid == aztecpic[1]) // Ацтек выход
+	else if(pickupid == aztecpic[1]) // РђС†С‚РµРє РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,1667.4498,-2108.3840,13.8906);
 		SetPlayerFacingAngle(playerid, 178.1356);
 	}
-	else if(pickupid == bankpic[0]) // Банк выход
+	else if(pickupid == bankpic[0]) // Р‘Р°РЅРє РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid, 0);
 		SetPlayerPos(playerid,1413.2419,-1700.8739,13.5395);
 		SetPlayerFacingAngle(playerid, 228.9556);
 	}
-	else if(pickupid == bankpic[1]) // Банк вход
+	else if(pickupid == bankpic[1]) // Р‘Р°РЅРє РІС…РѕРґ
 	{
 		SetPlayerInterior(playerid, 0);
 		SetPlayerPos(playerid,1401.7686,-1681.5453,20.3831);
 		SetPlayerFacingAngle(playerid, 198.1013);
 	}
-	else if(pickupid == ballasenter[0]) // Баллас выход
+	else if(pickupid == ballasenter[0]) // Р‘Р°Р»Р»Р°СЃ РІС‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,2647.9932,-2021.5747,13.5469);
 		SetPlayerFacingAngle(playerid, 100);
 	}
-	else if(pickupid == ballasenter[1]) // Баллас вход
+	else if(pickupid == ballasenter[1]) // Р‘Р°Р»Р»Р°СЃ РІС…РѕРґ
 	{
 		SetPlayerInterior(playerid,6);
 		SetPlayerVirtualWorld(playerid, 34);
@@ -12777,14 +12777,14 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 		SetPlayerFacingAngle(playerid, 355.8037);
 		SetPlayerVirtualWorld(playerid, 0);
 	}
-	else if(pickupid == streetpic[0]) // Стрит Рейсер Выход
+	else if(pickupid == streetpic[0]) // РЎС‚СЂРёС‚ Р РµР№СЃРµСЂ Р’С‹С…РѕРґ
 	{
 		SetPlayerInterior(playerid,0);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,689.0193,-1276.0498,13.5589);
 		SetPlayerFacingAngle(playerid, 90.3369);
 	}
-	else if(pickupid == streetpic[1]) // Стрит Рейсер Вход
+	else if(pickupid == streetpic[1]) // РЎС‚СЂРёС‚ Р РµР№СЃРµСЂ Р’С…РѕРґ
 	{
 		SetPlayerInterior(playerid,2);
 		SetPlayerVirtualWorld(playerid, 0);
@@ -13101,7 +13101,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	  		{
 		  		switch (SelectCharID[playerid])
 				{
-					case 1: // ЛСПД
+					case 1: // Р›РЎРџР”
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[15][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[15][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[16][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[16][0]; }
@@ -13113,7 +13113,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 8) { SetPlayerSkin(playerid, JoinPed[22][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[22][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 2: // ФБР
+					case 2: // Р¤Р‘Р 
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[23][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[23][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[24][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[24][0]; }
@@ -13123,13 +13123,13 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 6) { SetPlayerSkin(playerid, JoinPed[28][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[28][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 3: // Армия СФ
+					case 3: // РђСЂРјРёСЏ РЎР¤
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[29][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[29][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[30][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[30][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 4: // Медики СФ
+					case 4: // РњРµРґРёРєРё РЎР¤
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[31][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[31][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[32][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[32][0]; }
@@ -13139,7 +13139,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 6) { SetPlayerSkin(playerid, JoinPed[36][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[36][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 5: // ЛКН
+					case 5: // Р›РљРќ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[37][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[37][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[38][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[38][0]; }
@@ -13147,7 +13147,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 4) { SetPlayerSkin(playerid, JoinPed[40][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[40][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 6: // Якудза
+					case 6: // РЇРєСѓРґР·Р°
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[41][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[41][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[42][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[42][0]; }
@@ -13157,7 +13157,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 6) { SetPlayerSkin(playerid, JoinPed[46][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[46][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 7: // Мэрия
+					case 7: // РњСЌСЂРёСЏ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[47][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[47][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[48][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[48][0]; }
@@ -13166,7 +13166,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 5) { SetPlayerSkin(playerid, JoinPed[51][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[51][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 8: // Стрит Рейсеры
+					case 8: // РЎС‚СЂРёС‚ Р РµР№СЃРµСЂС‹
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[92][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[92][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[93][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[93][0]; }
@@ -13178,7 +13178,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 8) { SetPlayerSkin(playerid, JoinPed[99][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[99][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 9: // СФ Невс
+					case 9: // РЎР¤ РќРµРІСЃ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[52][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[52][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[53][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[53][0]; }
@@ -13187,7 +13187,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 5) { SetPlayerSkin(playerid, JoinPed[56][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[56][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 10: // СФПД
+					case 10: // РЎР¤РџР”
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[15][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[15][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[16][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[16][0]; }
@@ -13199,14 +13199,14 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 8) { SetPlayerSkin(playerid, JoinPed[22][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[22][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 11: // Инструкторы
+					case 11: // РРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[57][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[57][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[58][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[58][0]; }
 	                    else if(SelectCharPlace[playerid] == 3) { SetPlayerSkin(playerid, JoinPed[59][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[59][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 12: // Баллас
+					case 12: // Р‘Р°Р»Р»Р°СЃ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[60][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[60][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[61][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[61][0]; }
@@ -13214,7 +13214,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 4) { SetPlayerSkin(playerid, JoinPed[63][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[63][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 13: // Вагос
+					case 13: // Р’Р°РіРѕСЃ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[64][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[64][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[65][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[65][0]; }
@@ -13222,7 +13222,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 4) { SetPlayerSkin(playerid, JoinPed[67][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[67][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 14: // РМ
+					case 14: // Р Рњ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[68][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[68][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[69][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[69][0]; }
@@ -13231,7 +13231,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 5) { SetPlayerSkin(playerid, JoinPed[72][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[72][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 15: // Грув
+					case 15: // Р“СЂСѓРІ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[73][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[73][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[74][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[74][0]; }
@@ -13242,7 +13242,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 7) { SetPlayerSkin(playerid, JoinPed[79][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[79][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 16: // ЛС Невс
+					case 16: // Р›РЎ РќРµРІСЃ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[52][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[52][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[53][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[53][0]; }
@@ -13251,7 +13251,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 5) { SetPlayerSkin(playerid, JoinPed[56][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[56][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 17: // Ацтек
+					case 17: // РђС†С‚РµРє
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[80][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[80][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[81][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[81][0]; }
@@ -13259,7 +13259,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 4) { SetPlayerSkin(playerid, JoinPed[83][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[83][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 18: // Рифа
+					case 18: // Р РёС„Р°
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[84][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[84][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[85][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[85][0]; }
@@ -13267,13 +13267,13 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 4) { SetPlayerSkin(playerid, JoinPed[87][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[87][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 19: // Армия ЛВ
+					case 19: // РђСЂРјРёСЏ Р›Р’
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[29][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[29][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[30][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[30][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 20: // ЛВ Невс
+					case 20: // Р›Р’ РќРµРІСЃ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[52][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[52][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[53][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[53][0]; }
@@ -13282,7 +13282,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 5) { SetPlayerSkin(playerid, JoinPed[56][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[56][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 21: // ЛВПД
+					case 21: // Р›Р’РџР”
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[15][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[15][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[16][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[16][0]; }
@@ -13294,7 +13294,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 8) { SetPlayerSkin(playerid, JoinPed[22][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[22][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 22: // Медики ЛС
+					case 22: // РњРµРґРёРєРё Р›РЎ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[31][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[31][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[32][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[32][0]; }
@@ -13304,7 +13304,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 6) { SetPlayerSkin(playerid, JoinPed[36][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[36][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 23: // Байкеры
+					case 23: // Р‘Р°Р№РєРµСЂС‹
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[88][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[88][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[89][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[89][0]; }
@@ -13312,7 +13312,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 4) { SetPlayerSkin(playerid, JoinPed[91][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[91][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 24: // Медики ЛВ
+					case 24: // РњРµРґРёРєРё Р›Р’
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[31][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[31][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[32][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[32][0]; }
@@ -13322,13 +13322,13 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 6) { SetPlayerSkin(playerid, JoinPed[36][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[36][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 25: // Армия ЛС
+					case 25: // РђСЂРјРёСЏ Р›РЎ
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[29][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[29][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[30][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[30][0]; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 26: // Хитманы
+					case 26: // РҐРёС‚РјР°РЅС‹
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, 28); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = 28; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, 30); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = 30; }
@@ -13337,7 +13337,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	                    else if(SelectCharPlace[playerid] == 5) { SetPlayerSkin(playerid, 55); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 55; }
 			      		ShowMenuForPlayer(ChoseSkin,playerid);
 					}
-					case 27: // ЛСПД
+					case 27: // Р›РЎРџР”
 					{
                         if(SelectCharPlace[playerid] == 1) { SetPlayerSkin(playerid, JoinPed[15][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[15][0]; }
 	                    else if(SelectCharPlace[playerid] == 2) { SetPlayerSkin(playerid, JoinPed[16][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[16][0]; }
@@ -13365,7 +13365,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 			}
 		}
 	}
-	else if(Current == skinshopmagaz[0]) // Мужыские
+	else if(Current == skinshopmagaz[0]) // РњСѓР¶С‹СЃРєРёРµ
 	{
 		if(PlayerToPoint(3.0,playerid,222.3489,-8.5845,1002.2109))
 		{
@@ -13574,7 +13574,7 @@ public OnPlayerSelectedMenuRow(playerid, row)
 		}
 		return 1;
 	}
-	else if(Current == skinshopmagaz[1])//Женские
+	else if(Current == skinshopmagaz[1])//Р–РµРЅСЃРєРёРµ
 	{
 		if(PlayerToPoint(3.0,playerid,222.3489,-8.5845,1002.2109))
 		{
@@ -16145,7 +16145,7 @@ publics PayDay()
 				{
 					armmatsf = 0;
 				}
-				// ================== [Зарплата] ==================
+				// ================== [Р—Р°СЂРїР»Р°С‚Р°] ==================
 				if(FormaFrac[i] >= 1)
 		        {
 				    switch(PlayerInfo[i][pMember])
@@ -16882,12 +16882,12 @@ publics OnPlayerLogin(playerid, password[])
 		gNews[playerid] = 1;
 		LvNews[playerid] = 1;
 	}
-	// БОНУС
+	// Р‘РћРќРЈРЎ
 	if(PlayerInfo[playerid][pReg] == 0)
 	{
-		PlayerInfo[playerid][pLevel] = 1; // Лвл
-		PlayerInfo[playerid][pCash] = 0; // Деньги
-		PlayerInfo[playerid][pPasport] = 0; // Паспорт
+		PlayerInfo[playerid][pLevel] = 1; // Р›РІР»
+		PlayerInfo[playerid][pCash] = 0; // Р”РµРЅСЊРіРё
+		PlayerInfo[playerid][pPasport] = 0; // РџР°СЃРїРѕСЂС‚
 		PlayerInfo[playerid][pAdmin] = 0;
 		PlayerInfo[playerid][pHP] = 100;
 		PlayerInfo[playerid][pInt] = 0;
@@ -16896,13 +16896,13 @@ publics OnPlayerLogin(playerid, password[])
 		new randphone = 1000 + random(899999);
 		PlayerInfo[playerid][pPnumber] = randphone;
 		PlayerInfo[playerid][pReg] = 1;
-		PlayerInfo[playerid][pCarLic] = 0; // Лицензия на авто
+		PlayerInfo[playerid][pCarLic] = 0; // Р›РёС†РµРЅР·РёСЏ РЅР° Р°РІС‚Рѕ
 		PlayerInfo[playerid][pBank] = 0;
-		PlayerInfo[playerid][pDonateMoney] = 0; // Донат деньги
-		PlayerInfo[playerid][pFlyLic] = 0; // Лицензия на полеты
-		PlayerInfo[playerid][pMotLic] = 0; // Лицензия на мотоциклы
-		PlayerInfo[playerid][pBoatLic] = 0; // Лицензия на катера
-		PlayerInfo[playerid][pBisLic] = 0; // Лицензия на бизнес
+		PlayerInfo[playerid][pDonateMoney] = 0; // Р”РѕРЅР°С‚ РґРµРЅСЊРіРё
+		PlayerInfo[playerid][pFlyLic] = 0; // Р›РёС†РµРЅР·РёСЏ РЅР° РїРѕР»РµС‚С‹
+		PlayerInfo[playerid][pMotLic] = 0; // Р›РёС†РµРЅР·РёСЏ РЅР° РјРѕС‚РѕС†РёРєР»С‹
+		PlayerInfo[playerid][pBoatLic] = 0; // Р›РёС†РµРЅР·РёСЏ РЅР° РєР°С‚РµСЂР°
+		PlayerInfo[playerid][pBisLic] = 0; // Р›РёС†РµРЅР·РёСЏ РЅР° Р±РёР·РЅРµСЃ
 		PlayerInfo[playerid][pMobile] = 0;
 		PlayerInfo[playerid][pLabiding] = 0;
 		PlayerInfo[playerid][pHousecash] = 0;
@@ -17552,7 +17552,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			{
 				if(playa != INVALID_PLAYER_ID)
 				{
-					format(string, sizeof(string), "- %d donation was transferred to the player’s account", DonateMoney);
+					format(string, sizeof(string), "- %d donation was transferred to the playerвЂ™s account", DonateMoney);
 					SCM(playerid, COLOR_WHITE, string);
 					PlayerInfo[playa][pDonateMoney] += DonateMoney;
 					SCM(playa, COLOR_NEWS, "Account donation replenishment");
@@ -18131,14 +18131,14 @@ public OnPlayerCommandText(playerid, cmdtext[])
         }
         return 1;
     }
-    else if(strcmp(cmd,"/kaznawithdraw",true)==0)
+    else if(strcmp(cmd,"/treasurywithdraw",true)==0)
     {
         if(IsPlayerConnected(playerid))
 	    {
             new money;
        		if(PlayerInfo[playerid][pLeader] != 7) return SCM(playerid, COLOR_GRAD1, "You are not the mayor!");
 	        tmp = strtok(cmdtext, idx);
-	        if(!strlen(tmp)) return 	SCM(playerid, COLOR_WHITE, "Enter: /kaznawithdraw [Sum]");
+	        if(!strlen(tmp)) return 	SCM(playerid, COLOR_WHITE, "Enter: /treasurywithdraw [Sum]");
 			if(FormaFrac[playerid] == 7)
 			{
 				money = strval(tmp);
@@ -18154,14 +18154,14 @@ public OnPlayerCommandText(playerid, cmdtext[])
        		}
 	  	}
    	}
-    else if(strcmp(cmd,"/kaznaput",true)==0)
+    else if(strcmp(cmd,"/treasuryput",true)==0)
     {
         if(IsPlayerConnected(playerid))
 	    {
 	    	new money;
 	        if(FormaFrac[playerid] == 7)
 	        tmp = strtok(cmdtext, idx);
-	        if(!strlen(tmp)) return SCM(playerid, COLOR_WHITE, "Enter: /kaznaput [Quantity]");
+	        if(!strlen(tmp)) return SCM(playerid, COLOR_WHITE, "Enter: /treasuryput [Quantity]");
 			if(FormaFrac[playerid] == 7)
 			{
 				money = strval(tmp);
@@ -18176,7 +18176,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
    			}
       	}
 	}
-    else if(strcmp(cmd, "/kazna", true) == 0)
+    else if(strcmp(cmd, "/treasury", true) == 0)
 	{
 		if(FormaFrac[playerid] == 7)
 		{
@@ -18216,7 +18216,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				{
 					if(playa != INVALID_PLAYER_ID)
 					{
-						format(string, sizeof(string), " %d $ transferred to the player’s account", money);
+						format(string, sizeof(string), " %d $ transferred to the playerвЂ™s account", money);
 						SCM(playerid, COLOR_WHITE, string);
 						PlayerInfo[playa][pCash] += money;
 						SCM(playa, 0xFEBC41AA, string);
@@ -18242,7 +18242,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		    if(PlayerInfo[playerid][pCarLic] == 1) return SCM(playerid, COLOR_GREY, "You already have a driver's license");
 			new avtosdacha[256];
 			format(avtosdacha,sizeof(avtosdacha), "Welcome to the Driving School.\nIf you want to pass your license, click Next");
-			SPD(playerid,10022,DIALOG_STYLE_MSGBOX, "{00BFFF}•{FFFFFF}Driving test{00BFFF}•",avtosdacha, "Further", "Cancel");
+			SPD(playerid,10022,DIALOG_STYLE_MSGBOX, "{00BFFF}вЂў{FFFFFF}Driving test{00BFFF}вЂў",avtosdacha, "Further", "Cancel");
 		}
 		else SCM(playerid, COLOR_GREY, "You are not in driving school");
 	}
@@ -18823,7 +18823,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
         {
             if(!IsPlayerInRangeOfPoint(playerid,2.0,210.2006,187.1392,1003.0313)) return SCM(playerid,COLOR_GREY,"You're not in the locker room!");
             {
-                    SPD(playerid,11111,2,"{00BFFF}•{FFFFFF}Disguise{00BFFF}•","State Organizations\nMafia\nBandits\nBikers\nRegular Clothes","Choose","Cancel");
+                    SPD(playerid,11111,2,"{00BFFF}вЂў{FFFFFF}Disguise{00BFFF}вЂў","State Organizations\nMafia\nBandits\nBikers\nRegular Clothes","Choose","Cancel");
             }
         }
 		else
@@ -19688,7 +19688,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pGunLic] == 0) return SCM(playerid, COLOR_GREY, "You don't have a gun license");
 	    if(PlayerToPoint(25.0,playerid,286.9145,-38.6596,1001.5156) || PlayerToPoint(25.0,playerid,285.9187,-86.7644,1001.5229) || PlayerToPoint(25.0,playerid,313.7110,-140.3784,999.6016)) {
-		SPD(playerid, 7000, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Weapon Selection{00BFFF}•", "SD Pistol 100 cartridge (10,000 $)\nDeagle 100 cartridge (20,000 $)\nShotGun 100 cartridge (25,000 $)\nSMG 100 cartridge (20,000 $)\nAK-47 100 cartridge (30,000 $)\nM4 100 cartridge (30,000 $)\nRifle 100 cartridge (50,000 $)", "Choose", "Back"); }
+		SPD(playerid, 7000, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Weapon Selection{00BFFF}вЂў", "SD Pistol 100 cartridge (10,000 $)\nDeagle 100 cartridge (20,000 $)\nShotGun 100 cartridge (25,000 $)\nSMG 100 cartridge (20,000 $)\nAK-47 100 cartridge (30,000 $)\nM4 100 cartridge (30,000 $)\nRifle 100 cartridge (50,000 $)", "Choose", "Back"); }
 	    else SCM(playerid,COLOR_GREY, "You are not a gun store!");
 	}
 	else if(strcmp(cmd,"/unloading",true)==0)
@@ -21669,7 +21669,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
     {
         if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 437 || GetVehicleModel(GetPlayerVehicleID(playerid)) != 431)
         {
-			SPD(playerid, 10000, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}GPS{00BFFF}•", "Switch off GPS\nImportant Places\nFaction Bases\nWorks\nCar showrooms", "Choose", "Cancel");
+			SPD(playerid, 10000, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}GPS{00BFFF}вЂў", "Switch off GPS\nImportant Places\nFaction Bases\nWorks\nCar showrooms", "Choose", "Cancel");
 		}
 		else
 		{
@@ -24245,7 +24245,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			{
 				if(objectplayerid != INVALID_PLAYER_ID)
 				{
-					ShowPlayerDialog(playerid,8000,DIALOG_STYLE_LIST,"Give an object to the player","[1] - Chicken hat\n[2] - Light on the head\n[3] - Flashing light on head\n[4] - Black mask\n[5] - Bandana №1\n[6] - Bandana №2\n[7] - Bandana №3\n[8] - Bandana №4\n[9] - Bandana №5\n[10] - Dragon mask\n[11] - Laser on the head\n[12] - Almighty kit\n[13] - Parrot on shoulder\n[14] - Bright light\n[15] - Large M4 in hand\n[16] - Penis\n[17] - Parrot costume\n[18] - Delete all objects","Choose","Close");
+					ShowPlayerDialog(playerid,8000,DIALOG_STYLE_LIST,"Give an object to the player","[1] - Chicken hat\n[2] - Light on the head\n[3] - Flashing light on head\n[4] - Black mask\n[5] - Bandana в„–1\n[6] - Bandana в„–2\n[7] - Bandana в„–3\n[8] - Bandana в„–4\n[9] - Bandana в„–5\n[10] - Dragon mask\n[11] - Laser on the head\n[12] - Almighty kit\n[13] - Parrot on shoulder\n[14] - Bright light\n[15] - Large M4 in hand\n[16] - Penis\n[17] - Parrot costume\n[18] - Delete all objects","Choose","Close");
 				}
 			}
 		}
@@ -26215,9 +26215,9 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					PlayerInfo[giveplayerid][pLeader] = level;
 					PlayerInfo[giveplayerid][pMember] = level;
 					PlayerInfo[giveplayerid][pJob] = 0;
-					format(string, sizeof(string), "{FFFF00}Administrator %s appointed you to lead the organization №%d", playername, level);
+					format(string, sizeof(string), "{FFFF00}Administrator %s appointed you to lead the organization в„–%d", playername, level);
 					SCM(giveplayerid, 0x6495EDFF, string);
-					format(string, sizeof(string), "{FFFF00}you have appointed %s lead the organization №%d.", giveplayer,level);
+					format(string, sizeof(string), "{FFFF00}you have appointed %s lead the organization в„–%d.", giveplayer,level);
 					SCM(playerid, 0x6495EDFF, string);
 					OldSkin[playerid] = GetPlayerSkin(playerid);
 					if(level == 0)
@@ -26237,39 +26237,39 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 1; InviteSkin[giveplayerid] = 280;
 						format(string, sizeof(string), "[State News] New LSPD General - %s[%d]", giveplayer,giveplayerid);
                    		SCMTA(COLOR_BLUE,string);
-   					} //Полиция LS
+   					} //РџРѕР»РёС†РёСЏ LS
 					else if(level == 2)
-					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 2; InviteSkin[giveplayerid] = 286; //ФБР
+					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 2; InviteSkin[giveplayerid] = 286; //Р¤Р‘Р 
                        	format(string, sizeof(string), "[State News] New FBI Director - %s[%d]", giveplayer,giveplayerid);
      	                SCMTA(COLOR_BLUE,string);
 		 			}
 					else if(level == 3)
-					{ 	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 1; FormaFrac[giveplayerid] = 3; InviteSkin[giveplayerid] = 287; //Армия SF
+					{ 	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 1; FormaFrac[giveplayerid] = 3; InviteSkin[giveplayerid] = 287; //РђСЂРјРёСЏ SF
                         format(string, sizeof(string), "[State News] New General of the Army SF - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 4)
-					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 4; InviteSkin[giveplayerid] = 70;  //Медики SF
+					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 4; InviteSkin[giveplayerid] = 70;  //РњРµРґРёРєРё SF
                         format(string, sizeof(string), "[State News] New Chief Doctor of the Hospital SF - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 5)
-					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 223;  //ЛКН
+					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 223;  //Р›РљРќ
                         format(string, sizeof(string), "[News] New Leader of LCN - %s[%d]", giveplayer, giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 6)
-					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 120;  //Якудза
+					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 120;  //РЇРєСѓРґР·Р°
                         format(string, sizeof(string), "[News] New Yakuza Leader - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 7)
-					{	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 7; InviteSkin[giveplayerid] = 57;  //Мэрия
+					{	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 7; InviteSkin[giveplayerid] = 57;  //РњСЌСЂРёСЏ
                         format(string, sizeof(string), "[State News] The new Mayor of the city of LS - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
 					else if(level == 8)
-					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 29;  //Стрит Рейсеры
+					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 29;  //РЎС‚СЂРёС‚ Р РµР№СЃРµСЂС‹
                         format(string, sizeof(string), "[News] New Leader of Street Racers - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
 					}
@@ -26277,93 +26277,93 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 9; InviteSkin[giveplayerid] = 250;
                         format(string, sizeof(string), "[State News] New Director of Media of San Fierro - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Новости SF
+					} //РќРѕРІРѕСЃС‚Рё SF
 					else if(level == 10)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 10; InviteSkin[giveplayerid] = 281;
                         format(string, sizeof(string), "[State News] New Sheriff of SFPD - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Полиция SF
+					} //РџРѕР»РёС†РёСЏ SF
 					else if(level == 11)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 11; InviteSkin[giveplayerid] = 59;
                         format(string, sizeof(string), "[State News] New Director of AutoSchool - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Инструкторы SF
+					} //РРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ SF
 					else if(level == 12)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 102;
                         format(string, sizeof(string), "[News] New Leader Ballas - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Баллас
+					} //Р‘Р°Р»Р»Р°СЃ
 					else if(level == 13)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 108;
                         format(string, sizeof(string), "[News] New Leader Vagos - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Вагос
+					} //Р’Р°РіРѕСЃ
 					else if(level == 14)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 111;
                         format(string, sizeof(string), "[News] New Leader of the Russian Mafia - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Русская мафия
+					} //Р СѓСЃСЃРєР°СЏ РјР°С„РёСЏ
 					else if(level == 15)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 106;
                         format(string, sizeof(string), "[News] New Leader Groove - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Грув
+					} //Р“СЂСѓРІ
 					else if(level == 16)
 					{	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 16; InviteSkin[giveplayerid] = 261;
                         format(string, sizeof(string), "[State News] New Director of Media LS - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Новости LS
+					} //РќРѕРІРѕСЃС‚Рё LS
 					else if(level == 17)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 115;
                         format(string, sizeof(string), "[News] New Aztec Leader - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Ацтеки
+					} //РђС†С‚РµРєРё
 					else if(level == 18)
 					{	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 174;
                         format(string, sizeof(string), "[News] New Leader of Rifa - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Рифа
+					} //Р РёС„Р°
 					else if(level == 19)
 					{	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 2; FormaFrac[giveplayerid] = 19; InviteSkin[giveplayerid] = 287;
                         format(string, sizeof(string), "[State News] New General of Army LV -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Армия LV
+					} //РђСЂРјРёСЏ LV
 					else if(level == 20)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 20; InviteSkin[giveplayerid] = 261;
                         format(string, sizeof(string), "[State News] New Director of Media LV -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Новости LV
+					} //РќРѕРІРѕСЃС‚Рё LV
 					else if(level == 21)
 					{	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 21; InviteSkin[giveplayerid] = 281;
                         format(string, sizeof(string), "[State News] New General LVPD -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Полиция LV
+					} //РџРѕР»РёС†РёСЏ LV
 					else if(level == 22)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 22; InviteSkin[giveplayerid] = 70;
                         format(string, sizeof(string), "[State News] New Chief Doctor LS -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Медики LS
+					} //РњРµРґРёРєРё LS
 					else if(level == 23)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 248;
                         format(string, sizeof(string), "[News] New Biker Leader - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Байкеры
+					} //Р‘Р°Р№РєРµСЂС‹
 					else if(level == 24)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; FormaFrac[giveplayerid] = 24; InviteSkin[giveplayerid] = 70;
                         format(string, sizeof(string), "[State News] New Chief Doctor of the Hospital LV -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Медики LV
+					} //РњРµРґРёРєРё LV
 					else if(level == 25)
 					{ 	PlayerInfo[giveplayerid][pRank] = 10; PlayerInfo[giveplayerid][pVoennik] = 3; FormaFrac[giveplayerid] = 25; InviteSkin[giveplayerid] = 287;
                         format(string, sizeof(string), "[State News] New General of Army LS - %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-					} //Армия LS
+					} //РђСЂРјРёСЏ LS
 					else if(level == 26)
 					{
 						PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 30; 
                         format(string, sizeof(string), "[State News] New Chief Hitman -  %s[%d]", giveplayer,giveplayerid);
                         SCMTA(COLOR_BLUE,string);
-	  				}//Хитманы
+	  				}//РҐРёС‚РјР°РЅС‹
 					else if(level == 27)
 					{
 				 		PlayerInfo[giveplayerid][pRank] = 10; InviteSkin[giveplayerid] = 280; FormaFrac[giveplayerid] = 27;
@@ -27144,7 +27144,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] < 1) return ESCM
   		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-		SPD(playerid, 7777, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Teleport Menu{00BFFF}•", "Faction Bases\nWorks\nCar showrooms\nRest", "Choose", "Back");
+		SPD(playerid, 7777, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Teleport Menu{00BFFF}вЂў", "Faction Bases\nWorks\nCar showrooms\nRest", "Choose", "Back");
 	}
 	if(strcmp(cmd, "/goto", true) == 0)
 	{
@@ -27515,17 +27515,17 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
 		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			tmp = strtok(cmdtext, idx);
-			if(!strlen(tmp)) return	SCM(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color №1] [Color №2]");
+			if(!strlen(tmp)) return	SCM(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color в„–1] [Color в„–2]");
 			new car;
 			car = strval(tmp);
 			if(car < 400 || car > 611) { SCM(playerid, COLOR_GREY, "The car number cannot be less than 400 and more than 611"); return true; }
 			tmp = strtok(cmdtext, idx);
-			if(!strlen(tmp)) return SCM(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color №1] [Color №2]");
+			if(!strlen(tmp)) return SCM(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color в„–1] [Color в„–2]");
 			new color1;
 			color1 = strval(tmp);
 			if(color1 < 0 || color1 > 255) { SCM(playerid, COLOR_GREY, "The color number cannot be less than 0 and greater than 255"); return true; }
 			tmp = strtok(cmdtext, idx);
-			if(!strlen(tmp)) return	SCM(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color №1] [Color №2]");
+			if(!strlen(tmp)) return	SCM(playerid, COLOR_WHITE, "Enter: /veh [id auto] [Color в„–1] [Color в„–2]");
 			new color2;
 			new intt = GetPlayerInterior(playerid);
 			color2 = strval(tmp);
@@ -27654,7 +27654,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				if(playa != INVALID_PLAYER_ID)
 				{
 					GetPlayerName(playa, playername, sizeof(playername));
-					format(string, sizeof(string), "%d $ transferred to the player’s account %s", money,playername);
+					format(string, sizeof(string), "%d $ transferred to the playerвЂ™s account %s", money,playername);
 					SCM(playerid, COLOR_WHITE, string);
 					PlayerInfo[playa][pBank] += money;
 					format(string, sizeof(string), "Top up your account with the amount: %d $", money);
@@ -28790,7 +28790,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 					idx++;
 				}
 				result[idx - offset] = EOS;
-				if(!strlen(result)) return SendClientMessage(playerid, COLOR_WHITE, "{F74848}» Enter{FFFFFF}: /race [text]");
+				if(!strlen(result)) return SendClientMessage(playerid, COLOR_WHITE, "{F74848}В» Enter{FFFFFF}: /race [text]");
 				format(string, sizeof(string), "[Incoming]: %s. Sender: Unknown {FFFFFF} ( /racegps -> 1 )",result);
 				SetPlayerCheckpoint(playerid, 1053.9081,-908.9748,42.8060, 5.0);
 				SendRacersMessage(COLOR_ORANGE, string);
@@ -28886,7 +28886,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				if(MurderPlayers >= 4) return SendClientMessage(playerid,COLOR_WHITE,"Lots of participants!");
 				tmp = strtok(cmdtext, idx);
 				if(strlen(tmp) == 0)
-				return SendClientMessage(playerid, COLOR_YELLOW, "{F74848}» Enter{FFFFFF}: /reg [id]");
+				return SendClientMessage(playerid, COLOR_YELLOW, "{F74848}В» Enter{FFFFFF}: /reg [id]");
 				new pregidsss = strval(tmp);
 				if (!ProxDetectorS(5.0, playerid, pregidsss)) return SendClientMessage(playerid, COLOR_GREY, "The player is too far away!");
 				new name[35];
@@ -29311,7 +29311,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) { return true; }
 			ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch",4.0,0,0,0,0,0);
 			new listitems[] = "Withdraw cash\nBalance\nHome account";
-			SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", listitems, "Further", "Exit");
+			SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", listitems, "Further", "Exit");
 			return true;
 		}
 	}
@@ -29401,7 +29401,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		{
 		    if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
 			new listitems[] = "1st Level Administration\n1st Level Administration {00BFFF}(Part 2)\n2 Administration Level\n3 Administration Level\n4 Administration Level\n5 Administration Level\n6 Administration Level\n7 Administration Level\n8 Administration Level";
-			SPD(playerid, 20011, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Administrator Commands{00BFFF}•", listitems, "Choose", "Cancel");
+			SPD(playerid, 20011, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Administrator Commands{00BFFF}вЂў", listitems, "Choose", "Cancel");
 		}
 		else
         {
@@ -31228,7 +31228,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 			if(!IsPlayerInAnyVehicle(playerid)) return SCM(playerid, COLOR_GREY, "You must be in the car!");
 			if(PlayerToPoint(2.0,playerid,844.3691,-597.4912,18.4219))
 			{
-				SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Tuning menu{00BFFF}•", "Color (20.000)\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
+				SPD(playerid, 8005, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Tuning menu{00BFFF}вЂў", "Color (20.000)\nPainting work (30.000)\nNitro\nHydraulics (200.000)\nWheels (50.000)\nBumper\nSpoilers\nHoods (30.000)\nHeadlights (20.000)\nSilencers\nAir intakes\nRebuild Engine (500.000)\n{33AA33}Repair Auto|Moto (500)\n{33AA33}Refill Auto|Moto (5.000)", "Choose", "Back");
 	    	}
 	    	else
 			{
@@ -31245,11 +31245,11 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 	    if(PlayerInfo[playerid][pPHousekey] == 255) return SCM(playerid, COLOR_GREY, "You don't have a home");
 		if(PlayerInfo[playerid][pCarLic] != 1) return SCM(playerid, COLOR_GREY, "You don't have a driver's license!");
-		if(PlayerToPoint(4.0,playerid, 562.4449,-1291.9125,17.2482)) { SPD(playerid,4555,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}car showroom{00BFFF}•", "Landstalker\nBravura\nPerenniel\nEsperanto\nPrevion\nHermes\nWalton\nRegina\nBuccaneer\nWillard\nTractor\nClover\nSadler\nHustler\nTampa\nBroadway\nTornado\nPicador", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, -1641.6460,1203.5209,7.2479)) { SPD(playerid,4556,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}car showroom{00BFFF}•", "Part 1\nPart 2", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, -1966.8695,294.0146,35.4440)) { SPD(playerid,4655,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Motorcycle showroom{00BFFF}•", "PCJ-600\nFreeway\nSanchez\nQuad\nFCR-900\nNRG-500\nBF-400\nWayfarer", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, 2546.4695,1970.4794,10.8203)) { SPD(playerid,4755,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}car showroom{00BFFF}•", "Buffalo\nStretch\nBF Injection\nPatriot\nZR-350\nComet\nBlista\nMesa\nFeltzer\nSlamvan\nSunrise\nYosemite\nUranus\nStratum\nFlash\nHuntley\nEuros\nClub\nAlpha\nPhoenix", "Continue", "Cancel"); }
-		else if(PlayerToPoint(4.0,playerid, 2200.6201,1392.4924,10.8203)) { SPD(playerid,4855,DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}car showroom{00BFFF}•", "Infernus\nCheetah\nBanshee\nTurismo\nHotring Racer\nSandking\nHotring Racer 2\nHotring Racer 3\nSuper GT\nBullet\nJester\nSultan\nElegy", "Continue", "Cancel"); }
+		if(PlayerToPoint(4.0,playerid, 562.4449,-1291.9125,17.2482)) { SPD(playerid,4555,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}car showroom{00BFFF}вЂў", "Landstalker\nBravura\nPerenniel\nEsperanto\nPrevion\nHermes\nWalton\nRegina\nBuccaneer\nWillard\nTractor\nClover\nSadler\nHustler\nTampa\nBroadway\nTornado\nPicador", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, -1641.6460,1203.5209,7.2479)) { SPD(playerid,4556,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}car showroom{00BFFF}вЂў", "Part 1\nPart 2", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, -1966.8695,294.0146,35.4440)) { SPD(playerid,4655,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}Motorcycle showroom{00BFFF}вЂў", "PCJ-600\nFreeway\nSanchez\nQuad\nFCR-900\nNRG-500\nBF-400\nWayfarer", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, 2546.4695,1970.4794,10.8203)) { SPD(playerid,4755,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}car showroom{00BFFF}вЂў", "Buffalo\nStretch\nBF Injection\nPatriot\nZR-350\nComet\nBlista\nMesa\nFeltzer\nSlamvan\nSunrise\nYosemite\nUranus\nStratum\nFlash\nHuntley\nEuros\nClub\nAlpha\nPhoenix", "Continue", "Cancel"); }
+		else if(PlayerToPoint(4.0,playerid, 2200.6201,1392.4924,10.8203)) { SPD(playerid,4855,DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}car showroom{00BFFF}вЂў", "Infernus\nCheetah\nBanshee\nTurismo\nHotring Racer\nSandking\nHotring Racer 2\nHotring Racer 3\nSuper GT\nBullet\nJester\nSultan\nElegy", "Continue", "Cancel"); }
 		else SCM(playerid, COLOR_GREY, "You must be near a car dealership/motorcycle showroom!");
 	}
 	if(strcmp(cmd, "/sellcar", true) == 0)
@@ -32277,7 +32277,7 @@ public OnPlayerUpdate(playerid)
  	}
  	new AnimLib[30], AnimName[30];
     GetAnimationName(GetPlayerAnimationIndex(playerid), AnimLib, sizeof(AnimLib), AnimName, sizeof(AnimName));
-    // ============================== [ Античит на Оружие ] ==============================
+    // ============================== [ РђРЅС‚РёС‡РёС‚ РЅР° РћСЂСѓР¶РёРµ ] ==============================
     new gun = GetPlayerWeapon(playerid);
 	if(gun == 6 || gun == 9 || gun == 10 || gun == 11 || gun == 12 || gun == 13 || gun == 14 || gun == 15 || gun == 16 || gun == 18 || gun == 22 || gun == 26 || gun == 27 || gun == 28 || gun == 32 || gun == 35 || gun == 36 || gun == 37 || gun == 38 || gun == 39 || gun == 40 || gun == 42 || gun == 44 || gun == 45)
 	{
@@ -32707,7 +32707,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) { return true; }
 				ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch",4.0,0,0,0,0,0);
 				new listitems[] = "Withdraw cash\nBalance\nHome account";
-				SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}ATM{00BFFF}•", listitems, "Further", "Exit");
+				SPD(playerid, 8900, DIALOG_STYLE_LIST, "{00BFFF}вЂў{FFFFFF}ATM{00BFFF}вЂў", listitems, "Further", "Exit");
 				return true;
 			}
 		}
@@ -32796,7 +32796,7 @@ stock MotLic(carid)
 }
 stock CreateVehicles()
 {
-	//============================== [ Медики Сан Фиерро ] =================================
+	//============================== [ РњРµРґРёРєРё РЎР°РЅ Р¤РёРµСЂСЂРѕ ] =================================
 	medicssf[0] = AddStaticVehicleEx(416,-2665.4248,611.2086,14.6056,179.5688,1,3,1800); // Ambulance 0
 	medicssf[1] = AddStaticVehicleEx(416,-2661.2083,611.0942,14.6027,180.4825,1,3,1800); // Ambulance 1
 	medicssf[2] = AddStaticVehicleEx(416,-2669.6826,611.1447,14.5899,180.8062,1,3,1800); // Ambulance 2
@@ -32806,7 +32806,7 @@ stock CreateVehicles()
 	medicssf[6] = AddStaticVehicleEx(416,-2706.2490,595.5879,14.6025,270.1201,1,3,1800); // Ambulance 6
 	medicssf[7] = AddStaticVehicleEx(487,-2703.4836,622.4868,14.6662,176.4144,1,3,1800); // Medic Maverick 0
 	medicssf[8] = AddStaticVehicleEx(487,1631.0551,1820.4188,10.9949,359.9527,0,0,1800); // midikSF_vert
-	//================================ [ Медики Лос Сантос ] ===============================
+	//================================ [ РњРµРґРёРєРё Р›РѕСЃ РЎР°РЅС‚РѕСЃ ] ===============================
 	medicsls[0] = AddStaticVehicleEx(416,1178.5431,-1338.7671,14.0167,270.0624,1,3,1800); // Ambulance 0
 	medicsls[1] = AddStaticVehicleEx(416,1178.0116,-1308.9192,13.9939,268.2672,1,3,1800); // Ambulance 1
 	medicsls[2] = AddStaticVehicleEx(487,1178.7334,-1361.2590,14.2509,269.0083,1,3,1800); // Ambulance 2
@@ -32817,7 +32817,7 @@ stock CreateVehicles()
 	medicsls[7] = AddStaticVehicleEx(416,1213.4685,-1323.6259,13.7119,359.1526,1,3,1800); // Ambulance 7
 	medicsls[8] = AddStaticVehicleEx(416,1213.5892,-1357.7468,13.7089,0.0930,1,3,1800); // Ambulance 8
 	medicsls[9] = AddStaticVehicleEx(416,1213.5636,-1346.7876,13.7211,0.0978,1,3,1800); // Ambulance 9
-	//================================ [ Медики Лас Вентурас ] ===============================
+	//================================ [ РњРµРґРёРєРё Р›Р°СЃ Р’РµРЅС‚СѓСЂР°СЃ ] ===============================
 	medicslv[0] = AddStaticVehicleEx(416,1620.4630,1850.6283,10.9697,180.2412,1,3,1800); // Ambulance 0
 	medicslv[1] = AddStaticVehicleEx(416,1616.1317,1850.6100,11.0046,180.2408,1,3,1800); // Ambulance 1
 	medicslv[2] = AddStaticVehicleEx(416,1611.9624,1850.5928,11.0261,180.2408,1,3,1800); // Ambulance 2
@@ -32826,7 +32826,7 @@ stock CreateVehicles()
 	medicslv[5] = AddStaticVehicleEx(416,1599.3500,1850.5466,10.9629,180.2446,1,3,1800); // Ambulance 5
 	medicslv[6] = AddStaticVehicleEx(416,1595.1877,1850.5289,10.9924,180.2446,1,3,1800); // Ambulance 6
 	medicslv[7] = AddStaticVehicleEx(416,1591.0562,1850.5118,11.0216,180.2446,1,3,1800); // Ambulance 7
-	//================================ [ СФПД ] ====================================
+	//================================ [ РЎР¤РџР” ] ====================================
 	sfpdcar[0] = AddStaticVehicleEx(427,-1638.7850,653.7558,-5.1094,271.5658,1,79,1800); // SFPD Enforcer 0
 	sfpdcar[1] = AddStaticVehicleEx(427,-1638.8691,657.6266,-5.1104,271.5658,1,79,1800); // SFPD Enforcer 1
 	sfpdcar[2] = AddStaticVehicleEx(427,-1638.9778,661.6664,-5.1103,271.5658,1,79,1800); // SFPD Enforcer 2
@@ -32862,7 +32862,7 @@ stock CreateVehicles()
 	sfpdcar[33] = AddStaticVehicleEx(597,-1616.6355,733.3946,-5.4724,358.6333,1,79,1800); // SFPD Cruiser 8
 	sfpdcar[34] = AddStaticVehicleEx(597,-1595.9708,676.0563,-5.4748,359.1057,1,79,1800); // SFPD Cruiser 8
 	sfpdcar[35] = AddStaticVehicleEx(596,-1600.2311,676.0543,-5.5208,358.5910,1,79,1800); // SFPD Cruiser 8
-	//============================== [ Русская Мафия ] =============================
+	//============================== [ Р СѓСЃСЃРєР°СЏ РњР°С„РёСЏ ] =============================
 	ruscar[0] = AddStaticVehicleEx(579,984.1832,1720.4199,8.5910,90.3216,0,0,1800); // RM HUNTLEY 0
 	ruscar[1] = AddStaticVehicleEx(579,984.1126,1723.8441,8.5843,91.2075,0,0,1800); // RM HUNTLEY 1
 	ruscar[2] = AddStaticVehicleEx(579,984.1122,1727.3198,8.5860,91.1532,0,0,1800); // RM HUNTLEY 2
@@ -32875,7 +32875,7 @@ stock CreateVehicles()
 	ruscar[9] = AddStaticVehicleEx(579,983.9714,1730.7939,8.5866,90.0946,0,0,1800); // RM HUNTLEY 7
 	ruscar[10] = AddStaticVehicleEx(487,957.9562,1754.1691,8.4446,248.4217,0,0,1800); // RM Helicopter 0
 	ruscar[11] = AddStaticVehicleEx(409,949.6057,1715.6672,8.5426,181.0793,0,0,1800); // RM Limo 0
-	//================================== [ ЛКН ] ===================================
+	//================================== [ Р›РљРќ ] ===================================
 	lcncar[0] =	AddStaticVehicleEx(445,1413.5298,784.6968,10.6952,270.0358,0,0,1800); // LCN Admiral 1
 	lcncar[1] =	AddStaticVehicleEx(445,1413.5338,778.3932,10.6951,270.0358,0,0,1800); // LCN Admiral 3
 	lcncar[2] =	AddStaticVehicleEx(445,1413.5380,771.8521,10.6949,270.0358,0,0,1800); // LCN Admiral 5
@@ -32892,7 +32892,7 @@ stock CreateVehicles()
 	cnncar[3] = AddStaticVehicleEx(582,-2052.0874,478.6587,35.2299,269.6934,1,16,1800); // News Van 3
 	cnncar[4] = AddStaticVehicleEx(582,-2051.2991,487.4715,35.2243,269.5258,1,16,1800); // News Van 4
 	cnnmav = AddStaticVehicleEx(488,-2060.9878,442.0086,139.9191,270.0095,11,16,1800); // CNN maverick
-	//=================================== [ Такси ] =================================
+	//=================================== [ РўР°РєСЃРё ] =================================
 	taxicar[0] = AddStaticVehicleEx(438,1649.5000000,-1111.5999800,24.1000000,90.0000000,6,6,1800); //Cabbie
 	taxicar[1] = AddStaticVehicleEx(438,1649.5999800,-1107.0999800,24.1000000,90.0000000,6,6,1800); //Cabbie
 	taxicar[2] = AddStaticVehicleEx(438,1649.5999800,-1102.6999500,24.1000000,90.0000000,6,6,1800); //Cabbie
@@ -32919,7 +32919,7 @@ stock CreateVehicles()
 	taxicar[23] = AddStaticVehicleEx(420,-80.8301,-1197.9642,2.0334,344.0977,6,6,1800); // taxi
 	taxicar[24] = AddStaticVehicleEx(420,-87.0147,-1196.3429,2.0226,345.2068,6,6,1800); // taxi
 	taxicar[25] = AddStaticVehicleEx(420,-93.0536,-1194.7335,2.0340,344.3202,6,6,1800); // taxi
-	//============================== [ Аренда Мотоциклов ] ===================================
+	//============================== [ РђСЂРµРЅРґР° РњРѕС‚РѕС†РёРєР»РѕРІ ] ===================================
 	rentcarsf[0] = AddStaticVehicleEx(461,-1990.5000000,276.1000100,34.8000000,270.0000000,145,115,1800); //PCJ-600
     rentcarsf[1] = AddStaticVehicleEx(463,-1990.5999800,272.7999900,34.8000000,270.0000000,37,37,1800); //Freeway
     rentcarsf[2] = AddStaticVehicleEx(468,-1990.8000500,269.2000100,34.9000000,270.0000000,215,142,1800); //Sanchez
@@ -32927,7 +32927,7 @@ stock CreateVehicles()
     rentcarsf[4] = AddStaticVehicleEx(522,-1991.6999500,262.1000100,34.8000000,270.0000000,132,4,1800); //NRG-500
     rentcarsf[5] = AddStaticVehicleEx(581,-1991.8000500,258.7000100,34.9000000,270.0000000,88,88,1800); //BF-400
     rentcarsf[6] = AddStaticVehicleEx(586,-1992.0999800,255.1000100,34.8000000,270.0000000,132,148,1800); //Wayfarer
-	//============================= [ Аренда Машин ] ====================================
+	//============================= [ РђСЂРµРЅРґР° РњР°С€РёРЅ ] ====================================
 	rentcarls[0] = AddStaticVehicleEx(401,521.0999800,-1287.5000000,17.1000000,219.5000000,122,117,1800); //Bravura
     rentcarls[1] = AddStaticVehicleEx(410,524.0000000,-1285.0999800,17.0000000,219.0000000,93,27,1800); //Manana
     rentcarls[2] = AddStaticVehicleEx(436,527.0000000,-1282.9000200,17.1000000,220.0000000,109,108,1800); //Previon
@@ -32939,7 +32939,7 @@ stock CreateVehicles()
     rentcarls[8] = AddStaticVehicleEx(529,546.5999800,-1267.6999500,17.0000000,214.0000000,102,28,1800); //Willard
     rentcarls[9] = AddStaticVehicleEx(540,549.7000100,-1265.3000500,17.2000000,214.0000000,124,28,1800); //Vincent
     rentcarls[10] = AddStaticVehicleEx(546,553.0999800,-1262.8000500,17.1000000,214.0000000,105,88,1800); //Intruder
-	//============================= [ Аренда Гоночных Машин ]====================================
+	//============================= [ РђСЂРµРЅРґР° Р“РѕРЅРѕС‡РЅС‹С… РњР°С€РёРЅ ]====================================
 	rentcarlv[0] = AddStaticVehicleEx(402,2148.6999500,1397.5999800,10.8000000,0.0000000,77,132,1800); //Buffalo
     rentcarlv[1] = AddStaticVehicleEx(411,2142.1001000,1398.0999800,10.6000000,0.0000000,32,32,1800); //Infernus
     rentcarlv[2] = AddStaticVehicleEx(415,2135.8000500,1398.1999500,10.7000000,0.0000000,-1,-1,1800); //Cheetah
@@ -32956,7 +32956,7 @@ stock CreateVehicles()
     rentcarlv[13] = AddStaticVehicleEx(587,2145.6001000,1409.3000500,10.6000000,180.0000000,34,25,1800); //Euros
     rentcarlv[14] = AddStaticVehicleEx(602,2107.1999500,1408.8000500,10.7000000,180.0000000,100,100,1800); //Alpha
     rentcarlv[15] = AddStaticVehicleEx(603,2110.1999500,1397.0000000,10.8000000,0.0000000,100,100,1800); //Phoenix
-    //============================== [ Стрит Рейсеры ] ===================================
+    //============================== [ РЎС‚СЂРёС‚ Р РµР№СЃРµСЂС‹ ] ===================================
     streetcar[0] = AddStaticVehicleEx(411,659.81201172,-1258.47094727,13.43200016,0.00000000,6,1,1800); //Infernus
 	streetcar[1] = AddStaticVehicleEx(541,659.78698730,-1265.76403809,13.33199978,0.00000000,6,1,1800); //Bullet
 	streetcar[2] = AddStaticVehicleEx(559,659.88500977,-1272.78796387,13.38700008,0.00000000,6,1,1800); //Jester
@@ -32972,7 +32972,7 @@ stock CreateVehicles()
 	streetcar[12] = AddStaticVehicleEx(521,659.84399414,-1252.38098145,13.38199997,354.00000000,6,1,1800); //FCR-900
 	streetcar[13] = AddStaticVehicleEx(521,660.66802979,-1248.18103027,13.64400005,353.99597168,6,1,1800); //FCR-900
 	streetcar[14] = AddStaticVehicleEx(521,661.58099365,-1244.32800293,13.89000034,353.99597168,6,1,1800); //FCR-900
-	//================================== [ Байкеры ] ======================
+	//================================== [ Р‘Р°Р№РєРµСЂС‹ ] ======================
 	hamccar[0] = AddStaticVehicleEx(463,694.79998779,-473.20001221,16.00000000,270.00000000,0,0,1800); //Freeway
 	hamccar[1] = AddStaticVehicleEx(463,694.90002441,-470.10000610,16.00000000,270.00000000,0,0,1800); //Freeway
 	hamccar[2] = AddStaticVehicleEx(463,695.09997559,-466.89999390,16.00000000,270.00000000,0,0,1800); //Freeway
@@ -32984,13 +32984,13 @@ stock CreateVehicles()
 	hamccar[8] = AddStaticVehicleEx(463,708.20001221,-467.70001221,16.00000000,90.00000000,0,0,1800); //Freeway
 	hamccar[9] = AddStaticVehicleEx(463,708.20001221,-470.70001221,16.00000000,90.00000000,0,0,1800); //Freeway
 	matsfurahell[0] = AddStaticVehicleEx(459,696.09997559,-451.00000000,16.50000000,180.00000000,0,0,1800); //Pony
-	//================================== [ Инкассаторы ] ==================================
+	//================================== [ РРЅРєР°СЃСЃР°С‚РѕСЂС‹ ] ==================================
 	Inkasator[0] = AddStaticVehicleEx(428,1688.1999500,-1084.9000200,24.2000000,0.0000000,0,0,1800); //Securicar
 	Inkasator[1] = AddStaticVehicleEx(428,1692.5000000,-1085.0999800,24.2000000,0.0000000,0,0,1800); //Securicar
 	Inkasator[2] = AddStaticVehicleEx(428,1697.0000000,-1085.0999800,24.2000000,0.0000000,0,0,1800); //Securicar
 	Inkasator[3] = AddStaticVehicleEx(428,1701.5999800,-1085.0999800,24.2000000,0.0000000,0,0,1800); //Securicar
 	Inkasator[4] = AddStaticVehicleEx(428,1706.1999500,-1085.0999800,24.2000000,0.0000000,0,0,1800); //Securicar
-	//================================== [ ЛВПД ] ==================================
+	//================================== [ Р›Р’РџР” ] ==================================
 	lvpdcar[0] = AddStaticVehicleEx(598,2268.9678,2443.6958,10.5668,359.5409,0,1,1800); // LVPD Cruiser 0
 	lvpdcar[1] = AddStaticVehicleEx(598,2273.5706,2443.7290,10.5665,0.6987,0,1,1800); // LVPD Cruiser 1
 	lvpdcar[2] = AddStaticVehicleEx(598,2277.9482,2443.7490,10.5654,359.8027,0,1,1800); // LVPD Cruiser 2
@@ -33014,27 +33014,27 @@ stock CreateVehicles()
 	lvpdcar[20] = AddStaticVehicleEx(523,2255.9148,2459.6626,10.3902,180.0087,1,1,1800); //
 	lvpdcar[21] = AddStaticVehicleEx(523,2251.9368,2459.7366,10.3918,180.0135,1,1,1800); //
 	lvpdcar[22] = AddStaticVehicleEx(523,2260.2842,2459.7458,10.3889,181.0847,1,1,1800); //
-	//================================== [ Новости Лос Сантос ] ================================
+	//================================== [ РќРѕРІРѕСЃС‚Рё Р›РѕСЃ РЎР°РЅС‚РѕСЃ ] ================================
 	lsnewscar[0] = AddStaticVehicleEx(582,1668.2490,-1699.8988,15.6692,113.6156,1,2,1800); // LS NEWS VAN 0
 	lsnewscar[1] = AddStaticVehicleEx(582,1668.3706,-1705.5723,15.6659,113.6156,1,2,1800); // LS NEWS VAN 1
 	lsnewscar[2] = AddStaticVehicleEx(582,1668.7556,-1711.6621,15.6669,113.6156,1,2,1800); // LS NEWS VAN 2
 	lsnewscar[3] = AddStaticVehicleEx(582,1668.5909,-1718.2150,15.6650,113.6156,1,2,1800); // LS NEWS VAN 3
 	lsnewscar[4] = AddStaticVehicleEx(582,1667.6899,-1694.3616,15.6655,113.6156,1,2,1800); // LS NEWS VAN 4
 	lsnewscar[5] = AddStaticVehicleEx(488,1654.3325,-1637.6818,83.9478,360.0000,1,2,1800); // LS NEWS Helicopter 0
-	//================================= [ Новости Лас Вентурас ] ================================
+	//================================= [ РќРѕРІРѕСЃС‚Рё Р›Р°СЃ Р’РµРЅС‚СѓСЂР°СЃ ] ================================
 	lvnewscar[0] = AddStaticVehicleEx(488,2647.3130,1214.7228,27.0833,179.9999,1,3,1800); // LV NEWS VAN 0
 	lvnewscar[1] = AddStaticVehicleEx(582,2639.1929,1167.8363,10.8775,33.1387,1,3,1800); // LV NEWS VAN 1
 	lvnewscar[2] = AddStaticVehicleEx(582,2646.3479,1168.2446,10.8790,34.0851,1,3,1800); // LV NEWS VAN 2
 	lvnewscar[3] = AddStaticVehicleEx(582,2653.7300,1169.2220,10.8752,35.7964,1,3,1800); // LV NEWS VAN 3
 	lvnewscar[4] = AddStaticVehicleEx(582,2660.8367,1168.9835,10.8743,33.8417,1,3,1800); // LV NEWS VAN 4
 	lvnewscar[5] = AddStaticVehicleEx(582,2666.9121,1169.7819,10.8752,34.9291,1,3,1800); // LV NEWS Helicopter 0
-	//================================ [ Мэрия ] ===============================
+	//================================ [ РњСЌСЂРёСЏ ] ===============================
 	govcar[0] =	AddStaticVehicleEx(421,1406.5829,-1775.7263,13.3825,62.3187,1,1,1800); // Goverment Washingtone
 	govcar[1] =	AddStaticVehicleEx(421,1406.0670,-1780.0697,13.3301,66.5176,1,1,1800); // Goverment Washingtone
 	govcar[2] =	AddStaticVehicleEx(421,1406.4202,-1785.5613,13.3880,60.2430,1,1,1800); // Goverment Washingtone
 	govcar[3] =	AddStaticVehicleEx(409,1405.6885,-1797.0092,13.3953,358.7616,1,1,1800); // Goverment Limo
 	govcar[4] =	AddStaticVehicleEx(487,1534.9000200,-1790.5000000,33.8000000,0.0000000,1,1,1800); //Maverick
-	//================================= [ Лос Сантос Армия ] ====================================
+	//================================= [ Р›РѕСЃ РЎР°РЅС‚РѕСЃ РђСЂРјРёСЏ ] ====================================
     lsacar[0] = AddStaticVehicleEx(470,2739.5549,-2419.2371,13.6304,270.2878,0,0,1800);
     lsacar[1] = AddStaticVehicleEx(470,2739.5923,-2423.3367,13.6305,270.9906,0,0,1800);
     lsacar[2] = AddStaticVehicleEx(470,2739.6287,-2427.6265,13.6315,271.0866,0,0,1800);
@@ -33051,7 +33051,7 @@ stock CreateVehicles()
 	lsacar[13] = AddStaticVehicleEx(470,2740.5520,-2392.8936,13.6257,142.6246,0,0,1800);
 	lsacar[14] = AddStaticVehicleEx(470,2745.5024,-2392.9404,13.6255,142.6646,0,0,1800);
 	lsacar[15] = AddStaticVehicleEx(470,2750.4390,-2392.9768,13.6442,143.1559,0,0,1800);
-   	//================================ [ Водитель Автобусов ] =============================
+   	//================================ [ Р’РѕРґРёС‚РµР»СЊ РђРІС‚РѕР±СѓСЃРѕРІ ] =============================
     bus[0] = AddStaticVehicleEx(437,1623.0000000,-1012.5000000,24.2000000,162.0000000,1,2,1800); //Coach
 	bus[1] = AddStaticVehicleEx(437,1627.1999500,-1013.7999900,24.1000000,162.4990000,1,2,1800); //Coach
 	bus[2] = AddStaticVehicleEx(437,1631.4000200,-1015.0999800,24.1000000,162.4990000,1,2,1800); //Coach
@@ -33066,7 +33066,7 @@ stock CreateVehicles()
 	bus[11] = AddStaticVehicleEx(437,1080.6300,-1763.7549,13.5050,270.0393,1,2,1800); // bus2
 	bus[12] = AddStaticVehicleEx(437,1080.6649,-1769.6602,13.4916,270.0523,1,2,1800); // bus3
 	bus[13] = AddStaticVehicleEx(437,1080.6963,-1775.5421,13.4784,270.0924,1,2,1800); // bus4
-	//========================== [ Механники ] =====================================
+	//========================== [ РњРµС…Р°РЅРЅРёРєРё ] =====================================
     mehanik[0] = AddStaticVehicleEx(525,1621.4000200,-1107.5999800,23.9000000,90.2500000,1,3,1800); //Tow Truck
 	mehanik[1] = AddStaticVehicleEx(525,1621.5000000,-1103.0000000,23.9000000,90.2470000,1,3,1800); //Tow Truck
 	mehanik[2] = AddStaticVehicleEx(525,1621.5999800,-1098.5999800,23.9000000,90.2470000,1,3,1800); //Tow Truck
@@ -33086,7 +33086,7 @@ stock CreateVehicles()
 	mehanik[16] = AddStaticVehicleEx(525,-65.6145,-1112.6390,0.9591,160.8992,1,3,1800); // mex1
 	mehanik[17] = AddStaticVehicleEx(525,-71.1431,-1110.6771,0.9604,161.3991,1,3,1800); // mex2
 	mehanik[18] = AddStaticVehicleEx(525,-76.3284,-1108.8599,0.9542,160.2046,1,3,1800); // mex3
-	//================================= [ Инструкторы SF ] ==============================
+	//================================= [ РРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ SF ] ==============================
 	liccarsf[0] = AddStaticVehicleEx(587,-2077.0000000,-83.8000000,35.2000000,180.0000000,198,198,1800); //Sentinel
 	liccarsf[1] = AddStaticVehicleEx(587,-2081.3000500,-83.8000000,35.2000000,180.0000000,198,198,1800); //Sentinel
 	liccarsf[2] = AddStaticVehicleEx(587,-2085.5000000,-83.7000000,35.2000000,180.0000000,198,198,1800); //Sentinel
@@ -33097,7 +33097,7 @@ stock CreateVehicles()
 	licmotsf[1] = AddStaticVehicleEx(586,-2085.7000000,-98.3000000,34.8000000,0.0000000,198,198,1800); //Wayfarer
 	licmotsf[2] = AddStaticVehicleEx(586,-2081.5000000,-98.2000000,34.8000000,0.0000000,198,198,1800); //Wayfarer
 	licmotsf[3] = AddStaticVehicleEx(586,-2076.8999000,-98.2000000,34.8000000,0.0000000,198,198,1800); //Wayfarer
-	//=================================== [ Якудза ] ===============================
+	//=================================== [ РЇРєСѓРґР·Р° ] ===============================
 	yakcar[0] = AddStaticVehicleEx(550,1494.2484,2848.1500,10.7305,180.0,0,0,900); // Yakuza Car 0
 	yakcar[1] = AddStaticVehicleEx(550,1489.7351,2848.1500,10.7399,180.0,0,0,900); // Yakuza Car 1
 	yakcar[2] = AddStaticVehicleEx(550,1484.5413,2848.1500,10.7357,180.0,0,0,900); // Yakuza Car 2
@@ -33105,22 +33105,22 @@ stock CreateVehicles()
 	yakcar[4] = AddStaticVehicleEx(550,1475.3090,2848.1500,10.7374,180.0,0,0,900); // Yakuza Car 4
 	yakcar[5] = AddStaticVehicleEx(409,1472.8611,2773.2961,10.5400,180.0,0,0,900); // Yakuza Limo 0
 	yakcar[6] = AddStaticVehicleEx(487,1500.6167,2820.9463,10.9702,180.0,0,0,900); // Yakuza Helicopter 0
-	//=================================== [ Министры ] =================================
-	mincar[0] = AddStaticVehicleEx(579,1564.4136,-1710.7242,5.8221,358.9369,1,79, 900); // Министры
-	mincar[1] = AddStaticVehicleEx(579,-2442.6091,531.7583,29.8426,177.8711,1,79, 900); // Министры
-	mincar[2] = AddStaticVehicleEx(579,-2438.7900,531.5439,29.8377,177.8723,1,79, 900); // Министры
-	mincar[3] = AddStaticVehicleEx(579,-1573.9641,710.3821,-5.3106,90.3489,1,79, 900); // Министры
-	mincar[4] = AddStaticVehicleEx(579,-1573.9502,706.1547,-5.3098,89.2905,1,79, 900); // Министры
-	mincar[5] = AddStaticVehicleEx(579,2256.1814,2444.1943,10.7535,359.8222,1,79, 900); // Министры
-	mincar[6] = AddStaticVehicleEx(579,2260.5681,2444.2251,10.7532,359.1654,1,79, 900); // Министры
-	mincar[7] = AddStaticVehicleEx(579,1558.7284,-1711.1057,5.8231,358.6415,1,79, 900); // Министры
+	//=================================== [ РњРёРЅРёСЃС‚СЂС‹ ] =================================
+	mincar[0] = AddStaticVehicleEx(579,1564.4136,-1710.7242,5.8221,358.9369,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[1] = AddStaticVehicleEx(579,-2442.6091,531.7583,29.8426,177.8711,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[2] = AddStaticVehicleEx(579,-2438.7900,531.5439,29.8377,177.8723,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[3] = AddStaticVehicleEx(579,-1573.9641,710.3821,-5.3106,90.3489,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[4] = AddStaticVehicleEx(579,-1573.9502,706.1547,-5.3098,89.2905,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[5] = AddStaticVehicleEx(579,2256.1814,2444.1943,10.7535,359.8222,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[6] = AddStaticVehicleEx(579,2260.5681,2444.2251,10.7532,359.1654,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
+	mincar[7] = AddStaticVehicleEx(579,1558.7284,-1711.1057,5.8231,358.6415,1,79, 900); // РњРёРЅРёСЃС‚СЂС‹
 	mincar[8] = AddStaticVehicleEx(579,-1310.5579,475.7583,7.1187,90.1182,1,0,900); // mincarSFa
 	mincar[9] = AddStaticVehicleEx(579,-1310.4896,471.3024,7.1193,90.0774,1,0,900); // mincarSFa
 	mincar[10] = AddStaticVehicleEx(579,289.7324,1812.7561,17.5695,270.5443,1,0,900); // mincarLVa
 	mincar[11] = AddStaticVehicleEx(579,289.8224,1807.6128,17.5786,269.8408,1,0,900); // mincarLVa
 	mincar[12] = AddStaticVehicleEx(579,2776.7766,-2433.8269,13.5672,88.5034,1,0,900); // mincarLSa
 	mincar[13] = AddStaticVehicleEx(579,2776.6965,-2438.8481,13.5689,89.4872,1,0,900); // mincarLSa
-	//=================================== [ ЛСПД ] =================================
+	//=================================== [ Р›РЎРџР” ] =================================
 	sapdcar[0] = AddStaticVehicleEx(596,1602.4960,-1683.9705,5.6106,89.9966,1,79, 900); // LSPD Copcar 0
 	sapdcar[1] = AddStaticVehicleEx(596,1602.4961,-1688.1863,5.6106,89.9944,1,79, 900); // LSPD Copcar 1
 	sapdcar[2] = AddStaticVehicleEx(596,1602.4960,-1692.1858,5.6106,89.9963,1,79, 900); // LSPD Copcar 2
@@ -33148,7 +33148,7 @@ stock CreateVehicles()
 	sapdcar[24] = AddStaticVehicleEx(427,1534.1730,-1644.9996,6.0335,180.0002,1,79, 900); // LSPD Enforcer 1
 	sapdcar[25] = AddStaticVehicleEx(427,1529.9532,-1644.9991,6.0335,180.0003,1,79, 900); // LSPD Enforcer 2
 	sapdcar[26] = AddStaticVehicleEx(497,1551.7830,-1609.5548,13.5595,270.2284,1,79,900); // LSPD Maverick 0
-	//=================================== [ ФБР ] ==================================
+	//=================================== [ Р¤Р‘Р  ] ==================================
 	fbicar[0] = AddStaticVehicleEx(490,-2427.9131,513.7803,30.0532,215.1379,0,0,1800); // FBI 0
 	fbicar[1] = AddStaticVehicleEx(490,-2424.6934,516.8582,30.0587,222.8319,0,0,1800); // FBI 1
 	fbicar[2] = AddStaticVehicleEx(490,-2421.7825,520.8435,30.0605,228.4378,0,0,1800); // FBI 2
@@ -33174,7 +33174,7 @@ stock CreateVehicles()
 	fbicar[22] = AddStaticVehicleEx(596,-1435.5282,-1542.7156,101.4812,90.3961,0,0,1800); // seckret11
 	fbicar[23] = AddStaticVehicleEx(601,-1428.1204,-1459.8536,101.4323,173.1155,0,0,1800); // seckret12
 	fbicar[24] = AddStaticVehicleEx(526,-1435.1465,-1532.9204,101.5227,359.5713,0,0,1800); // seckret14
-	//================================= [ Развозчик Продуктов ] ==================================
+	//================================= [ Р Р°Р·РІРѕР·С‡РёРє РџСЂРѕРґСѓРєС‚РѕРІ ] ==================================
 	comptruck[0] = AddStaticVehicleEx(440,1676.4000200,-1097.9000200,24.1000000,90.0000000,8,8,1800); //Rumpo
 	comptruck[1] = AddStaticVehicleEx(440,1676.4000200,-1102.3000500,24.1000000,90.0000000,8,8,1800); //Rumpo
 	comptruck[2] = AddStaticVehicleEx(440,1676.3000500,-1106.9000200,24.1000000,90.0000000,8,8,1800); //Rumpo
@@ -33183,7 +33183,7 @@ stock CreateVehicles()
 	comptruck[5] = AddStaticVehicleEx(440,1676.1999500,-1120.3000500,24.1000000,90.0000000,8,8,1800); //Rumpo
 	comptruck[6] = AddStaticVehicleEx(440,1676.1999500,-1124.8000500,24.1000000,90.0000000,8,8,1800); //Rumpo
 	comptruck[7] = AddStaticVehicleEx(440,1676.3000500,-1129.5999800,24.1000000,90.0000000,8,8,1800); //Rumpo
-	//================================= [ Развозчик Бензина ] =================================
+	//================================= [ Р Р°Р·РІРѕР·С‡РёРє Р‘РµРЅР·РёРЅР° ] =================================
 	benzovoz[0] = AddStaticVehicleEx(403,1680.9000200,-1034.0999800,24.6000000,0.0000000,15,15,1800); //Linerunner
 	benzovoz[1] = AddStaticVehicleEx(403,1685.5000000,-1034.3000500,24.6000000,0.0000000,15,15,1800); //Linerunner
 	benzovoz[2] = AddStaticVehicleEx(403,1690.0000000,-1034.3000500,24.6000000,0.0000000,15,15,1800); //Linerunner
@@ -33200,7 +33200,7 @@ stock CreateVehicles()
 	AddStaticVehicleEx(584,1703.3000500,-1045.3000500,25.1000000,180.0000000,15,15,1800); //Trailer 3
 	AddStaticVehicleEx(584,1707.8000500,-1045.4000200,25.1000000,180.0000000,15,15,1800); //Trailer 3
 	AddStaticVehicleEx(584,1712.4000200,-1045.4000200,25.1000000,180.0000000,15,15,1800); //Trailer 3
-	//============================== [ Сан Фиерро Армия ] ==================================
+	//============================== [ РЎР°РЅ Р¤РёРµСЂСЂРѕ РђСЂРјРёСЏ ] ==================================
 	armycarsf[0] = AddStaticVehicleEx(470,-1382.8628,456.3147,7.1837,358.4553,1,1,900);// Hydra 0
 	armycarsf[1] = AddStaticVehicleEx(470,-1388.7695,456.4739,7.1835,358.4553,1,1,900);// Hydra 1
 	armycarsf[2] = AddStaticVehicleEx(470,-1396.8483,456.6917,7.1833,358.4553,1,1,900); // Hydra 2
@@ -33222,7 +33222,7 @@ stock CreateVehicles()
 	armycarsf[18] = AddStaticVehicleEx(497,-1404.1675,493.7274,18.4051,206.0088,44,44,900); // Hunter 0
 	armycarsf[19] = AddStaticVehicleEx(497,-1422.7838,493.1982,18.4068,206.0107,44,44,900); // Hunter 0
 	armycarsf[20] = AddStaticVehicleEx(497,-1448.2502,492.6282,18.4413,205.9975,44,44,900); // Hunter 0
-	//================================ [ Ацтеки ] =================================
+	//================================ [ РђС†С‚РµРєРё ] =================================
     coronoscar[0] = AddStaticVehicleEx(478,1671.6920166,-2110.8889160,13.6268749,270.0000000,135,1,1800); //Walton
     coronoscar[1] = AddStaticVehicleEx(534,1688.1534424,-2118.2841797,13.3697519,310.0000000,135,1,1800); //Remington
     coronoscar[2] = AddStaticVehicleEx(534,1692.1567383,-2118.9899902,13.3697519,310.0000000,135,1,1800); //Remington
@@ -33238,7 +33238,7 @@ stock CreateVehicles()
     coronoscar[12] = AddStaticVehicleEx(468,1701.2189941,-2080.7473145,13.3068752,180.0000000,135,1,1800); //Sanchez
     matsfuraactek[0] = AddStaticVehicleEx(482,1663.0811768,-2115.4006348,13.7968750,269.2500000,135,1,1800); //Burrito
     coronoscar[13] = AddStaticVehicleEx(568,1677.4000200,-2102.3999000,13.5000000,180.0000000,135,1,1800); //Bandito
-	//================================= [ Вагос ] ==================================
+	//================================= [ Р’Р°РіРѕСЃ ] ==================================
     vagoscar[0] = AddStaticVehicleEx(478,2792.1030273,-1621.5002441,11.0018749,0.0000000,6,6,1800); //Walton
     vagoscar[1] = AddStaticVehicleEx(474,2786.5471191,-1622.4840088,10.8218746,338.0000000,6,6,1800); //Hermes
     vagoscar[2] = AddStaticVehicleEx(474,2782.8757324,-1622.5627441,10.8218746,338.0000000,6,6,1800); //Hermes
@@ -33252,12 +33252,12 @@ stock CreateVehicles()
     vagoscar[10] = AddStaticVehicleEx(468,2784.1010742,-1602.1884766,10.6818752,180.0000000,6,6,1800); //Sanchez
     matsfuravagos[0] = AddStaticVehicleEx(482,2793.9809570,-1597.5345459,11.1757708,359.7500000,6,6,1800); //Burrito
     vagoscar[11] = AddStaticVehicleEx(568,2769.5000000,-1621.8000500,10.9000000,272.0000000,6,6,1800); //Bandito
-	//================================== [ Машинисты ] =========================
-	mashinist = AddStaticVehicleEx(538,1716.30004883,-1990.00000000,15.00000000,290.00000000,-1,-1,300); //Машинисты
-	//================================== [ Ферма ] =========================
+	//================================== [ РњР°С€РёРЅРёСЃС‚С‹ ] =========================
+	mashinist = AddStaticVehicleEx(538,1716.30004883,-1990.00000000,15.00000000,290.00000000,-1,-1,300); //РњР°С€РёРЅРёСЃС‚С‹
+	//================================== [ Р¤РµСЂРјР° ] =========================
 	FarmCar0[0] = AddStaticVehicleEx(478, -367.364, -1441.959, 25.735, 90.00000000, 110, 1, 6000000000); // Walton 2
 	Combine[0] = AddStaticVehicleEx(532, -377.016, -1451.346, 26.726, 0.00000000, 113,1,6000000000); // Combine
-	//================================== [ Грув Стрит ] =========================
+	//================================== [ Р“СЂСѓРІ РЎС‚СЂРёС‚ ] =========================
     grovecar[0] = AddStaticVehicleEx(478,2482.2321777,-1691.2835693,13.5969973,354.0000000,128,1,1800); //Walton
     grovecar[1] = AddStaticVehicleEx(600,2486.3637695,-1680.7540283,13.1773071,344.0000000,128,1,1800); //Picador
     grovecar[2] = AddStaticVehicleEx(600,2489.6362305,-1680.6630859,13.1775866,344.0000000,128,1,1800); //Picador
@@ -33272,7 +33272,7 @@ stock CreateVehicles()
     grovecar[11] = AddStaticVehicleEx(468,2450.3718262,-1669.5737305,13.2537909,0.0000000,128,1,1800); //Sanchez
     matsfuragrove[0] = AddStaticVehicleEx(482,2506.0571289,-1694.7474365,13.8075790,0.0000000,128,1,1800); //Burrito
     grovecar[12] = AddStaticVehicleEx(568,2473.6001000,-1691.1999500,13.5000000,0.0000000,128,14,1800); //Bandito
-	//================================= [ Рифа ] ===================================
+	//================================= [ Р РёС„Р° ] ===================================
     rifacar[0] = AddStaticVehicleEx(478,2180.3718262,-1780.2644043,13.4412174,0.0000000,204,1,1800); //Walton
     rifacar[1] = AddStaticVehicleEx(518,2174.0222168,-1808.9389648,13.1683998,0.0000000,204,1,1800); //Buccaneer
     rifacar[2] = AddStaticVehicleEx(518,2170.6530762,-1808.9627686,13.1685410,359.7500000,204,1,1800); //Buccaneer
@@ -33287,7 +33287,7 @@ stock CreateVehicles()
     rifacar[11] = AddStaticVehicleEx(468,2156.9367676,-1801.3387451,13.1320009,272.0000000,204,1,1800); //Sanchez
     matsfurarifa[0] = AddStaticVehicleEx(482,2190.0146484,-1785.7839355,13.6276436,0.0000000,204,1,1800); //Burrito
     rifacar[12] = AddStaticVehicleEx(568,2178.3999000,-1789.3000500,13.5000000,320.0000000,204,123,1800); //Bandito
-	//================================== [ Баллас ] ================================
+	//================================== [ Р‘Р°Р»Р»Р°СЃ ] ================================
     ballascar[0] = AddStaticVehicleEx(478,2645.3698730,-1990.5883789,13.6339464,180.0000000,233,1,1800); //Walton
     ballascar[1] = AddStaticVehicleEx(412,2654.7624512,-2009.7657471,13.3328123,326.0000000,233,1,1800); //Voodoo
     ballascar[2] = AddStaticVehicleEx(412,2658.9697266,-2010.3720703,13.5046873,324.0000000,233,1,1800); //Voodoo
@@ -33308,7 +33308,7 @@ stock CreateVehicles()
 	hitcar[4] = AddStaticVehicleEx(560,1057.95104980,1028.84899902,9.95899963,231.99279785,0,1,1800); //Sultan
 	hitcar[5] = AddStaticVehicleEx(560,1034.48400879,1065.10998535,9.96199989,193.99279785,0,1,1800); //Sultan
 	hitcar[6] = AddStaticVehicleEx(560,1036.32604980,1057.38000488,9.96199989,193.99279785,0,1,1800); //Sultan
-	//============================== [ Лас Вентурас Армия ] ===================================
+	//============================== [ Р›Р°СЃ Р’РµРЅС‚СѓСЂР°СЃ РђСЂРјРёСЏ ] ===================================
 	armcar[0] = AddStaticVehicleEx(425,288.3243,1928.8093,18.2336,275.8014,37,37,300); // Hunter0
 	armcar[1] = AddStaticVehicleEx(432,277.2724,2030.6893,17.6550,268.4021,0,0,300); // Rhino0
 	armcar[2] = AddStaticVehicleEx(432,276.9091,2017.6702,18.0319,268.4021,0,0,300); // Rhino1
@@ -33355,7 +33355,7 @@ stock CreateVehicles()
 	gunscar[0] = AddStaticVehicle(433,275.2985,1982.4747,18.0773,269.3129,34,34); // ArmyTruck0
 	gunscar[1] = AddStaticVehicle(433,275.3807,1989.3337,18.0773,269.3129,34,34); // ArmyTruck1
 	gunscar[2] = AddStaticVehicle(433,275.4670,1996.5306,18.0773,269.3129,34,34); // ArmyTruck2
-	//============================= [ Скутеры на Автошокле ] ========================================
+	//============================= [ РЎРєСѓС‚РµСЂС‹ РЅР° РђРІС‚РѕС€РѕРєР»Рµ ] ========================================
 	AddStaticVehicleEx(462,-2018.4000200,-90.0000000,35.0000000,178.0000000,1,1,600); //Faggio
 	AddStaticVehicleEx(462,-2020.5999800,-90.0000000,35.0000000,177.9950000,1,1,600); //Faggio
 	AddStaticVehicleEx(462,-2023.0000000,-89.9000000,35.0000000,177.9950000,1,1,600); //Faggio
@@ -33365,24 +33365,24 @@ stock CreateVehicles()
 	AddStaticVehicleEx(462,-2031.5999800,-89.7000000,35.0000000,177.9950000,1,1,600); //Faggio
 	AddStaticVehicleEx(462,-2034.0000000,-89.7000000,35.0000000,177.9950000,1,1,600); //Faggio
 	AddStaticVehicleEx(462,-2036.5999800,-89.7000000,35.0000000,177.9950000,1,1,600); //Faggio
-    //============================= [ Водитель Мусоровоза ] ========================================
+    //============================= [ Р’РѕРґРёС‚РµР»СЊ РњСѓСЃРѕСЂРѕРІРѕР·Р° ] ========================================
     trashtruck[0] = AddStaticVehicleEx(408,1666.4000200,-1135.0999800,24.7000000,0.0000000,8,8,1800); //Trashmaster
 	trashtruck[1] = AddStaticVehicleEx(408,1661.9000200,-1135.0999800,24.7000000,0.0000000,8,8,1800); //Trashmaster
 	trashtruck[2] = AddStaticVehicleEx(408,1657.4000200,-1135.0000000,24.7000000,0.0000000,8,8,1800); //Trashmaster
 	trashtruck[3] = AddStaticVehicleEx(408,1653.0000000,-1134.9000200,24.7000000,0.0000000,8,8,1800); //Trashmaster
 	trashtruck[4] = AddStaticVehicleEx(408,1648.5000000,-1134.9000200,24.7000000,0.0000000,8,8,1800); //Trashmaster
-	//============================= [ Скутеры на спавне ] ======================
+	//============================= [ РЎРєСѓС‚РµСЂС‹ РЅР° СЃРїР°РІРЅРµ ] ======================
     AddStaticVehicleEx(462,1374.8000000,-1900.7000000,13.2000000,0.0000000,1,1,1800); //Faggio
 	AddStaticVehicleEx(462,1372.8000000,-1900.8000000,13.2000000,0.0000000,1,1,1800); //Faggio
 	AddStaticVehicleEx(462,1370.8000000,-1900.8000000,13.2000000,0.0000000,1,1,1800); //Faggio
 	AddStaticVehicleEx(462,1368.8000000,-1900.7000000,13.2000000,0.0000000,1,1,1800); //Faggio
 	
-   //============================  Поствое авто  ======================================
-	carpost[0] = AddStaticVehicleEx(596,74.3329,-1534.6642,4.9557,260.7001,1,150, 900); // Постовое
-	carpost[1] = AddStaticVehicleEx(596,29.5306,-1527.8151,4.7934,78.8966,1,150, 900); // Постовое
-	carpost[2] = AddStaticVehicleEx(497,51.5597,-1531.3192,15.8100,261.9013,1,150, 900); // Постовое
-	carpost[3] = AddStaticVehicleEx(596,57.8134,-1522.7747,4.7295,83.8773,1,150, 900); // Постовое
-	carpost[4] = AddStaticVehicleEx(596,46.1722,-1540.9897,4.8979,264.5434,1,150, 900); // Постовое
+   //============================  РџРѕСЃС‚РІРѕРµ Р°РІС‚Рѕ  ======================================
+	carpost[0] = AddStaticVehicleEx(596,74.3329,-1534.6642,4.9557,260.7001,1,150, 900); // РџРѕСЃС‚РѕРІРѕРµ
+	carpost[1] = AddStaticVehicleEx(596,29.5306,-1527.8151,4.7934,78.8966,1,150, 900); // РџРѕСЃС‚РѕРІРѕРµ
+	carpost[2] = AddStaticVehicleEx(497,51.5597,-1531.3192,15.8100,261.9013,1,150, 900); // РџРѕСЃС‚РѕРІРѕРµ
+	carpost[3] = AddStaticVehicleEx(596,57.8134,-1522.7747,4.7295,83.8773,1,150, 900); // РџРѕСЃС‚РѕРІРѕРµ
+	carpost[4] = AddStaticVehicleEx(596,46.1722,-1540.9897,4.8979,264.5434,1,150, 900); // РџРѕСЃС‚РѕРІРѕРµ
 	carpost[5] = AddStaticVehicleEx(596,1780.5736,826.6501,10.3972,269.3667,1,150,900); // post1
 	carpost[6] = AddStaticVehicleEx(596,1813.8435,826.6145,10.3272,89.1966,1,150,900); // post2
 	carpost[7] = AddStaticVehicleEx(596,1810.6423,812.2981,10.6146,177.9172,1,150,900); // post3
@@ -33455,8 +33455,8 @@ stock CreatePickups()
 	chekmaterialslv[8] = CreatePickup(1239,2,176.9783,1841.3126,17.6406);
 	chekmaterialslv[9]= CreatePickup(1239,2,233.3041,1842.0875,17.6406);
     arace = CreatePickup(19134, 23, 822.3992,2.7049,1004.1797);
-    hitpic[0] = CreatePickup(1318,23,296.7644,-112.0696,1001.5156);// Выход Хитманы
-	hitpic[1] = CreatePickup(1318,23,1045.9125,1007.9276,11.0000);// Вход Хитманы
+    hitpic[0] = CreatePickup(1318,23,296.7644,-112.0696,1001.5156);// Р’С‹С…РѕРґ РҐРёС‚РјР°РЅС‹
+	hitpic[1] = CreatePickup(1318,23,1045.9125,1007.9276,11.0000);// Р’С…РѕРґ РҐРёС‚РјР°РЅС‹
     dollar = CreatePickup(1274, 23, 1398.8770,-1684.4924,20.3831);
     passs[0] = CreatePickup(1318,23,-127.6163,-92.0732,1006.0311);
     passs[1] = CreatePickup(1318,23,1486.9645,-1771.8337,18.7958);
@@ -33494,8 +33494,8 @@ stock CreatePickups()
     fracgunpic[3] = CreatePickup(353,23,302.5668,-127.6718,1004.0625,15);
     swatgun = CreatePickup(353,23,209.6441,182.3000,1003.0313,100);
     lspd[0] = CreatePickup(1318,23,1555.1332,-1675.7180,16.1953);
-    streetpic[0] = CreatePickup(1318,23,2468.8435,-1698.2961,1013.5078);// Выход Стрит Рейсер
-	streetpic[1] = CreatePickup(1318,23,691.5786,-1275.9353,13.5607);// Вход Стрит Рейсер
+    streetpic[0] = CreatePickup(1318,23,2468.8435,-1698.2961,1013.5078);// Р’С‹С…РѕРґ РЎС‚СЂРёС‚ Р РµР№СЃРµСЂ
+	streetpic[1] = CreatePickup(1318,23,691.5786,-1275.9353,13.5607);// Р’С…РѕРґ РЎС‚СЂРёС‚ Р РµР№СЃРµСЂ
 	lspd[1] = CreatePickup(1318,23,246.7096,62.8786,1003.6406);
 	lspd[2] = CreatePickup(1318,23,1524.486938,-1677.990844,6.218750);
 	lspd[3] = CreatePickup(1318,23,246.4416,87.6784,1003.6406);
@@ -33568,33 +33568,33 @@ stock CreatePickups()
     warehousearmy[2] = CreatePickup(1318,23,316.3806,-170.2857,999.5938,3);
     warehousearmy[3] = CreatePickup(1318,23,-1373.0463,498.9842,11.1953);
     robber = CreatePickup(1239, 23, 2755.9060,-2515.5491,13.6397, -1);
-	FormaFracPic[0] = CreatePickup(1275, 23, 255.1582,78.4345,1003.6406);// LSPD Раздевалка
-	FormaFracPic[1] = CreatePickup(1275, 23, 210.0586,183.9375,1003.0313,1);// FBI Раздевалка
-	FormaFracPic[2] = CreatePickup(1275, 23, -1344.0225,490.3044,11.2027);// SFa Раздевалка
-	FormaFracPic[3] = CreatePickup(1275, 23, 374.0956,-53.1722,1076.4708,3);// Medics SF Раздевалка
-	FormaFracPic[4] = CreatePickup(1275, 23, 376.0690,181.1919,1008.3828);// Mayor Раздевалка
-	FormaFracPic[5] = CreatePickup(1275, 23, 225.8078,124.1105,999.0156);// SFPD Раздевалка
-	FormaFracPic[6] = CreatePickup(1275, 23, -2022.1334,-114.7256,1035.1719,1);// Instructors Раздевалка
-	FormaFracPic[7] = CreatePickup(1275, 23, 240.4291,1860.7698,8.7578);// LVa Раздевалка
-	FormaFracPic[8] = CreatePickup(1275, 23, 210.0915,187.6858,1003.0313,122);// LVPD Раздевалка
-	FormaFracPic[9] = CreatePickup(1275, 23, 374.0956,-53.1722,1076.4708,4);// Medics LS Раздевалка
-	FormaFracPic[10] = CreatePickup(1275, 23, 374.0956,-53.1722,1076.4708,5);// Medics LV Раздевалка
-	FormaFracPic[11] = CreatePickup(1275, 23, 2749.5254,-2454.0627,13.8623);// LSa Раздевалка
+	FormaFracPic[0] = CreatePickup(1275, 23, 255.1582,78.4345,1003.6406);// LSPD Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[1] = CreatePickup(1275, 23, 210.0586,183.9375,1003.0313,1);// FBI Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[2] = CreatePickup(1275, 23, -1344.0225,490.3044,11.2027);// SFa Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[3] = CreatePickup(1275, 23, 374.0956,-53.1722,1076.4708,3);// Medics SF Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[4] = CreatePickup(1275, 23, 376.0690,181.1919,1008.3828);// Mayor Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[5] = CreatePickup(1275, 23, 225.8078,124.1105,999.0156);// SFPD Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[6] = CreatePickup(1275, 23, -2022.1334,-114.7256,1035.1719,1);// Instructors Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[7] = CreatePickup(1275, 23, 240.4291,1860.7698,8.7578);// LVa Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[8] = CreatePickup(1275, 23, 210.0915,187.6858,1003.0313,122);// LVPD Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[9] = CreatePickup(1275, 23, 374.0956,-53.1722,1076.4708,4);// Medics LS Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[10] = CreatePickup(1275, 23, 374.0956,-53.1722,1076.4708,5);// Medics LV Р Р°Р·РґРµРІР°Р»РєР°
+	FormaFracPic[11] = CreatePickup(1275, 23, 2749.5254,-2454.0627,13.8623);// LSa Р Р°Р·РґРµРІР°Р»РєР°
 	FormaFracPic[12] = CreatePickup(1275, 23, 999.1284,1003.9637,1999.7999,2);// SF News
 	FormaFracPic[13] = CreatePickup(1275, 23, 999.1284,1003.9637,1999.7999,1);// LS News
 	FormaFracPic[14] = CreatePickup(1275, 23, 999.1284,1003.9637,1999.7999,3);// LV News
 	FormaFracPic[15] = CreatePickup(1275, 23, 210.5611,188.2006,1003.0313,100);// SWAT
-	FormaFracPic[16] = CreatePickup(1275, 23, 210.0586,183.9375,1003.0313,2);// FBI Раздевалка (Секретная)
-	ammomerls = CreatePickup(353,23,376.2533,187.6920,1008.3893);// Пикап с оружием у Мэрии
+	FormaFracPic[16] = CreatePickup(1275, 23, 210.0586,183.9375,1003.0313,2);// FBI Р Р°Р·РґРµРІР°Р»РєР° (РЎРµРєСЂРµС‚РЅР°СЏ)
+	ammomerls = CreatePickup(353,23,376.2533,187.6920,1008.3893);// РџРёРєР°Рї СЃ РѕСЂСѓР¶РёРµРј Сѓ РњСЌСЂРёРё
 	CloakroomFarm = CreatePickup(1275,23,-382.7190,-1426.3296,26.2543);
 	FarmInfoPic = CreatePickup(1239,23,-382.99908447,-1438.91796875,26.19865036);
-	marvert[0] = CreatePickup(1318,23,366.5716,158.9356,1008.3828);// Вход на вертолетную площадку Мэрии
-	marvert[1] = CreatePickup(1318,23,1527.4294,-1790.3389,33.5281);// Выход с вертолетной площадки Мэрии
-	gangpic[0] = CreatePickup(1254, 23, 2649.9771,-2018.6350,13.5520);// Склад Ballas
-	gangpic[1] = CreatePickup(1254, 23, 2769.4001,-1625.1445,10.9272);// Склад Vagos
-	gangpic[2] = CreatePickup(1254, 23, 2498.2405,-1686.9944,13.4877);// Склад Grove
-	gangpic[3] = CreatePickup(1254, 23, 1673.3944,-2107.7874,13.5469);// Склад Aztecs
-	gangpic[4] = CreatePickup(1254, 23, 2188.2756,-1813.6758,13.5469);// Склад Rifa
+	marvert[0] = CreatePickup(1318,23,366.5716,158.9356,1008.3828);// Р’С…РѕРґ РЅР° РІРµСЂС‚РѕР»РµС‚РЅСѓСЋ РїР»РѕС‰Р°РґРєСѓ РњСЌСЂРёРё
+	marvert[1] = CreatePickup(1318,23,1527.4294,-1790.3389,33.5281);// Р’С‹С…РѕРґ СЃ РІРµСЂС‚РѕР»РµС‚РЅРѕР№ РїР»РѕС‰Р°РґРєРё РњСЌСЂРёРё
+	gangpic[0] = CreatePickup(1254, 23, 2649.9771,-2018.6350,13.5520);// РЎРєР»Р°Рґ Ballas
+	gangpic[1] = CreatePickup(1254, 23, 2769.4001,-1625.1445,10.9272);// РЎРєР»Р°Рґ Vagos
+	gangpic[2] = CreatePickup(1254, 23, 2498.2405,-1686.9944,13.4877);// РЎРєР»Р°Рґ Grove
+	gangpic[3] = CreatePickup(1254, 23, 1673.3944,-2107.7874,13.5469);// РЎРєР»Р°Рґ Aztecs
+	gangpic[4] = CreatePickup(1254, 23, 2188.2756,-1813.6758,13.5469);// РЎРєР»Р°Рґ Rifa
  	return true;
 }
 stock CreateLabels()
@@ -33653,14 +33653,14 @@ stock CreateSpecialZone()
 }
 stock CreateMapIcons()
 {
- 	CreateDynamicMapIcon(-2.9803,-363.4466,5.4297,51,0); // Развозчики
+ 	CreateDynamicMapIcon(-2.9803,-363.4466,5.4297,51,0); // Р Р°Р·РІРѕР·С‡РёРєРё
    	CreateDynamicMapIcon(472.4380,-1515.5332,40.5726,45,0); // Victim LS
  	CreateDynamicMapIcon(-1882.5100,866.3918,35.1719,45,0); // Victim SF
-   	CreateDynamicMapIcon(542.1437,-1272.3624,51.3059,55,0); // Автосалон N
-   	CreateDynamicMapIcon(-1641.6460,1203.5209,7.2479,55,0); // Автосалон D
-   	CreateDynamicMapIcon(-1948.4501,278.1562,68.9698,55,0); // Мотосалон C
-   	CreateDynamicMapIcon(2546.4695,1970.4794,10.8203,55,0); // Автосалон B
-   	CreateDynamicMapIcon(2200.9758,1394.2899,11.0625,55,0); // Автосалон A
+   	CreateDynamicMapIcon(542.1437,-1272.3624,51.3059,55,0); // РђРІС‚РѕСЃР°Р»РѕРЅ N
+   	CreateDynamicMapIcon(-1641.6460,1203.5209,7.2479,55,0); // РђРІС‚РѕСЃР°Р»РѕРЅ D
+   	CreateDynamicMapIcon(-1948.4501,278.1562,68.9698,55,0); // РњРѕС‚РѕСЃР°Р»РѕРЅ C
+   	CreateDynamicMapIcon(2546.4695,1970.4794,10.8203,55,0); // РђРІС‚РѕСЃР°Р»РѕРЅ B
+   	CreateDynamicMapIcon(2200.9758,1394.2899,11.0625,55,0); // РђРІС‚РѕСЃР°Р»РѕРЅ A
    	CreateDynamicMapIcon(1481.2144,-1756.5200,17.5313,56,0); // Goverment
    	CreateDynamicMapIcon(1552.8314,-1675.9022,16.1953,30,0); // Police LS
    	CreateDynamicMapIcon(-1605.4998,710.2729,13.8672,30,0); // Police SF
@@ -33682,7 +33682,7 @@ stock CreateMapIcons()
     CreateDynamicMapIcon(-2626.6384,210.3960,4.5971,6,0); // Ammo SF
     CreateDynamicMapIcon(2159.5449,943.2165,10.8203,6,0); // Ammo LV
 	CreateDynamicMapIcon(1961.8124,-2189.2671,13.5469,53,0); // Race
-    CreateDynamicMapIcon(212.2816,1812.2374,21.8672,56,0); // Точка наблюдения
+    CreateDynamicMapIcon(212.2816,1812.2374,21.8672,56,0); // РўРѕС‡РєР° РЅР°Р±Р»СЋРґРµРЅРёСЏ
     CreateDynamicMapIcon(-1816.5311,618.6709,35.1719,50,0); // Pizza
    	CreateDynamicMapIcon(-1911.7004,828.8093,35.1719,50,0); // Burger
    	CreateDynamicMapIcon(-2336.1675,-168.1730,35.3203,50,0); // Burger
@@ -33700,15 +33700,15 @@ stock CreateMapIcons()
 }
 stock CreateTimers()
 {
-	AdvertiseTimerEx = SetTimer("AdvertiseTimer", 800000, true); // Таймер обьявлений в чат (Реклама сервера)
-	UnJailTimer = SetTimer("SetPlayerUnjail", 1000, true);// Обновление для гангзон таймер
-	FreshTimer = SetTimer("Fresh", 1000, true);// Обновить
-	OtherTimerEx = SetTimer("OtherTimer", 1000, true);// Остальные таймеры
-	SpeedoTimer = SetTimer("UpdateSpeedometr", 120, true);// Обновление спидометра
-	CountExTimer = SetTimer("CountEx", 1000, true);// AFK таймер
-    PickupTimer = SetTimer("CustomPickups", 5000, true);// Пикапы бизнесов и домов
-	GzCheckTimer = SetTimer("GzCheck", 1000, true);// Таймер на проверку зоны
-	MzCheckTimer = SetTimer("MzCheck", 1000, true);// Таймер на проверку бизнеса мафии
+	AdvertiseTimerEx = SetTimer("AdvertiseTimer", 800000, true); // РўР°Р№РјРµСЂ РѕР±СЊСЏРІР»РµРЅРёР№ РІ С‡Р°С‚ (Р РµРєР»Р°РјР° СЃРµСЂРІРµСЂР°)
+	UnJailTimer = SetTimer("SetPlayerUnjail", 1000, true);// РћР±РЅРѕРІР»РµРЅРёРµ РґР»СЏ РіР°РЅРіР·РѕРЅ С‚Р°Р№РјРµСЂ
+	FreshTimer = SetTimer("Fresh", 1000, true);// РћР±РЅРѕРІРёС‚СЊ
+	OtherTimerEx = SetTimer("OtherTimer", 1000, true);// РћСЃС‚Р°Р»СЊРЅС‹Рµ С‚Р°Р№РјРµСЂС‹
+	SpeedoTimer = SetTimer("UpdateSpeedometr", 120, true);// РћР±РЅРѕРІР»РµРЅРёРµ СЃРїРёРґРѕРјРµС‚СЂР°
+	CountExTimer = SetTimer("CountEx", 1000, true);// AFK С‚Р°Р№РјРµСЂ
+    PickupTimer = SetTimer("CustomPickups", 5000, true);// РџРёРєР°РїС‹ Р±РёР·РЅРµСЃРѕРІ Рё РґРѕРјРѕРІ
+	GzCheckTimer = SetTimer("GzCheck", 1000, true);// РўР°Р№РјРµСЂ РЅР° РїСЂРѕРІРµСЂРєСѓ Р·РѕРЅС‹
+	MzCheckTimer = SetTimer("MzCheck", 1000, true);// РўР°Р№РјРµСЂ РЅР° РїСЂРѕРІРµСЂРєСѓ Р±РёР·РЅРµСЃР° РјР°С„РёРё
 	return true;
 }
 stock PlayerToKvadrat(playerid,Float:min_x,Float:min_y,Float:max_x,Float:max_y)
@@ -34972,7 +34972,7 @@ stock IsAGang(playerid)
 }
 stock DeleteObjects(playerid)
 {
-	//================================= Удаленные объекты ==========================
+	//================================= РЈРґР°Р»РµРЅРЅС‹Рµ РѕР±СЉРµРєС‚С‹ ==========================
     RemoveBuildingForPlayer(playerid, 1226, 1451.6250, -1727.6719, 16.4219, 0.25);
 	RemoveBuildingForPlayer(playerid, 1226, 1467.9844, -1727.6719, 16.4219, 0.25);
 	RemoveBuildingForPlayer(playerid, 1226, 1485.1719, -1727.6719, 16.4219, 0.25);
@@ -35004,17 +35004,17 @@ stock DeleteObjects(playerid)
 	RemoveBuildingForPlayer(playerid, 1283, 1568.8828, -1745.4766, 15.6250, 0.25);
 	RemoveBuildingForPlayer(playerid, 1283, 1545.7656, -1731.6719, 15.6250, 0.25);
 	RemoveBuildingForPlayer(playerid, 1283, 1530.1172, -1717.0078, 15.6250, 0.25);
-	//======================================= мериия интерьер  =================
+	//======================================= РјРµСЂРёРёСЏ РёРЅС‚РµСЂСЊРµСЂ  =================
     RemoveBuildingForPlayer(playerid, 2001, 364.6016, 170.6484, 1007.3750, 0.25);
     RemoveBuildingForPlayer(playerid, 14598, 364.7266, 173.8906, 1022.9375, 0.25);
     RemoveBuildingForPlayer(playerid, 2001, 364.6641, 176.9766, 1007.3750, 0.25);
     RemoveBuildingForPlayer(playerid, 2001, 374.0078, 170.6406, 1007.3750, 0.25);
     RemoveBuildingForPlayer(playerid, 2001, 373.9766, 176.9453, 1007.3750, 0.25);
-    //====================================== Около спавна ======================
+    //====================================== РћРєРѕР»Рѕ СЃРїР°РІРЅР° ======================
     RemoveBuildingForPlayer(playerid, 1266, 1482.0859, -1859.9688, 25.0391, 0.25);
     RemoveBuildingForPlayer(playerid, 1283, 1373.4609, -1872.2266, 15.6250, 0.25);
     RemoveBuildingForPlayer(playerid, 1260, 1482.0859, -1859.9688, 25.0391, 0.25);
-    //====================================== Секретная база ====================
+    //====================================== РЎРµРєСЂРµС‚РЅР°СЏ Р±Р°Р·Р° ====================
     RemoveBuildingForPlayer(playerid, 17051, -1426.7656, -1594.4844, 100.7500, 0.25);
 	RemoveBuildingForPlayer(playerid, 3276, -1427.8516, -1600.0859, 101.4844, 0.25);
 	RemoveBuildingForPlayer(playerid, 3276, -1439.2656, -1600.3359, 101.4844, 0.25);
@@ -35081,7 +35081,7 @@ publics unFrez(playerid)
 }
 stock CreateObjects()
 {
-	//============================ Банкоматы ===================================
+	//============================ Р‘Р°РЅРєРѕРјР°С‚С‹ ===================================
     CreateDynamicObject(2754,1919.78381348,-1766.21813965,13.44901943,0.00000000,0.00000000,270.00000000); //object(otb_machine) (4)
 	CreateDynamicObject(2754,2236.16186523,-1665.79772949,15.27980804,0.00000000,0.00000000,344.00000000); //object(otb_machine) (6)
 	CreateDynamicObject(2754,1367.56359863,-1290.13696289,13.44901943,0.00000000,0.00000000,0.00000000); //object(otb_machine) (7)
@@ -35105,7 +35105,7 @@ stock CreateObjects()
 	CreateDynamicObject(2754,1587.30920410,2218.34838867,10.96464443,0.00000000,0.00000000,88.00000000); //object(otb_machine) (28)
 	CreateDynamicObject(2754,2187.36035156,2478.89160156,11.14433193,0.00000000,0.00000000,180.00000000); //object(otb_machine) (29)
 	CreateDynamicObject(2754,2843.30444336,1286.17187500,11.29276943,0.00000000,0.00000000,270.00000000); //object(otb_machine) (30)
-   //============================ Секретная база ==============================
+   //============================ РЎРµРєСЂРµС‚РЅР°СЏ Р±Р°Р·Р° ==============================
 	CreateObject(987, -1411.93616, -1456.75769, 100.24650,   0.00000, 0.00000, 91.00000);
 	CreateObject(987, -1411.72791, -1468.70154, 100.24650,   0.00000, 0.00000, 91.00000);
 	CreateObject(987, -1410.43457, -1487.72339, 100.24650,   0.00000, 0.00000, 93.00000);
@@ -35145,7 +35145,7 @@ stock CreateObjects()
 	CreateObject(3279, -1427.90369, -1593.38354, 100.64230,   0.00000, 0.00000, 86.00000);
 	CreateObject(3279, -1422.40076, -1450.28296, 100.66230,   0.00000, 0.00000, -89.00000);
 	CreateObject(967, -1410.17725, -1469.73035, 100.41400,   0.00000, 0.00000, 89.24000);
-   //============================ Ресторан спавн ==============================
+   //============================ Р РµСЃС‚РѕСЂР°РЅ СЃРїР°РІРЅ ==============================
     CreateObject(19425, 1374.37, -1894.91, 12.47,   0.00, 0.00, 0.00);
     CreateObject(19425, 1371.50, -1894.91, 12.49,   0.00, 0.00, 0.00);
 	CreateObject(19425, 1368.23, -1894.91, 12.51,   0.00, 0.00, 0.00);
@@ -35244,7 +35244,7 @@ stock CreateObjects()
 	CreateObject(19377, 1385.0620117188, -1887.4489746094, 19.865999221802, 0, 90, 0);
 	CreateObject(19377, 1395.5579833984, -1887.4479980469, 19.865999221802, 0, 90, 0);
 	CreateObject(19377, 1395.5610351563, -1886.9520263672, 19.864000320435, 0, 90, 0);
-    //========================== LSPD вид с улицы ==============================
+    //========================== LSPD РІРёРґ СЃ СѓР»РёС†С‹ ==============================
 	CreateObject(10932,1536.90002441,-1675.30004883,19.70000076,0.00000000,0.00000000,180.00000000); //object(station03_sfs) (1)
 	CreateObject(11353,1517.80004883,-1675.09997559,16.79999924,0.00000000,0.00000000,0.00000000); //object(station5new) (1)
 	CreateObject(997,1534.30004883,-1663.90002441,12.39999962,0.00000000,0.00000000,0.00000000); //object(lhouse_barrier3) (1)
@@ -35304,7 +35304,7 @@ stock CreateObjects()
 	CreateObject(983,1554.30004883,-1632.80004883,13.10000038,0.00000000,0.00000000,90.49987793); //object(fenceshit3) (7)
 	CreateObject(983,1560.59997559,-1632.69995117,13.10000038,0.00000000,0.00000000,90.74987793); //object(fenceshit3) (8)
 	CreateObject(1491,1582.59997559,-1637.90002441,12.39999962,0.00000000,0.00000000,0.00000000); //object(gen_doorint01) (1)
-    //========================== Вид с улицы банк ==============================
+    //========================== Р’РёРґ СЃ СѓР»РёС†С‹ Р±Р°РЅРє ==============================
 	CreateObject(970,1417.4876709,-1692.3105469,13.0983562,0.0000000,0.0000000,0.0000000); //object(fencesmallb) (1)
 	CreateObject(970,1419.5466309,-1694.3742676,13.0983562,0.0000000,0.0000000,270.0000000); //object(fencesmallb) (2)
 	CreateObject(970,1419.5072021,-1712.2103271,13.0983562,0.0000000,0.0000000,270.0000000); //object(fencesmallb) (3)
@@ -35337,7 +35337,7 @@ stock CreateObjects()
 	CreateObject(1215,1419.2945557,-1706.2563477,13.1111984,0.0000000,0.0000000,0.0000000); //object(bollardlight) (4)
 	CreateObject(1215,1419.2945557,-1700.5296631,13.1111984,0.0000000,0.0000000,0.0000000); //object(bollardlight) (5)
 	CreateObject(1215,1419.2863770,-1692.6623535,13.1111984,0.0000000,0.0000000,0.0000000); //object(bollardlight) (6)
-	//=============================== Здаие мэрии ==============================
+	//=============================== Р—РґР°РёРµ РјСЌСЂРёРё ==============================
 	CreateObject(1649,1492.1679688,-1751.6600342,25.7209988,0.0000000,0.0000000,0.0000000); //object(wglasssmash) (1)
 	CreateObject(1649,1492.1679688,-1751.6591797,19.3209991,0.0000000,0.0000000,180.0000000); //object(wglasssmash) (2)
 	CreateObject(1649,1492.1679688,-1751.6591797,19.3209991,0.0000000,0.0000000,0.0000000); //object(wglasssmash) (3)
@@ -35384,7 +35384,7 @@ stock CreateObjects()
 	CreateObject(626,1484.8730469,-1771.8819580,19.8439999,0.0000000,0.0000000,0.0000000); //object(veg_palmkb2) (2)
 	CreateObject(626,1477.5229492,-1771.7889404,19.8439999,0.0000000,0.0000000,0.0000000); //object(veg_palmkb2) (3)
 	CreateObject(1649,1481.1679688,-1751.6591797,22.6209984,0.0000000,0.0000000,179.9945068); //object(wglasssmash) (43)
-    //=============================== Стоянку и украшение мерии ================
+    //=============================== РЎС‚РѕСЏРЅРєСѓ Рё СѓРєСЂР°С€РµРЅРёРµ РјРµСЂРёРё ================
     CreateObject(3437, 1466.25, -1750.25, 24.42,   0.00, 0.00, 0.00);
     CreateObject(3437, 1496.14, -1750.25, 24.42,   0.00, 0.00, 0.00);
     CreateObject(1506, 1525.49, -1790.92, 32.53,   0.00, 0.00, 90.00);
@@ -35567,7 +35567,7 @@ stock CreateObjects()
 	CreateObject(19425,1419.3979492,-1648.6109619,12.3830004,0.0000000,0.0000000,90.0000000); //object(speed_bump01) (16)
 	CreateObject(19425,1432.0660400,-1720.5219727,12.3830004,0.0000000,0.0000000,0.0000000); //object(speed_bump01) (17)
 	CreateObject(19425,1426.8349609,-1720.5849609,12.3830004,0.0000000,0.0000000,0.0000000); //object(speed_bump01) (18)
-    //=========================== кпп LV ==========================
+    //=========================== РєРїРї LV ==========================
     CreateObject(3881,1784.2000000,820.2000100,11.6000000,0.0000000,0.0000000,178.0000000);
     CreateObject(3881,1810.3000000,819.0999800,11.6000000,0.0000000,0.0000000,358.0000000);
     CreateObject(968,1786.9000000,823.5000000,11.2000000,0.0000000,32.0000000,0.0000000);
@@ -35576,7 +35576,7 @@ stock CreateObjects()
     CreateObject(1250,1786.5000000,823.5999800,10.7000000,0.0000000,0.0000000,90.0000000);
     CreateObject(1250,1808.1000000,823.2999900,10.7000000,0.0000000,0.0000000,268.0000000);
     CreateObject(968,1807.6000000,823.5000000,11.4000000,0.0000000,316.0000000,0.0000000);
-    //=========================== кпп LS ==========================
+    //=========================== РєРїРї LS ==========================
     CreateObject(1231,37.9003900,-1529.4004000,7.1000000,0.0000000,0.0000000,0.0000000); //object(streetlamp2) (1)
     CreateObject(1231,66.0000000,-1533.4004000,6.9000000,0.0000000,0.0000000,0.0000000); //object(streetlamp2) (2)
     CreateObject(1231,54.2002000,-1532.0996000,7.0000000,0.0000000,0.0000000,0.0000000); //object(streetlamp2) (3)
@@ -35599,7 +35599,7 @@ stock CreateObjects()
     CreateObject(968,34.4000000,-1537.6000000,5.9000000,0.0000000,330.0000000,268.0000000); //object(barrierturn) (3)
     CreateObject(9241,51.6000000,-1531.3000000,13.8000000,0.0000000,0.0000000,172.0000000); //object(copbits_sfn) (2)
     CreateObject(5820,69.5996100,-1523.5000000,9.0000000,0.0000000,357.9950000,169.9970000); //object(odrampbit02) (5)
-    //============================== Дороги по Лс ==============================
+    //============================== Р”РѕСЂРѕРіРё РїРѕ Р›СЃ ==============================
     CreateObject(700, 1008.5, -1800.19921875, 13.199999809265, 0, 0, 0);
     CreateObject(700, 1036.3994140625, -1813.5, 12.89999961853, 0, 0, 0);
     CreateObject(700, 985.3994140625, -1794, 13.199999809265, 0, 0, 0);
@@ -35716,7 +35716,7 @@ stock CreateObjects()
     CreateObject(700, 119.23899841309, -1546.7199707031, 7.0430002212524, 0, 0, 0);
     CreateObject(700, 129.2177734375, -1552.5263671875, 8.0380001068115, 0, 0, 0);
     CreateObject(700, 109.14453125, -1542.1630859375, 6.1370000839233, 0, 0, 0);
-	//======================================= мериия интерьер  =================
+	//======================================= РјРµСЂРёРёСЏ РёРЅС‚РµСЂСЊРµСЂ  =================
 	CreateObject(19450, 357.79089, 165.14900, 1011.41998,   180.00000, 0.00000, 0.00000);
 	CreateObject(19358, 357.79089, 158.75430, 1011.41998,   180.00000, 0.00000, 0.00000);
 	CreateObject(3857, 357.79089, 166.20760, 1007.38147,   0.00000, 0.00000, -45.00000);
@@ -35757,7 +35757,7 @@ stock CreateObjects()
 	CreateObject(3857, 377.79205, 168.86276, 1007.70001,   0.00000, 0.00000, -45.00000);
 	CreateObject(11435, 377.81519, 174.88130, 1006.00000,   180.00000, 0.00000, 90.00000);
 	CreateObject(1502, 377.85358, 172.75595, 1007.38147,   0.00000, 0.00000, 90.00000);
-	CreatePickup(1275,23,296.1342,-104.4862,1001.5156); // Раздевалка Хитманов
+	CreatePickup(1275,23,296.1342,-104.4862,1001.5156); // Р Р°Р·РґРµРІР°Р»РєР° РҐРёС‚РјР°РЅРѕРІ
 	CreateObject(3857, 377.79211, 178.23720, 1007.70001,   0.00000, 0.00000, -45.00000);
 	CreateObject(11435, 377.81049, 167.91000, 1008.00000,   0.00000, -90.00000, 90.00000);
 	CreateObject(11435, 377.81049, 179.16229, 1007.01398,   0.00000, 90.00000, 90.00000);
@@ -36252,7 +36252,7 @@ stock CreateObjects()
 	CreateDynamicObject(1237, -878.05408, -1132.69348, 98.89507,   0.00000, 0.00000, 0.00000);
 	CreateDynamicObject(1237, -871.81903, -1101.97705, 96.38340,   0.00000, 0.00000, 0.00000);
 	CreateDynamicObject(19123, 481.10907, -1498.14563, 20.01358,   0.00000, 0.00000, 0.00000);
-	//=========================== Банка паспортный стол ========================
+	//=========================== Р‘Р°РЅРєР° РїР°СЃРїРѕСЂС‚РЅС‹Р№ СЃС‚РѕР» ========================
 	CreateObject(19366,1410.3701172,-1697.1181641,19.2971191,0.0000000,90.0000000,8.4978943); //object(wall014) (1)
 	CreateObject(19366,1409.7685547,-1694.2744141,19.2929993,0.0000000,90.0000000,15.8587341); //object(wall014) (4)
 	CreateObject(19366,1408.8778076,-1691.2199707,19.2971191,0.0000000,90.0000000,15.8477783); //object(wall014) (7)
