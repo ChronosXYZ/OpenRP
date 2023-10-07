@@ -1277,7 +1277,7 @@ new RulesMSG[17][] = // Правила
 	{"{00BFFF}It is prohibited to use nicknames containing obscene or offensive words.\n"},
 	{"{00BFFF}Send more than one request per hour ({FF0000}Exception: Administration Request{00BFFF}).\n"},
 	{"{00BFFF}If you are refused to change your nickname, then you'll be banned.\n"} };
-	new RulesMSGG[22][] = {
+	new RulesMSGG[20][] = {
 	{"{FFFFFF}3. {FFFF00}Chat\n"},
 	{"{00BFFF}OOC ({FF0000}Out Of Charter{00BFFF}) - that's all that concerns the real world.\n"},
 	{"{00BFFF}IC ({FF0000}In Charter{00BFFF}) - this is everything that concerns the virtual world, that is, the game.\n"},
@@ -2167,18 +2167,6 @@ public OnPlayerConnect(playerid)
     if(fexist(string)) { gPlayerAccount[playerid] = true;}
 	else { gPlayerAccount[playerid] = false; }
 	//==========================================================================
-	switch(random(8))
-    {
-       case 0: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/7fb77afc17f7.mp3");
-       case 1: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/9fc048752087.mp3");
-       case 2: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/b5bea75cda28.mp3");
-       case 3: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/c04b0e1201d7.mp3");
-       case 4: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/7c88f4b19608.mp3");
-       case 5: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/13ed17cd7b3e.mp3");
-       case 6: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/8c72c0aa29a1.mp3");
-       case 7: PlayAudioStreamForPlayer(playerid,"http://grand-samp.clan.su/b2808f0e1465.mp3");
-
-    }
 	CountVezit ++;
 	// ~~~~~~~~~~~~~~~~~~~~ [ Спидометр ] ~~~~~~~~~~~~~~~~~~~~
 	ModelShow[playerid] = TextDrawCreate(520.000000, 360.000000, "_");
@@ -2575,7 +2563,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        if(response)
 			{
 				new rulesdialogg[1324];
-				format(rulesdialogg,sizeof(rulesdialogg), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSGG[0],RulesMSGG[1],RulesMSGG[2],RulesMSGG[3],RulesMSGG[4],RulesMSGG[5],RulesMSGG[6],RulesMSGG[7],RulesMSGG[8],RulesMSGG[9],RulesMSGG[10],RulesMSGG[11],RulesMSGG[12],RulesMSGG[13],RulesMSGG[14],RulesMSGG[15],RulesMSGG[16],RulesMSGG[17],RulesMSGG[18],RulesMSGG[19],RulesMSGG[20],RulesMSGG[21]);
+				format(rulesdialogg,sizeof(rulesdialogg), "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", RulesMSGG[0],RulesMSGG[1],RulesMSGG[2],RulesMSGG[3],RulesMSGG[4],RulesMSGG[5],RulesMSGG[6],RulesMSGG[7],RulesMSGG[8],RulesMSGG[9],RulesMSGG[10],RulesMSGG[11],RulesMSGG[12],RulesMSGG[13],RulesMSGG[14],RulesMSGG[15],RulesMSGG[16],RulesMSGG[17],RulesMSGG[18],RulesMSGG[19]);
 				SPD(playerid,13,DSM, "{00BFFF}[ {AFAFAF}Server Rules {00BFFF}]", rulesdialogg, "Agree", "Cancel");
 			}
 			else
@@ -9636,7 +9624,6 @@ public OnPlayerDeath(playerid, killerid, reason)
 }
 public OnPlayerSpawn(playerid)
 {
-    StopAudioStreamForPlayer(playerid);
 	new LevScore; LevScore = PlayerInfo[playerid][pLevel];
 	if(gPlayerLogged[pJailed] == 1) { SetPlayerInterior(ChosenPlayer[playerid], 6); SetPlayerPos(ChosenPlayer[playerid],264.1425,77.4712,1001.0391); SetPlayerFacingAngle(ChosenPlayer[playerid], 263.0160); return true; }
 	if(PlayerInfo[playerid][pMember] > 0) { SetPlayerSkin(playerid, PlayerInfo[playerid][pModel]); }
