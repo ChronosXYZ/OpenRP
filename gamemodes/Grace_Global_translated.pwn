@@ -1273,10 +1273,10 @@ new RulesMSG[17][] = // Правила
 	{"{00BFFF}(You can change your nickname via {FF0000}/mm {FFFFFF}>> {FF0000}Change nickname)\n"},
 	{"{00BFFF}Nickname must consist of Name_Last names in capital letters.\n"},
 	{"{FF0000}Forbidden:\n"},
-	{"{00BFFF}It is prohibited to use other people's ({FF0000}already busy with someone{00BFFF}) nicknames\n"},
+	{"{00BFFF}It is prohibited to use other people's nicknames\n"},
 	{"{00BFFF}It is prohibited to use nicknames containing obscene or offensive words.\n"},
 	{"{00BFFF}Send more than one request per hour ({FF0000}Exception: Administration Request{00BFFF}).\n"},
-	{"{00BFFF}If you are refused to change your nickname, then you can’t.\n"} };
+	{"{00BFFF}If you are refused to change your nickname, then you'll be banned.\n"} };
 	new RulesMSGG[22][] = {
 	{"{FFFFFF}3. {FFFF00}Chat\n"},
 	{"{00BFFF}OOC ({FF0000}Out Of Charter{00BFFF}) - that's all that concerns the real world.\n"},
@@ -1285,9 +1285,7 @@ new RulesMSG[17][] = // Правила
 	{"{00BFFF}Cursing, insults or obscene language.\n"},
 	{"{00BFFF}Threats to players ({FF0000}Not related to gameplay{00BFFF}).\n"},
 	{"{00BFFF}Write messages in uppercase ({FF0000}Caps Lock{00BFFF}).\n"},
-	{"{00BFFF}Write messages in the announcement chat that are not related to {FF0000}Role Play{00BFFF}.\n"},
 	{"{00BFFF}Write the same message too often.\n"},
-	{"{00BFFF}Discuss and criticize the actions of the administration.\n"},
 	{"{00BFFF}Advertising of third-party resources.\n\n"},
 	{"{FFFFFF}4. {FFFF00}Server administration\n"},
 	{"{00BFFF}It is necessary to report to the administration any violations of these rules. ({FF0000}/mm {FFFFFF}> {FF0000}Report){00BFFF}.\n"},
@@ -12477,10 +12475,10 @@ public OnPlayerPickUpPickup(playerid, pickupid)
 	    if(PlayerInfo[playerid][pPasport] == 0)
 	    {
 			SPD(playerid,228,DIALOG_STYLE_MSGBOX,"Obtaining a Passport","\
-			{FFFFFF}Здравствуйте. Вы хотите стать гражданином этого штата?\n\
-			•{00BFFF}Паспорт будет свидетельствовать, о том, что вы будете новым гражданином этого штата.\n\
-			{FFFFFF}•{00BFFF}Будучи гражданином штата, вы сможете устроиться на работу, купить себе дом, машину или вступить в одну из организаций.\n\
-			{FFFF00}Если вы все настроятельно решили, то потвердите получение паспорт!\
+			{FFFFFF}Hello. Do you want to become a citizen of this state?\n\
+			•{00BFFF}The passport will indicate that you will be a new citizen of this state.\n\
+			{FFFFFF}•{00BFFF}As a citizen of the state, you can get a job, buy a house, a car, or join one of the organizations.\n\
+			{FFFF00}If you have decided everything, then confirm receipt of your passport!\
 			","Get","Close");
 		}
 		else SCM(playerid, COLOR_GREY, "You already have a passport!");
@@ -13026,15 +13024,17 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	            PicCP[playerid] = 0;
 	            PlayerInfo[playerid][pRank] = 0;
 	            SPD(playerid,229,DIALOG_STYLE_MSGBOX,"{FFFFFF}Information","\
-				{FFFFFF}С удачным приездом в штат Лос Сантос\n\n\
-				Вы начнете свой путь с этого замечательного города\n\
-				С собой у вас есть немного денег. Отлично хватит для начала\n\
-				Вы сможете работать на любой понравившейся вам работе\n\
-				Учавствовать на разлчиных мероприятиях\n\
-				Быть успешным бизнесменом\n\
-				Быть страшным бандитом, или знаменитым полицейским\n\
-				Это и многое другое ждет вас в нашем штате\n\
-				Удачи!\
+				{FFFFFF}Welcome to the city of Los Santos!\n\n\
+				You will start your journey from this wonderful city\n\
+				You have some money with you. Great enough for a start\n\
+				You can work in any job you like\n\
+				Participate in various events\n\
+				Be a successful businessman\n\
+				Be a scary bandit, or a famous policeman\n\
+				This and much more awaits you in our state.\n\
+				Good luck!\n\n\
+				/mm - Server menu, you can find there some help\n\
+				Ask anything if you need through /o chat or /mm > Support!\
 				","Close","");
 	            SetSpawnInfo(playerid, 0, 0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0);
 	            SCM(playerid, COLOR_YELLOW, "Happy playing on our server!");
@@ -13081,15 +13081,17 @@ public OnPlayerSelectedMenuRow(playerid, row)
 	            PicCP[playerid] = 0;
 	            PlayerInfo[playerid][pRank] = 0;
 	            SPD(playerid,229,DIALOG_STYLE_MSGBOX,"{FFFFFF}Information","\
-				{FFFFFF}С удачным приездом в штат Лос Сантос\n\n\
-				Вы начнете свой путь с этого замечательного города\n\
-				С собой у вас есть немного денег. Отлично хватит для начала\n\
-				Вы сможете работать на любой понравившейся вам работе\n\
-				Учавствовать на разлчиных мероприятиях\n\
-				Быть успешным бизнесменом\n\
-				Быть страшным бандитом, или знаменитым полицейским\n\
-				Это и многое другое ждет вас в нашем штате\n\
-				Удачи!\
+				{FFFFFF}Welcome to the city of Los Santos!\n\n\
+				You will start your journey from this wonderful city\n\
+				You have some money with you. Great enough for a start\n\
+				You can work in any job you like\n\
+				Participate in various events\n\
+				Be a successful businessman\n\
+				Be a scary bandit, or a famous policeman\n\
+				This and much more awaits you in our state.\n\
+				Good luck!\n\n\
+				/mm - Server menu, you can find there some help\n\
+				Ask anything if you need through /o chat or /mm > Support!\
 				","Close","");
 				PlayerPlaySound(playerid, 1069, 0.0, 0.0, 0.0);
 	            SetSpawnInfo(playerid, 0, 0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0);
@@ -14742,14 +14744,14 @@ public OnPlayerRequestClass(playerid, classid)
 		if(gPlayerAccount[playerid] == true)
 		{
   			gPlayerAccount[playerid] = true;
-			format(bac, sizeof(bac), "{FFFFFF}Welcome to the server Open RolePlay\nYour nickname is registered\n\nLogin: {66CC33}%s\n{FFFFFF}enter password:", playername);
+			format(bac, sizeof(bac), "{FFFFFF}Welcome to the server Open RolePlay\nYour nickname is registered\n\nLogin: {66CC33}%s\n{FFFFFF}Enter your password:", playername);
   			SPD(playerid,1,DIALOG_STYLE_PASSWORD, "{66CCFF}Authorization",bac, "Enter", "Cancel");
 			return true;
 		}
 		if(gPlayerAccount[playerid] == false)
 		{
 			gPlayerAccount[playerid] = false;
- 			format(bac, sizeof(bac), "{FFFFFF}Welcome to the server Open RolePlay\nTo start the game you need to register\n\nEnter the password for your account\nIt will be requested every time you log into the server\n\n{66CC33}	Notes:\n	- The password can consist of Russian and Latin characters\n	- Password is case sensitive\n	- Password length from 6 to 15 characters", playername);
+ 			format(bac, sizeof(bac), "{FFFFFF}Welcome to the server Open RolePlay\nTo start the game you need to register\n\nEnter the password for your account\nIt will be requested every time you log into the server\n\n{66CC33}Notes:\n-	The password can consist of Latin characters\n	- Password is case sensitive\n	- Password length from 6 to 15 characters", playername);
   			SPD(playerid,2,DIALOG_STYLE_INPUT, "{3DBAF8}Registration",bac, "Ready", "Cancel");
 	    	return true;
 		}
@@ -14813,7 +14815,7 @@ stock SetPlayerCriminal(playerid,declare,reason[])
 						{
 						    if(PlayerInfo[i][pMember] == 1 ||PlayerInfo[i][pLeader] == 1 || PlayerInfo[i][pMember] == 10 ||PlayerInfo[i][pLeader] == 10 || PlayerInfo[i][pMember] == 2 ||PlayerInfo[i][pLeader] == 2 || PlayerInfo[i][pMember] == 3 || PlayerInfo[i][pLeader] == 3 || PlayerInfo[i][pMember] == 19 || PlayerInfo[i][pLeader] == 19 || PlayerInfo[i][pMember] == 21 || PlayerInfo[i][pLeader] == 21)
 						    {
-								format(cbjstore, sizeof(turnmes), "Walkie Talkie: Creports: %s. Crime: %s. Suspect: %s",turner,reason,turned);
+								format(cbjstore, sizeof(turnmes), "Walkie Talkie: Reports: %s. Crime: %s. Suspect: %s",turner,reason,turned);
 								SCM(i, 0xFEBC41AA, cbjstore);
 							}
 						}
@@ -14846,7 +14848,7 @@ publics OtherTimer()
 				    {
 						new called[MAX_PLAYER_NAME];
 						GetPlayerName(Mobile[i], called, sizeof(called));
-						format(string, sizeof(string), "U %s cell phone ringing", called);
+						format(string, sizeof(string), "Your %s cell phone is ringing", called);
 						ProxDetector(30.0, Mobile[i], string, COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE,COLOR_PURPLE);
 					}
 				}
