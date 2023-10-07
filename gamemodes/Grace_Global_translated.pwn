@@ -7693,7 +7693,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						SendClientMessage(playerid, COLOR_BLUE, "You have been teleported");
 					}
 		 			case 2: SPD(playerid, 7703, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Car showrooms{00BFFF}•", "car showroom [N] class\ncar showroom [D] class\nMotorcycle showroom [C] class\ncar showroom [B] class\ncar showroom [A] class", "Choose", "Back");
-			 		case 3: SPD(playerid, 7704, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Rest{00BFFF}•", "Auto repair shop\nRace\nPaint Ball\nLoaders\nFarm\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
+			 		case 3: SPD(playerid, 7704, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Misc{00BFFF}•", "Auto repair shop\nRace\nPaint Ball\nLoaders\nFarm\nWeapons store LS\nWeapons store SF\nWeapons store LV", "Choose", "Back");
 			 	}
 		 	}
 		 	else OnPlayerCommandText(playerid,"/apanel");
@@ -27145,7 +27145,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	{
 		if(PlayerInfo[playerid][pAdmin] < 1) return ESCM
   		if(dostup[playerid] != 1) return SPD(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-		SPD(playerid, 7777, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Teleport Menu{00BFFF}•", "Faction Bases\nWorks\nCar showrooms\nRest", "Choose", "Back");
+		SPD(playerid, 7777, DIALOG_STYLE_LIST, "{00BFFF}•{FFFFFF}Teleport Menu{00BFFF}•", "Faction Bases\nWorks\nCar showrooms\nMisc", "Choose", "Back");
 	}
 	if(strcmp(cmd, "/goto", true) == 0)
 	{
@@ -33616,30 +33616,6 @@ stock CreateLabels()
     Create3DTextLabel("{40BF00}Motorcycle showroom: C\nEnter /buycar",COLOR_WHITE,-1966.8695,294.0146,35.4440,10.0,0,1);
     Create3DTextLabel("{40BF00}car showroom: B\nEnter /buycar",COLOR_WHITE,2546.4695,1970.4794,10.8203,10.0,0,1);
     Create3DTextLabel("{40BF00}car showroom: A\nEnter /buycar",COLOR_WHITE,2200.6201,1392.4924,10.8203,10.0,0,1);
-    Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,1142.8103,-1764.0710,15.5082,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-1676.34570312,434.01806641,8.08183193,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-2033.32604980,159.50723267,29.94120598,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,2236.16186523,-1665.79772949,26.27980804,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,1367.56359863,-1290.13696289,14.44901943,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,1142.44287109,-1763.92932129,14.59816360,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,847.58093262,-1799.19348145,14.71945286,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-78.74282837,-1171.64892578,2.95329499,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-1551.53637695,-2737.33691406,49.64560318,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,661.71307373,-576.21777344,17.25428581,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,557.32824707,-1294.28137207,18.24994087,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-2035.70605469,-102.35491180,36.07402039,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,1919.78381348,-1766.21813965,14.44901943,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,2843.30444336,1286.17187500,12.29276943,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,2187.36035156,2478.89160156,12.14433193,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,1587.30920410,2218.34838867,11.96464443,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,2174.20336914,1402.93469238,11.96464443,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-818.55200195,1567.63708496,28.01933098,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,91.92106628,1180.56555176,19.56620598,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-1282.38098145,2715.18652344,51.16842651,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-2452.32275391,2252.62988281,5.87058449,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-2621.31445312,1415.23510742,7.88521862,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,-2421.45410156,958.35540771,46.18632126,7.0,0,1);
-	Create3DTextLabel("{00D900}Click: \"ENTER\"",COLOR_WHITE,2843.3179,1286.2759,11.3000,7.0,0,1);
 	Create3DTextLabel("LSPD", 0x6495EDBB, 1555.1332,-1675.7180,16.1953,10.0,0,1);
     Create3DTextLabel("{00BFFF}Receiving a passport",0xFFB43CAA,-116.5947,-89.9473,1006.0311,20.0,0,1);
 	pas = CreatePickup(1314,2,-116.5947,-89.9473,1006.0311);
