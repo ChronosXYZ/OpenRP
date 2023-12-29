@@ -1,5 +1,6 @@
 #include "core/atm.pwn"
 #include "core/objects.pwn"
+#include "core/helpers.pwn"
 
 static Text:logo;
 

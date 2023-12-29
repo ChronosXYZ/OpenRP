@@ -31,6 +31,9 @@
 #define DSP DIALOG_STYLE_PASSWORD // ¬вод зашифрованного парол€
 #define MOROZ TogglePlayerControllable(playerid, 0);
 #define UNMOROZ TogglePlayerControllable(playerid, 1);
+
+#define SERVER_NAME "Open RolePlay"
+#define SERVER_MODE_TEXT "Open RolePlay | 1.0"
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ ÷вета ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define COLOR_GRAD1 0xB4B5B7FF // —ерый
 #define COLOR_GRAD2 0xBFC0C2FF // —ерый
@@ -8061,17 +8064,17 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SendClientMessage(playerid, COLOR_GRAD1, "---------===[ CHECK ]===---------"); format(string, sizeof(string), "Old balance: %d $", PlayerInfo[playerid][pBank]); SendClientMessage(playerid, COLOR_GREY, string); PlayerInfo[playerid][pCash] -=summa; PlayerInfo[playerid][pBank] += summa; format(string, sizeof(string), "Translated: %d $",summa); SendClientMessage(playerid, COLOR_GRAD4, string); format(string, sizeof(string), "New balance: %d $", PlayerInfo[playerid][pBank]);
 			SendClientMessage(playerid, COLOR_WHITE, string); }
 			else {
-			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
+			new listitems[] = "Withdraw\nTop up the account\nInformation\nTop up your business account";
 			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
 		}
 		case 8817:
 		{
 			if(response) {
 			if(listitem == 0) {
-			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
+			new listitems[] = "Withdraw\nTop up the account\nInformation\nTop up your business account";
 			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); } }
 			else {
-			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
+			new listitems[] = "Withdraw\nTop up the account\nInformation\nTop up your business account";
 			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
 		}
 		case 8814:
@@ -8085,7 +8088,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SendClientMessage(playerid, COLOR_GRAD1, "---------===[ CHECK ]===---------"); format(string, sizeof(string), "Old balance: %d $", PlayerInfo[playerid][pBank]); SendClientMessage(playerid, COLOR_GREY, string); PlayerInfo[playerid][pCash] +=summa; PlayerInfo[playerid][pBank] -= summa; format(string, sizeof(string), "Removed: %d $",summa); SendClientMessage(playerid, COLOR_GRAD4, string); format(string, sizeof(string), "New balance: %d $", PlayerInfo[playerid][pBank]);
 			SendClientMessage(playerid, COLOR_WHITE, string); }
 			else {
-			new listitems[] = "Withdraw\nPut on the account\nInformation\nTop up your business account";
+			new listitems[] = "Withdraw\nTop up the account\nInformation\nTop up your business account";
 			ShowPlayerDialog(playerid, 8810, DIALOG_STYLE_LIST, "{00BFFF}Х{FFFFFF}Banking services{00BFFF}Х", listitems, "Choose", "Close"); }
 		}
 		case 8900:
@@ -8907,7 +8910,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 8:
 					{
-						if(PlayerInfo[playerid][pMember] != 12) return SendClientMessage(playerid,COLOR_GREY, "You are not in a gang Ballas Gang!");
+						if(PlayerInfo[playerid][pMember] != 12) return SendClientMessage(playerid,COLOR_GREY, "You are not in Ballas Gang!");
 						if(MatHaul[tmpcar-gunscar[0]][mLoad] == 0) return SendClientMessage(playerid,COLOR_GREY, "Your truck is empty!");
 					    SendClientMessage(playerid,COLOR_GREEN, "Take the red marker to unload!");
 					    SetPlayerCheckpoint(playerid,2644.7185,-2023.3259,13.5469,8.0);
@@ -8915,7 +8918,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 9:
 					{
-						if(PlayerInfo[playerid][pMember] != 13) return SendClientMessage(playerid,COLOR_GREY, "You are not in a gang Vagos Gang!");
+						if(PlayerInfo[playerid][pMember] != 13) return SendClientMessage(playerid,COLOR_GREY, "You are not in Vagos Gang!");
 						if(MatHaul[tmpcar-gunscar[0]][mLoad] == 0) return SendClientMessage(playerid,COLOR_GREY, "Your truck is empty!");
 					    SendClientMessage(playerid,COLOR_GREEN, "Take the red marker to unload!");
 					    SetPlayerCheckpoint(playerid,2774.4082,-1623.7872,10.9219,8.0);
@@ -8923,7 +8926,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 10:
 					{
-						if(PlayerInfo[playerid][pMember] != 15) return SendClientMessage(playerid,COLOR_GREY, "You are not in a gang Grove Gang!");
+						if(PlayerInfo[playerid][pMember] != 15) return SendClientMessage(playerid,COLOR_GREY, "You are not in Grove Gang!");
 						if(MatHaul[tmpcar-gunscar[0]][mLoad] == 0) return SendClientMessage(playerid,COLOR_GREY, "Your truck is empty!");
 					    SendClientMessage(playerid,COLOR_GREEN, "Take the red marker to unload!");
 					    SetPlayerCheckpoint(playerid,2499.2222,-1681.8239,13.3641,8.0);
@@ -8931,7 +8934,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 11:
 					{
-						if(PlayerInfo[playerid][pMember] != 17) return SendClientMessage(playerid,COLOR_GREY, "You are not in a gang Aztecs Gang!");
+						if(PlayerInfo[playerid][pMember] != 17) return SendClientMessage(playerid,COLOR_GREY, "You are not in Aztecs Gang!");
 						if(MatHaul[tmpcar-gunscar[0]][mLoad] == 0) return SendClientMessage(playerid,COLOR_GREY, "Your truck is empty!");
 					    SendClientMessage(playerid,COLOR_GREEN, "Take the red marker to unload!");
 					    SetPlayerCheckpoint(playerid,1673.3986,-2115.3398,13.5469,8.0);
@@ -8939,7 +8942,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 12:
 					{
-						if(PlayerInfo[playerid][pMember] != 18) return SendClientMessage(playerid,COLOR_GREY, "You are not in a gang Rifa Gang!");
+						if(PlayerInfo[playerid][pMember] != 18) return SendClientMessage(playerid,COLOR_GREY, "You are not in Rifa Gang!");
 						if(MatHaul[tmpcar-gunscar[0]][mLoad] == 0) return SendClientMessage(playerid,COLOR_GREY, "Your truck is empty!");
 					    SendClientMessage(playerid,COLOR_GREEN, "Take the red marker to unload!");
 					    SetPlayerCheckpoint(playerid,2181.1948,-1807.6876,13.3732,8.0);
@@ -15862,7 +15865,8 @@ public OnGameModeInit()
 	ShowPlayerMarkers(PLAYER_MARKERS_MODE_GLOBAL);
 	ShowNameTags(1);
 	SetNameTagDrawDistance(50.0);
-	SetGameModeText("Open RolePlay | 1.0");
+	SetServerRule("hostname", SERVER_NAME);
+	SetGameModeText(SERVER_MODE_TEXT);
 	CreateVehicles();
 	SetWeather(10);
 	CreateLabels();
