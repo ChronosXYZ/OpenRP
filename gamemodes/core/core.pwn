@@ -2,6 +2,10 @@
 #include "core/objects.pwn"
 #include "core/helpers.pwn"
 
+#include <YSI_Coding\y_hooks>
+
+#define SERVER_MODE_TEXT "Open RolePlay | 1.0"
+
 static Text:logo;
 
 ShowProjectLogo(playerid)
@@ -15,4 +19,16 @@ ShowProjectLogo(playerid)
     TextDrawSetOutline(logo,1);
     TextDrawSetProportional(logo,1);
     TextDrawShowForPlayer(playerid, logo);
+}
+
+hook OnGameModeInit() {
+    AllowInteriorWeapons(1);
+	DisableInteriorEnterExits();
+	EnableStuntBonusForAll(0);
+	LimitPlayerMarkerRadius(100.0);
+	ShowPlayerMarkers(PLAYER_MARKERS_MODE_GLOBAL);
+	ShowNameTags(1);
+	SetNameTagDrawDistance(50.0);
+
+    SetGameModeText(SERVER_MODE_TEXT);
 }

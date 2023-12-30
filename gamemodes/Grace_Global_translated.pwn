@@ -32,8 +32,6 @@
 #define MOROZ TogglePlayerControllable(playerid, 0);
 #define UNMOROZ TogglePlayerControllable(playerid, 1);
 
-#define SERVER_NAME "Open RolePlay"
-#define SERVER_MODE_TEXT "Open RolePlay | 1.0"
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Цвета ] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define COLOR_GRAD1 0xB4B5B7FF // Серый
 #define COLOR_GRAD2 0xBFC0C2FF // Серый
@@ -15146,25 +15144,9 @@ publics Fresh()
 			}
   		}
 	}
-	if(hour == 04 && minute == 48 && second == 00)
+	if(hour == 04 && minute == 50 && second == 00)
 	{
-		SCMTA(COLOR_REDD, "Attention! Server restart in 2 minutes!");
-	}
-	else if(hour == 04 && minute == 50 && second == 00)
-	{
-		SCMTA(COLOR_REDD, "Attention! The server is restarting!");
-		new playerid;
-        foreach(new i : Player)
-		{
-			new txtid;
-			GameTextForPlayer(i, string, 5000, txtid);
-		}
-		SaveAccounts();
-		SaveMaterials();
-		SaveGZ();
-		OnPropUpdate();
-		OnPlayerUpdateAc(playerid);
-		GameModeExitFunc();
+		SaveServer();
 	}
 	if(hour == 13 && minute == 10  || hour == 14 && minute == 10  || hour == 16 && minute == 10  || hour == 22 && minute == 10 )
 	{
@@ -15729,7 +15711,7 @@ stock GameModeExitFunc()
 	KillTimer(SpeedoTimer);
 	KillTimer(GzCheckTimer);
 	KillTimer(MzCheckTimer);
-	SaveAccounts();
+	SaveServer();
 	GameModeExit();
  	return true;
 }
@@ -15858,15 +15840,6 @@ public OnGameModeInit()
 {
     new myobject2 = CreateObject(10671, 1481.2015, -1750.9497, 28.4468, 0.0000, 0.0000, -90.5548);
 	SetObjectMaterialText(myobject2, "{00BFFF}City Hall", 0, 40, "Arial", 36, 1, -16776961, 0, 1);
-	AllowInteriorWeapons(1);
-	DisableInteriorEnterExits();
-	EnableStuntBonusForAll(0);
-	LimitPlayerMarkerRadius(100.0);
-	ShowPlayerMarkers(PLAYER_MARKERS_MODE_GLOBAL);
-	ShowNameTags(1);
-	SetNameTagDrawDistance(50.0);
-	SetServerRule("hostname", SERVER_NAME);
-	SetGameModeText(SERVER_MODE_TEXT);
 	CreateVehicles();
 	SetWeather(10);
 	CreateLabels();
@@ -16522,10 +16495,11 @@ stock OnPlayerUpdateAc(playerid)
 	{
 		if(gPlayerLogged[playerid] == 1)
 		{
-			new string3[32];
-			GPN
-			format(string3, sizeof(string3), "Users/%s.ini", playername);
-			new File = ini_openFile(string3);
+			new player_file_path[64];
+			new player_name[MAX_PLAYER_NAME+1];
+			GetPlayerName(playerid, player_name, sizeof(player_name));
+			format(player_file_path, sizeof(player_file_path), "Users/%s.ini", player_name);
+			new File = ini_openFile(player_file_path);
 			if(!File)
 			{
 				PlayerInfo[playerid][pCash] = GetSRVMoney(playerid);
@@ -16658,11 +16632,13 @@ stock OnPlayerUpdateAc(playerid)
 publics OnPlayerLogin(playerid, password[])
 {
 	new tmp2[256];
-	new string2[64];
 	new pass[256];
-	GPN
-	format(string2, sizeof(string2), "Users/%s.ini", playername);
-	new File = ini_openFile(string2);
+
+	new player_file_path[64];
+	new player_name[MAX_PLAYER_NAME+1];
+	GetPlayerName(playerid, player_name, sizeof(player_name));
+	format(player_file_path, sizeof(player_file_path), "Users/%s.ini", player_name);
+	new File = ini_openFile(player_file_path);
 	if(!File)
 	{
 		ini_getString(File, "Key", pass);
@@ -31378,7 +31354,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	if(strcmp(cmd, "/saveall",true) == 0)
 	{
 	    if(dostup[playerid] != 1) return ShowPlayerDialog(playerid,2934,DIALOG_STYLE_INPUT, "{D01F1F}Administrator authorization", "{FFFFFF}Enter Admin Password\n","Enter","");
-		if(PlayerInfo[playerid][pAdmin] >= 8) { SaveAccounts(); SaveMaterials(); SaveGZ(); OnPropUpdate(); OnPlayerUpdateAc(playerid); SendClientMessage(playerid, COLOR_WHITE, "Server and Accounts saved!"); }
+		if(PlayerInfo[playerid][pAdmin] >= 8) { SaveServer(); SendClientMessage(playerid, COLOR_WHITE, "Server and Accounts saved!"); }
 		else SendClientMessage(playerid, COLOR_GREY, "You are not authorized to use this command!");
 	}
 	if(strcmp(cmd, "/donate", true) == 0)
@@ -31581,11 +31557,6 @@ public OnPlayerCommandText(playerid, cmdtext[])
 				new txtid;
 				GameTextForPlayer(i, string, 5000, txtid);
 			}
-			SaveAccounts();
-			SaveMaterials();
-			SaveGZ();
-			OnPropUpdate();
-			OnPlayerUpdateAc(playerid);
 			GameModeExitFunc();
 			format(string, sizeof(string), "~r~RESTART");
 		}
@@ -34565,6 +34536,7 @@ stock SaveServer()
 	SaveBankMafia();
 	SaveBankFrac();
 	SaveAccounts();
+	print("Server is successfully saved!");
 }
 stock SendAdminMessage(color, const string[])
 {
