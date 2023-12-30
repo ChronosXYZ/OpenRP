@@ -4,7 +4,8 @@
 
 #include <YSI_Coding\y_hooks>
 
-#define SERVER_MODE_TEXT "Open RolePlay | 1.0"
+#define SERVER_MODE_NAME "Open RP GM"
+#define SERVER_MODE_VERSION "Beta 1.0"
 
 static Text:logo;
 
@@ -30,5 +31,11 @@ hook OnGameModeInit() {
 	ShowNameTags(1);
 	SetNameTagDrawDistance(50.0);
 
-    SetGameModeText(SERVER_MODE_TEXT);
+    SetupGameModeText();
+}
+
+static SetupGameModeText() {
+    new buffer[256];
+    format(buffer, sizeof(buffer), "%s | %s", SERVER_MODE_NAME, SERVER_MODE_VERSION);
+    SetGameModeText(buffer);
 }
